@@ -1,0 +1,49 @@
+stages:
+  - lint
+  - test
+  - build
+  - deploy
+
+variables:
+  NODE_VERSION: 18
+
+lint:
+  stage: lint
+  image: node:${NODE_VERSION}
+  script:
+    - npm ci
+    - npm run lint
+
+test:
+  stage: test
+  image: node:${NODE_VERSION}
+  script:
+    - npm ci
+    - npm test
+
+build:
+  stage: build
+  image: node:${NODE_VERSION}
+  script:
+    - npm ci
+    - npm run build
+  artifacts:
+    paths:
+      - .next/
+
+deploy-staging:
+  stage: deploy
+  image: node:${NODE_VERSION}
+  script:
+    - echo "Deploying to staging environment"
+  only:
+    - develop
+
+deploy-production:
+  stage: deploy
+  image: node:${NODE_VERSION}
+  script:
+    - echo "Deploying to production environment"
+  only:
+    - release/stable
+  when: manual
