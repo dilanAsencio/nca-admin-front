@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const instance = axios.create({
-  baseURL: `${process.env.API_URL}`,
+  baseURL: `${process.env.NEXT_PUBLIC_API_URL}`,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -10,7 +10,7 @@ const instance = axios.create({
 // Interceptor de solicitud
 instance.interceptors.request.use((config) => {
   // se agrega el token de auth
-  const token = localStorage.getItem('token');
+  const token = typeof window !== "undefined" ? localStorage.getItem("auth_token") : null;
   if (token) {
     config.headers['Authorization'] = `Bearer ${token}`;
   }
@@ -25,12 +25,7 @@ instance.interceptors.response.use(
   (error) => {
     const { response } = error;
     if (response) {
-      if (response.status === 401) {
-        console.error('Unauthorized access');
-      } else if (response.status === 403) {
-        console.error('Access forbidden');
-      }
-      return Promise.reject(new Error(response.data?.message || 'An error occurred'));
+      return Promise.reject(error);
     }
     return Promise.reject(new Error('Network error or server not responding'));
   }

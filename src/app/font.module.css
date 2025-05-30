@@ -1,0 +1,27 @@
+
+.font-outfit {
+    font-family: var(--font-sans-outfit);
+    font-weight: 500;
+    color: #646363;
+}
+.font-sidebar {
+    font-family: var(--font-sans-outfit);
+    font-weight: 500;
+    font-size: 0.875rem;
+    line-height: 1rem;
+    color: #646363;
+}
+
+.font-info-user {
+    font-family: var(--font-sans-funnel);
+    font-weight: 700;
+    font-size: 0.875rem;
+    line-height: 1rem;
+    color: #FFFFFF;
+}
+
+.font-roboto {
+    font-family: var(--font-sans-roboto);
+    font-weight: 400;
+    color: #646363;
+}

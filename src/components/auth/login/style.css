@@ -1,0 +1,12 @@
+.content-inputs {
+    position: relative;
+    /* display: flex;
+    flex-wrap: wrap; */
+    align-items: stretch;
+    width: 100%;
+    /* gap: 0.25rem; */
+}
+
+.linked-forgotpass {
+    color: #FC4554;
+}

@@ -1,0 +1,19 @@
+.p-errors {
+    font-size: 0.875rem;
+    font-weight: 400;
+    margin-top: 0rem;
+    margin-bottom: 0rem;
+    /* color: #FC4554; */
+}
+.content-inputs {
+    position: relative;
+    /* display: flex;
+    flex-wrap: wrap; */
+    align-items: stretch;
+    width: 100%;
+    /* gap: 0.25rem; */
+}
+
+.linked-forgotpass {
+    color: #FC4554;
+}
