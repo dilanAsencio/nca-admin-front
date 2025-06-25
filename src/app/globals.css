@@ -1,8 +1,11 @@
 @import "tailwindcss";
 
 :root {
-  --background: #FFFBEF;
+  --background: #FFFCF8;
   --foreground: #171717;
+  --font-sans-outfit: "Outfit", sans-serif;
+  --font-sans-funnel: "Funnel Sans", sans-serif;
+  --font-sans-roboto: "Roboto", sans-serif;
 }
 
 @theme inline {
@@ -14,7 +17,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #FFFBEF;
+    --background: #FFFCF8;
     --foreground: #171717;
   }
 }
