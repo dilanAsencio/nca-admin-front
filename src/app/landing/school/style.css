@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+.content-filter {
+    @apply
+        p-4
+        rounded-[0.5rem]
+        basis-1/4
+        h-[101vh]
+        bg-white
+        overflow-y-auto
+        shadow-[0_7px_21px_0_#451A1A0A];
+}

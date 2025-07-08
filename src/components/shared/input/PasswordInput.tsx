@@ -1,7 +1,5 @@
 import React from "react";
-
 import { InputComponentProps } from "@/types/componentsShared";
-
 import "./style.css";
 
 const PasswordInput: React.FC<InputComponentProps> = ({

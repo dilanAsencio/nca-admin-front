@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+.custom-footer {
+  @apply
+    bg-[#ffffff99]
+    backdrop-blur-[5.25rem];
+
+  & .content-link {
+    & a {
+      @apply
+        text-[#00000099];
+    }
+  }
+}

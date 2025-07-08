@@ -1,40 +1,59 @@
+@import "tailwindcss";
+
 .btn-custom {
-    width: 100%;
-    border-radius: 2rem;
-    padding: 0.75rem 1.25rem;
-    font-weight: 400;
-    font-size: 0.875rem;
+    @apply
+        rounded-[2rem]
+        py-[0.75rem]
+        px-[1.25rem]
+        font-normal
+        text-[0.875rem]
+}
+
+.btn-chevron-custom {
+    @apply
+        bg-[#FC4554]
+        rounded-[100%];
 }
 
 .btn-custom.primary {
-    color: white;
-    background-color: #FC4554;
-}
-.btn-custom.primary:not(:disabled):hover {
-    background-color: #CC3440;
-    box-shadow: 0 0.25rem 0.75rem 0 rgba(235, 55, 81, 0.3);
-}
-.btn-custom.primary:focus {
-    background-color: #FF737F;
-    border: 1px solid #FC4554
-}
-.btn-custom.primary:disabled {
-    background-color: #CACACA;
+    @apply
+        text-[#FFFFFF]
+        bg-[#FC4554]
+        
+        /****** Events ******/
+        /* :hover */
+        not-[:disabled]:hover:bg-[#CC3440]
+        not-[:disabled]:hover:shadow-[0_0.25rem_0.75rem_0_#eb37514d]
+
+        /* :focus */
+        focus:bg-[#FF737F]
+        focus:border-[0.068rem]
+        focus:border-solid
+        focus:border-[#FC4554]
+
+        /* :disabled */
+        disabled:bg-[#CACACA]
 }
 
 .btn-custom.secondary {
-    color: #262626;
-    border: 2px solid #FC4554
-}
-.btn-custom.secondary:not(:disabled):hover {
-    background-color: #CC3440;
-    box-shadow: 0 0.25rem 0.75rem 0 rgba(235, 55, 81, 0.3);
-    color: white;
-}
-.btn-custom.secondary:focus {
-    background-color: #FF737F;
-    border: 1px solid #FC4554
-}
-.btn-custom.secondary:disabled {
-    background-color: #CACACA;
+    @apply
+        text-[#262626]
+        border-2
+        border-solid
+        border-[#FC4554]
+
+        /****** Events *******/
+        /* :hover */
+        not-[:disabled]:hover:bg-[#CC3440]
+        not-[:disabled]:hover:shadow-[0_0.25rem_0.75rem_0_#eb37514d]
+        not-[:disabled]:hover:text-[#FFFFFF]
+
+        /* :focus */
+        focus:bg-[#FF737F]
+        focus:border-[0.068rem]
+        focus:border-solid
+        focus:border-[#FC4554]
+
+        /* :disabled */
+        disabled:bg-[#CACACA]
 }

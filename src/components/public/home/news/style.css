@@ -1,0 +1,8 @@
+@import "tailwindcss";
+
+.card-news {
+    @apply bg-white;
+}
+.chevron-left, .chevron-right {
+    @apply text-[#FC4554];
+}

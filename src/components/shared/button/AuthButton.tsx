@@ -1,6 +1,6 @@
 import React from "react";
-import "./style.css";
 import { ButtonComponentProps } from "@/types/componentsShared";
+import "./style.css";
 
 const AuthButton: React.FC<ButtonComponentProps> = ({ blockAccess = false, loading = false, type, label, className = "primary" }) => {
 

@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+.custom-nav-filter {
+    @apply
+        flex
+        flex-col
+        gap-8
+        bg-white;
+
+    & .content-title {
+        @apply 
+            text-[#262626]
+            font-medium
+            text-[1rem]
+            leading-[1.25rem];
+    }
+
+    & .text-help {
+        @apply
+            text-[#676767]
+            font-normal
+            leading-[1.25rem];
+    }
+
+    & .content-international-program {
+        @apply
+            flex
+            flex-col
+            gap-2;
+    }
+
+    & .content-number-studens,
+    .content-special-learning {
+        @apply
+            flex
+            flex-col
+            gap-6;
+    }
+
+    & .content-max-studens-classroom,
+    .content-per-native-teachers-scd-lenguage,
+    .content-per-students-study-exterior,
+    .content-entry-time-pre,
+    .content-exterior-program,
+    .content-per-foreigners,
+    .content-min-age,
+    .content-age-school {
+        @apply
+            flex
+            flex-col
+            gap-4;
+    }
+}
