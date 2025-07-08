@@ -29,7 +29,7 @@ const CardMessage: React.FC<{
           )}
           <div className="container grid text-center">
             <ButtonComponent
-              className="primary"
+              className="tertiary"
               onClick={() => handleSubmit(path)}
               label={labelButton}
             />

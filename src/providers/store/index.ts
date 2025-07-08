@@ -34,11 +34,9 @@ export const loginThunk = createAsyncThunk(
       if (!response.success) {
         return rejectWithValue({ success: false, message: response.message });
       }
-      console.log("CHUNK LOGIN", response);
       
       return response;
     } catch (error: any) {
-      console.log("CHUNK LOGIN error", error);
       // Si ocurre un error inesperado, encapsúlalo en el formato Response
       return rejectWithValue(error);
     }

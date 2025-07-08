@@ -231,13 +231,14 @@ const ResetPasswordForm = () => {
 
         <PasswordStrengthIndicator password={getValues("password") || ""} />
 
-        <div className="flex flex-col gap-[1rem]">
+        <div className="flex flex-col items-center gap-[1rem]">
           <ButtonComponent 
-              className="primary" type="submit" label="Ingresar" />
+              className="tertiary w-full" type="submit" label="Ingresar" />
           <div className="form-check self-center">
             <CheckBoxComponent
+              name="rememberMe"
               checked={rememberMe}
-              setChecked={setRememberMe}
+              setChecked={() =>  setRememberMe(!rememberMe)}
               label="Recordar usuario"
             />
           </div>

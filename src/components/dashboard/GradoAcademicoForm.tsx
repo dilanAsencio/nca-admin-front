@@ -24,8 +24,6 @@ const GradoAcademicoForm = () => {
   const [blockForm, setBlockForm] = useState(true);
 
   const onSubmit = (data: any) => {
-    console.log(data);
-    console.log("VALOR FORMAT TO NOMBER", unformatCurrency(data.valor_nivel));
     toggleModalGrado();
     reset();
   };
@@ -89,7 +87,7 @@ const GradoAcademicoForm = () => {
             <ButtonComponent
               label="Cancelar"
               type="button"
-              className="secondary"
+              className="tertiary-outline"
               onClick={() => {
                 toggleModalGrado();
                 reset();
@@ -99,7 +97,7 @@ const GradoAcademicoForm = () => {
               label="Crear"
               type="submit"
               blockAccess={blockForm}
-              className="primary"
+              className="tertiary"
             />
           </div>
         </div>

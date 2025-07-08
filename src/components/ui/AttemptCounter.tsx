@@ -1,5 +1,5 @@
-import { AttemptCounterProps } from "@/types/componentsShared";
 import React from "react";
+import { AttemptCounterProps } from "@/types/componentsShared";
 
 const AttemptCounter: React.FC<AttemptCounterProps> = ({ attempts, maxAttempts = 3 }) => (
   <div aria-live="polite" className="flex gap-1 items-center">

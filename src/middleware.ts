@@ -10,9 +10,11 @@ export function middleware(request: NextRequest) {
   // Rutas públicas
   const publicRoutes = ["/login", "/forgot-password"];
   const resetRoutes = ["/reset-password", "/change-password"];
-  const isPublic = publicRoutes.some((path) => pathname === path);
-  const isReset = resetRoutes.some((path) => pathname === path);
-  console.log("AUTH", token, isFirstLogin, pathname);
+
+  // Permitir acceso libre a /landing y subrutas
+  if (pathname.startsWith('/landing')) {
+    return NextResponse.next();
+  }
 
   // 1. Si NO está autenticado
   if (!token) {
@@ -34,9 +36,7 @@ export function middleware(request: NextRequest) {
   }
 
   // 3. Si está autenticado y NO es primer login
-  console.log("AUTENTICADO Y NO FIRST LOGIN", token, isFirstLogin, pathname);
   if (token && !isFirstLogin) {
-  console.log("AUTENTICADO Y NO FIRST LOGIN 11", token, isFirstLogin, pathname);
     // Si intenta acceder a rutas públicas o de reset, redirigir a raíz
     if ([...publicRoutes, ...resetRoutes].includes(pathname)) {
       return NextResponse.redirect(new URL('/', request.url));

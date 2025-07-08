@@ -1,40 +1,105 @@
+@import "tailwindcss";
+
 .btn-custom {
-    width: 100%;
-    border-radius: 2rem;
-    padding: 0.75rem 1.25rem;
-    font-weight: 400;
-    font-size: 0.875rem;
+    @apply
+        rounded-[2rem]
+        py-[0.75rem]
+        px-[1.25rem]
+        font-normal
+        text-[0.875rem]
+        inline-flex
+        items-center
+        justify-center
+        whitespace-nowrap
+        /* w-fit */
+        min-w-fit
+        max-w-full;
+}
+
+.btn-chevron-custom {
+    @apply
+        bg-[#FC4554]
+        rounded-[100%];
 }
 
 .btn-custom.primary {
-    color: white;
-    background-color: #FC4554;
-}
-.btn-custom.primary:not(:disabled):hover {
-    background-color: #CC3440;
-    box-shadow: 0 0.25rem 0.75rem 0 rgba(235, 55, 81, 0.3);
-}
-.btn-custom.primary:focus {
-    background-color: #FF737F;
-    border: 1px solid #FC4554
-}
-.btn-custom.primary:disabled {
-    background-color: #CACACA;
+    @apply
+        text-[#FFFFFF]
+        bg-[#610CF4]
+        
+        /****** Events ******/
+        /* :hover */
+        not-[:disabled]:hover:bg-[#5409D5]
+
+        /* :focus */
+        focus:bg-[#B086FA]
+        focus:border-[0.068rem]
+        focus:border-solid
+        focus:border-[#610CF4]
+
+        /* :disabled */
+        disabled:bg-[#EFE7FE]
 }
 
 .btn-custom.secondary {
-    color: #262626;
-    border: 2px solid #FC4554
+    @apply
+        text-[#262626]
+        bg-[#FFE193]
+        
+        /****** Events ******/
+        /* :hover */
+        not-[:disabled]:hover:bg-[#E2B43F]
+
+        /* :focus */
+        focus:bg-[#FFE193]
+        focus:border-[0.068rem]
+        focus:border-solid
+        focus:border-[#FFD464]
+
+        /* :disabled */
+        disabled:bg-[#FFF6E0]
+        disabled:text-[#A8A8A8]
 }
-.btn-custom.secondary:not(:disabled):hover {
-    background-color: #CC3440;
-    box-shadow: 0 0.25rem 0.75rem 0 rgba(235, 55, 81, 0.3);
-    color: white;
+
+.btn-custom.tertiary {
+    @apply
+        text-[#FFFFFF]
+        bg-[#FC4554]
+        
+        /****** Events ******/
+        /* :hover */
+        not-[:disabled]:hover:bg-[#CC3440]
+        not-[:disabled]:hover:shadow-[0_0.25rem_0.75rem_0_#eb37514d]
+
+        /* :focus */
+        focus:bg-[#FF737F]
+        focus:border-[0.068rem]
+        focus:border-solid
+        focus:border-[#FC4554]
+
+        /* :disabled */
+        disabled:bg-[#CACACA]
 }
-.btn-custom.secondary:focus {
-    background-color: #FF737F;
-    border: 1px solid #FC4554
-}
-.btn-custom.secondary:disabled {
-    background-color: #CACACA;
+
+.btn-custom.tertiary-outline {
+    @apply
+        text-[#262626]
+        border-2
+        border-solid
+        border-[#FC4554]
+
+        /****** Events *******/
+        /* :hover */
+        not-[:disabled]:hover:bg-[#CC3440]
+        not-[:disabled]:hover:shadow-[0_0.25rem_0.75rem_0_#eb37514d]
+        not-[:disabled]:hover:text-[#FFFFFF]
+
+        /* :focus */
+        focus:bg-[#FF737F]
+        focus:border-[0.068rem]
+        focus:border-solid
+        focus:border-[#FC4554]
+
+        /* :disabled */
+        disabled:bg-[#CACACA]
 }

@@ -42,7 +42,6 @@ export const authService = {
       localStorage.setItem("refresh_token", refreshToken);
       document.cookie = `auth_token=${accessToken}; path=/;`;
       document.cookie = `first_login=${isFirstLogin ? "true" : "false"}; path=/;`;
-      console.log("SERVICE", response.data);
       
       return {
         success: success,
@@ -54,11 +53,9 @@ export const authService = {
       // Intenta extraer el mensaje del backend si existe
       let message = "Login failed";
       if (error.response && error.response.data) {
-        console.log("SERVICE ERROR", error.response.data, error.response);
         
         message = error.response.data.error
       }
-      console.log("SERVICE ERROR", error);
       // Lanza el mensaje para que el thunk lo capture
       throw { success: false, error: message };
     }
@@ -210,8 +207,6 @@ export const authService = {
    * Redirects the user to the login page.
    */
   async logout() {
-    console.log("Logging out...");
-
     try {
       localStorage.removeItem("auth_token");
       localStorage.removeItem("refresh_token");
