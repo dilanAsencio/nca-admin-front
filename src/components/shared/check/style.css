@@ -1,10 +1,13 @@
+@import "tailwindcss";
 
-.form-check-input:checked {
-    background-color: #FC4554;
-    border-color: #FC4554;
+.form-check-input {
+    @apply
+        checked:bg-[#FC4554]
+        checked:border-[#FC4554];
 }
 .form-check-input:focus {
-    border-color: #FC4554;
-    outline: 0;
-    box-shadow: 0 0 0 .25rem rgba(252, 69, 84, 0.25);
+    @apply
+        focus:border-[#FC4554]
+        focus:outline-0
+        focus:shadow-[0_0_0_0.25rem_#fc455440];
 }

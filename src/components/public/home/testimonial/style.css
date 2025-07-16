@@ -1,0 +1,7 @@
+@import "tailwindcss";
+
+.card-testimonial {
+    @apply
+        bg-[#FFFFFF]
+        shadow-[1px_6px_24px_0_#2626260A];
+}

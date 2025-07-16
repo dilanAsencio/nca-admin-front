@@ -1,6 +1,6 @@
 import React from "react";
-import "./style.css";
 import { CheckComponentProps } from "@/types/componentsShared";
+import "./style.css";
 
 const CheckBoxComponent: React.FC<CheckComponentProps> = ({ label, checked, setChecked }) => {
     

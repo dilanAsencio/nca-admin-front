@@ -1,7 +1,8 @@
 export interface ButtonComponentProps {
     blockAccess?: boolean;
     type?: "button" | "submit" | undefined;
-    label: string;
+    label?: string;
+    icon?: {path: string; alt: string};
     loading?: boolean;
     className?: string;
     onClick?: () => void;
@@ -15,6 +16,7 @@ export interface CheckComponentProps {
 
 export interface InputComponentProps {
     disabled?: boolean;
+    isInputSearch?: boolean;
     name: string;
     label?: string;
     typeInput?: string;
@@ -22,6 +24,21 @@ export interface InputComponentProps {
     register?: any;
     className?: string;
     onKeyUp?: (e: any) => void;
+}
+
+interface options {
+    label: string;
+    value: string;
+}
+export interface DropdownComponentProps {
+    disabled?: boolean;
+    name: string;
+    label?: string;
+    placeholder?: string;
+    register?: any;
+    className?: string;
+    options: options[];
+    onChange?: (value: string) => void;
 }
 
 

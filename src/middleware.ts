@@ -10,9 +10,12 @@ export function middleware(request: NextRequest) {
   // Rutas públicas
   const publicRoutes = ["/login", "/forgot-password"];
   const resetRoutes = ["/reset-password", "/change-password"];
-  const isPublic = publicRoutes.some((path) => pathname === path);
-  const isReset = resetRoutes.some((path) => pathname === path);
   console.log("AUTH", token, isFirstLogin, pathname);
+
+  // Permitir acceso libre a /landing y subrutas
+  if (pathname.startsWith('/landing')) {
+    return NextResponse.next();
+  }
 
   // 1. Si NO está autenticado
   if (!token) {

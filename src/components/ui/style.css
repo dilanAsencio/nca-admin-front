@@ -1,11 +1,14 @@
+@import "tailwindcss";
+
 .count-timer {
-    color: #FC4554;
+    @apply
+        text-[#FC4554];
 }
 
 .p-errors {
-    font-size: 0.875rem;
-    font-weight: 400;
-    margin-top: 0rem;
-    margin-bottom: 0rem;
-    color: #FC4554;
+    @apply
+        text-[0.875rem]
+        font-normal
+        text-[#FC4554]
+        mt-0 mb-0;
 }

@@ -14,7 +14,8 @@ interface UiContextType {
   toggleModalNivel: () => void;
   isOpenModalGrado: boolean;
   toggleModalGrado: () => void;
-
+  logoNexus: string;
+  logoSecure: string;
 }
 
 const UiContext = createContext<UiContextType | undefined>(undefined);
@@ -26,6 +27,8 @@ export const UIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
   const [isOpenModalGrado, setIsOpenModalGrado] = useState(false);
   const [isVisualCardMessage, setIsVisualCardMessage] = useState(false);
   const [selectedModule, setSelectedModule] = useState<string | null>("dashboard");
+  const [logoNexus, setLogoNexus] = useState("/assets/img/logo-nexuscore.png");
+  const [logoSecure, setLogoSecure] = useState("/assets/img/logo-secure.png");
 
   const toggleSidebar = () => {
     localStorage.setItem("sidebarOpen", isOpenSidebar ? "0" : "1");
@@ -62,7 +65,9 @@ export const UIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
     isOpenModalNivel,
     toggleModalNivel,
     isOpenModalGrado,
-    toggleModalGrado
+    toggleModalGrado,
+    logoNexus,
+    logoSecure
   };
 
   return (

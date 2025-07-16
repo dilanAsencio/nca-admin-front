@@ -1,5 +1,4 @@
 import React from "react";
-
 import style from "@/app/font.module.css";
 import "./style.css";
 
