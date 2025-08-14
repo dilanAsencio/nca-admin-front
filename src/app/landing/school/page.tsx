@@ -82,4 +82,5 @@ const SchoolPage: React.FC = () => {
     </div>
   );
 };
+  
 export default SchoolPage;

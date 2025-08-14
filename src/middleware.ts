@@ -16,6 +16,11 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // Permitir acceso libre a /landing y subrutas
+  if (pathname.startsWith('/landing')) {
+    return NextResponse.next();
+  }
+
   // 1. Si NO está autenticado
   if (!token) {
     // Permitir acceso solo a rutas públicas y de reset
