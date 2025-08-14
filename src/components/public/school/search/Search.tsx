@@ -8,7 +8,7 @@ import ButtonComponent from '@/components/shared/button/ButtonComponent';
 import DropdownComponent from '@/components/shared/dropdown/DropdownComponent';
 import "./style.css";
 
-const Search: React.FC = () => {
+const Search: React.FC<{search: (search: string) => void}> = ({search}) => {
   const {
     reset,
     register,
@@ -37,18 +37,18 @@ const Search: React.FC = () => {
         className='primary'
         placeholder='Buscar por nombre. idioma, género, ect.'
         typeInput='text'
+        onKeyUp={(e) => search(e.target.value)}
         register={register("searchSchool")}
       />
     </div>
     <ButtonComponent
-      className="secondary"
+      className="tertiary-outline"
       icon={iconMap}
       type="button"
       label="Ver mapa"
     />
     <DropdownComponent
       name='drCiudad'
-      register={register("drCiudad")}
       className='primary'
       placeholder="Ciudad"
       options={[
@@ -59,7 +59,6 @@ const Search: React.FC = () => {
      />
     <DropdownComponent
       name='drGenero'
-      register={register("drGenero")}
       className='primary'
       placeholder="Genero"
       options={[
@@ -70,7 +69,6 @@ const Search: React.FC = () => {
      />
     <DropdownComponent
       name='drIdioma'
-      register={register("drIdioma")}
       className='primary'
       placeholder="Idioma"
       options={[
@@ -81,7 +79,6 @@ const Search: React.FC = () => {
      />
     <DropdownComponent
       name='drReligion'
-      register={register("drReligion")}
       className='primary'
       placeholder="Religion"
       options={[
@@ -91,7 +88,7 @@ const Search: React.FC = () => {
       ]}
      />
     <ButtonComponent
-      className="primary"
+      className="tertiary"
       icon={iconSearch}
       type="button"
     />

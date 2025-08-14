@@ -1,6 +1,6 @@
 import React from 'react';
-import PublicLayout from '@/components/public/layout/PublicLayout';
+import LandingLayout from '@/components/public/layout/LandingLayout';
 
 export default function PublicRootLayout({ children }: { children: React.ReactNode }) {
-  return <PublicLayout>{children}</PublicLayout>;
+  return <LandingLayout>{children}</LandingLayout>;
 }

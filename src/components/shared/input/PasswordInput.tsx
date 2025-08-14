@@ -24,7 +24,7 @@ const PasswordInput: React.FC<InputComponentProps> = ({
         {...register}
       />
       <button
-        className="absolute right-2 top-2 btn-toggle-icon"
+        className="absolute right-2 top-3 btn-toggle-icon"
         disabled={disabled}
         onClick={() => setShowPss(!showPss)}
         tabIndex={-1}

@@ -4,6 +4,7 @@ const instance = axios.create({
   baseURL: `${process.env.NEXT_PUBLIC_API_URL}`,
   headers: {
     'Content-Type': 'application/json',
+    'X-Tenant-ID': '2a9a9956-7eed-40d3-921a-cf40ea06ac6e'
   },
 });
 

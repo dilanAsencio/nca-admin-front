@@ -22,7 +22,7 @@ const CardSchool: React.FC<{
       className={`card-school ${style["font-outfit"]}
         flex flex-col w-[21.438rem] rounded-[0.5rem] p-4 gap-4
         md:w-[21rem]
-        lg:w-[23.833rem]`}
+        lg:w-full`}
     >
       <div className="img-school relative">
         <img
@@ -39,9 +39,9 @@ const CardSchool: React.FC<{
       <div className="name-school p-1">
         <h5 className="font-medium text-[1.25rem]">{nameSchool}</h5>
       </div>
-      <div className="info-school grid grid-cols-2 grid-rows-2 gap-x-2 gap-y-2">
+      <div className="info-school grid grid-cols-2 grid-rows-2 gap-x-2 gap-y-2 text-[0.875rem]">
         {infoSchool.map((info, index) => (
-          <div key={index} className="flex flex-row gap-2 max-w-[9.625rem]">
+          <div key={index} className="flex flex-row items-center gap-2 max-w-[9.625rem]">
             <img className="p-" src={info.icon} alt={info.name} />
             <p className="m-0">{info.label}</p>
           </div>

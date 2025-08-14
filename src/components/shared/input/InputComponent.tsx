@@ -37,14 +37,14 @@ const InputComponent: React.FC<InputComponentProps> = (
                             alt="search-icon"
                         />
                     </div>) : (<>
-                    {label && name && <label htmlFor={name}>{label}</label>}
+                    {label && name && <label className="font-normal text-[0.875rem]" htmlFor={name}>{label}</label>}
                     <input
-                        inputMode={typeInput === "number" ? "numeric" : "text"}
+                        inputMode={typeInput === "number" ? "number" : "text"}
                         placeholder={placeholder}
                         name={name}
                         type={typeInput}
                         disabled={disabled}
-                        className={"custom-input form-control" + className}
+                        className={"custom-input form-control " + className}
                         onKeyUp={onKeyUp}
                         {...register}
                     /></>) 

@@ -7,6 +7,13 @@
         px-[1.25rem]
         font-normal
         text-[0.875rem]
+        inline-flex
+        items-center
+        justify-center
+        whitespace-nowrap
+        /* w-fit */
+        min-w-fit
+        max-w-full;
 }
 
 .btn-chevron-custom {
@@ -16,6 +23,45 @@
 }
 
 .btn-custom.primary {
+    @apply
+        text-[#FFFFFF]
+        bg-[#610CF4]
+        
+        /****** Events ******/
+        /* :hover */
+        not-[:disabled]:hover:bg-[#5409D5]
+
+        /* :focus */
+        focus:bg-[#B086FA]
+        focus:border-[0.068rem]
+        focus:border-solid
+        focus:border-[#610CF4]
+
+        /* :disabled */
+        disabled:bg-[#EFE7FE]
+}
+
+.btn-custom.secondary {
+    @apply
+        text-[#262626]
+        bg-[#FFE193]
+        
+        /****** Events ******/
+        /* :hover */
+        not-[:disabled]:hover:bg-[#E2B43F]
+
+        /* :focus */
+        focus:bg-[#FFE193]
+        focus:border-[0.068rem]
+        focus:border-solid
+        focus:border-[#FFD464]
+
+        /* :disabled */
+        disabled:bg-[#FFF6E0]
+        disabled:text-[#A8A8A8]
+}
+
+.btn-custom.tertiary {
     @apply
         text-[#FFFFFF]
         bg-[#FC4554]
@@ -35,7 +81,7 @@
         disabled:bg-[#CACACA]
 }
 
-.btn-custom.secondary {
+.btn-custom.tertiary-outline {
     @apply
         text-[#262626]
         border-2

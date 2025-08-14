@@ -25,15 +25,15 @@ const outfitSans = Outfit({
   subsets: ["latin"],
 });
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+// const geistSans = Geist({
+//   variable: "--font-geist-sans",
+//   subsets: ["latin"],
+// });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+// const geistMono = Geist_Mono({
+//   variable: "--font-geist-mono",
+//   subsets: ["latin"],
+// });
 
 export default function RootLayout({
   children,
@@ -43,13 +43,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${outfitSans.variable} ${robotoSans.variable} antialiased`}
+        className={`${outfitSans.variable} ${robotoSans.variable} antialiased`}
       >
         <Provider store={store}>
           <ReduxLoaderOverlay />
           <PersistGate loading={null} persistor={persistor}>
             <UIProvider>
-              <div className="app-layout h-[100vh] bg-[#FFFCF8]">
+              <div className="app-layout h-[100vh] bg-[#FCFBFF]">
                 <div className="main-content">
                   <MainContent>{children}</MainContent>
                 </div>

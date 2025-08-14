@@ -51,7 +51,6 @@ const LoginForm = () => {
       .unwrap()
       .then((resp: any) => {
         localStorage.setItem("username", data.username);
-        console.log("user", resp);
 
         if (resp?.status === 202) {
           showToast(resp?.message, "info");
@@ -66,8 +65,6 @@ const LoginForm = () => {
         setLoading(false);
       })
       .catch((error) => {
-        console.log("error", error);
-        
         setShowTry(true);
         setFailedTry((prev) => {
           if (prev === 1) {
@@ -184,8 +181,9 @@ const LoginForm = () => {
           )}
         </div>
 
-        <div className="flex flex-col gap-[1rem]">
+        <div className="flex flex-col items-center gap-[1rem]">
           <AuthButton
+            className="tertiary w-full"
             blockAccess={blockAccess}
             type="submit"
             label="Ingresar"
@@ -197,8 +195,9 @@ const LoginForm = () => {
           }
           <div className="form-check self-center">
             <CheckBoxComponent
+              name="rememberMe"
               checked={rememberMe}
-              setChecked={setRememberMe}
+              setChecked={() => setRememberMe(!rememberMe)}
               label="Recordar usuario"
             />
           </div>

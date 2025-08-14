@@ -1,18 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import BreadcumbComponent from "@/components/shared/breadcumb/BreadcumbComponent";
-
 import style from "@/app/font.module.css";
 import CardComponent from "@/components/dashboard/CardComponent";
-import { useUI } from "@/providers/ui-context";
-import ModalComponent from "@/components/dashboard/ModalComponent";
-import NivelAcademicoForm from "@/components/dashboard/NivelAcademicoForm";
-import GradoAcademicoForm from "@/components/dashboard/GradoAcademicoForm";
-import DropTableComponent from "@/components/shared/drop-table/DropTable";
+import AcademicManagementForm from "@/components/academicManagement/AcademicManagement";
 
-const AcademicDashboard = () => {
-  const { isOpenModalNivel, toggleModalNivel, isOpenModalGrado, toggleModalGrado } = useUI();
-
+const AcademicDashboard: React.FC = () => {
   const columns = [
     { nameField: "Nombre del nivel académico" },
     { nameField: "Periodo académico" },
@@ -21,29 +15,25 @@ const AcademicDashboard = () => {
     { nameField: "Acciones" },
   ]
 
+const [openForm, setOpenForm] = useState(false);
+
+const toggleCreateSchool = () => {
+  setOpenForm(prev => !prev);
+};
+
   return (<>
+  {
+    openForm ? <AcademicManagementForm onBack={toggleCreateSchool} /> :
     <div className="content-dashboard grid gap-[1.5rem]">
       <div className={`header-content flex flex-row justify-between items-center h-[3.125rem] ${style["font-roboto"]}`}>
         <span className="font-[700] text-[1.25rem]">Gestión Académica</span>
         <BreadcumbComponent />
       </div>
       <div className="flex flex-row justify-center gap-[1.5rem]">
-        <CardComponent labelButton="Crear Colegio" />
-        <CardComponent handleClick={toggleModalNivel} labelButton="Crear nivel académico" />
-        <CardComponent handleClick={toggleModalGrado} labelButton="Crear grado académico" />
+        <CardComponent handleClick={toggleCreateSchool} labelButton="Crear Colegio" />
       </div>
-      <DropTableComponent title="Nivel académico" columns={columns}></DropTableComponent>
     </div>
-    { isOpenModalNivel &&
-      <ModalComponent handlerModal={toggleModalNivel} title="Crear Nivel Académico">
-        <NivelAcademicoForm />
-      </ModalComponent>
-    }
-    { isOpenModalGrado &&
-      <ModalComponent handlerModal={toggleModalGrado} title="Crear Grado Académico">
-        <GradoAcademicoForm />
-      </ModalComponent>
-    }
+  }
   </>);
 }
 

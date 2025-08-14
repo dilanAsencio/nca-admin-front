@@ -2,12 +2,16 @@
 
 import React from "react";
 import { useUI } from "@/providers/ui-context";
+import clsx from "clsx";
+import ButtonComponent from "../shared/button/ButtonComponent";
 
 const ModalComponent: React.FC<{
   title: string;
   children: React.ReactNode;
   handlerModal: () => void;
-}> = ({ title, children, handlerModal }) => {
+  handlerSubmit: () => void;
+  labelBtnAccept?: string;
+}> = ({ title, children, handlerModal, handlerSubmit, labelBtnAccept }) => {
 
   return (
     <>
@@ -15,9 +19,12 @@ const ModalComponent: React.FC<{
         tabIndex={-1}
         className="fixed inset-0 z-20 flex justify-center items-center w-full h-full bg-[#6c757d7a]"
       >
-        <div className="relative bg-white rounded-[0.5rem]">
+        <div className={clsx(
+          "relative bg-white rounded-[0.5rem]",
+          "max-w-1/2 w-full"
+        )}>
           {/* Modal header */}
-          <div className="flex items-center justify-between pt-6 pb-10 px-4">
+          <div className="flex items-center justify-between pt-[1.5rem] px-[1.5rem]">
             <h3 className="text-xl font-semibold text-gray-900">{title}</h3>
             <button
               type="button"
@@ -44,6 +51,18 @@ const ModalComponent: React.FC<{
             </button>
           </div>
           {children}
+          <div className="flex justify-end gap-[0.75rem] px-[1.5rem] py-[0.5rem]">
+            <ButtonComponent
+              className="secondary"
+              label="Cancelar"
+              onClick={handlerModal}
+            />
+            <ButtonComponent
+              className="primary"
+              label={labelBtnAccept || "Agregar"}
+              onClick={handlerSubmit}
+            />
+          </div>
           <div className="flex flex-row gap-4">
             <div className="bg-[#FC4554] h-3 w-[85%] rounded-bl-[0.5rem]"></div>
             <div className="bg-[#FFD464] h-3 w-[15%] rounded-br-[0.5rem]"></div>

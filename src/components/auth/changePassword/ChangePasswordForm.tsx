@@ -188,9 +188,9 @@ const ChangePasswordForm = () => {
 
           <PasswordStrengthIndicator password={getValues("password") || ""} />
 
-          <div className="flex flex-col gap-[1rem]">
+          <div className="flex flex-col items-center gap-[1rem]">
             <ButtonComponent
-              className="primary"
+              className="tertiary w-full"
               blockAccess={blockSubmit}
               type="submit"
               label="Enviar"

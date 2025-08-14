@@ -11,3 +11,20 @@
         focus:outline-0
         focus:shadow-[0_0_0_0.25rem_#fc455440];
 }
+
+.content-checkbadge {
+    @apply
+        cursor-pointer
+        border
+        border-solid
+        rounded-[1.5rem]
+        flex gap-1 items-center
+        py-[0.5rem] pl-[0.75rem] pr-[1rem];
+
+    & .checkbadge {
+        @apply
+            text-black
+            /* appearance-none */
+            w-6 h-6;
+    }
+}

@@ -66,10 +66,10 @@ const SidebarMenu: React.FC = () => {
     <aside
       className={`sidebar fixed top-0 left-0 bottom-0 h-svh transition-all duration-400 ease-in-out 
         bg-[#FFFFFF] box-shadow-[0px_7px_21px_0px_#451A1A0A]
-        py-[1.5rem] flex justify-between ${isOpenSidebar ? "w-[15rem] pl-[1rem]" : "w-[4rem]"}`}
+        py-[1rem] flex justify-between ${isOpenSidebar ? "w-[15rem] pl-[1rem]" : "w-[4rem]"}`}
     >
       <div className="flex flex-col items-center gap-[3.5rem] w-[100%]">
-        <div className="sidebar-header pt-[1.563rem]">
+        <div className="sidebar-header">
           <img
             src={`/assets/img/${isOpenSidebar ? "logo-nc-aca" : "logo-nc-aca-light"}.svg`}
             className={`${isOpenSidebar ? "pl-[1rem]" : "px-[0.75rem]"}`} alt="logo-nexus" />

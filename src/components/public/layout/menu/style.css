@@ -18,7 +18,7 @@
     }
 }
 
-.custom-link.home:hover {
+.custom-link.home:hover, .custom-link.home.active {
     @apply
         font-bold
         text-[#610CF4];
@@ -31,7 +31,7 @@
         }
     }
 }
-.custom-link.colegios:hover {
+.custom-link.colegios:hover, .custom-link.colegios.active {
     @apply
         font-bold
         text-[#FC4554];
@@ -44,7 +44,7 @@
         }
     }
 }
-.custom-link.inscripcion:hover {
+.custom-link.inscripcion:hover, .custom-link.inscripcion.active {
     @apply
         font-bold
         text-[#000000];
@@ -62,7 +62,7 @@
         @apply fill-[#FFFFFF];
     }
 }
-.custom-link.admisiones:hover {
+.custom-link.admisiones:hover, .custom-link.admisiones.active {
     @apply
         font-bold
         text-[#610CF4];
@@ -80,7 +80,7 @@
         @apply fill-[#676767];
     }
 }
-.custom-link.certificaciones:hover {
+.custom-link.certificaciones:hover, .custom-link.certificaciones.active {
     @apply
         font-bold
         text-[#0CC2F4];
@@ -93,7 +93,7 @@
         }
     }
 }
-.custom-link.noticias:hover {
+.custom-link.noticias:hover, .custom-link.noticias.active {
     @apply
         font-bold
         text-[#000000];
@@ -111,7 +111,7 @@
         @apply fill-[#646363];
     }
 }
-.custom-link.quienes-somos:hover {
+.custom-link.quienes-somos:hover, .custom-link.quienes-somos.active {
     @apply
         font-black
         text-[#FC4554];

@@ -10,8 +10,10 @@ export interface ButtonComponentProps {
 
 export interface CheckComponentProps {
     checked: boolean;
-    setChecked: React.Dispatch<React.SetStateAction<boolean>>;
-    label: string;
+    setChecked: () => void;
+    label?: string;
+    name: string;
+    typeCheck?: "checkbox" | "checkbadge";
 }
 
 export interface InputComponentProps {
@@ -31,14 +33,15 @@ interface options {
     value: string;
 }
 export interface DropdownComponentProps {
+    isMulti?: boolean;
     disabled?: boolean;
     name: string;
     label?: string;
     placeholder?: string;
-    register?: any;
+    value?: string | string[];
     className?: string;
     options: options[];
-    onChange?: (value: string) => void;
+    onChange?: (value: string | string[]) => void;
 }
 
 

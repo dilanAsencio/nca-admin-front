@@ -13,17 +13,18 @@ const MainContent: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const router = useRouter();
   const pathname = usePathname();
   
-  const whiteList = ["/login", "/reset-password", "/forgot-password", "/change-password"];
+  const whiteList = ["/login", "/reset-password", "/forgot-password", "/change-password", "/landing"];
+  const isLandingRoute = pathname.startsWith("/landing");
   // Redirige si ya está autenticado y está en una ruta pública
-  useEffect(() => {
-    if (isAuthenticated && whiteList.includes(pathname)) {
-      router.replace("/");
-    }
-  }, [isAuthenticated, pathname, router]);
+  // useEffect(() => {
+  //   if (isAuthenticated && whiteList.includes(pathname)) {
+  //     router.replace("/");
+  //   }
+  // }, [isAuthenticated, pathname, router]);
 
   return (<>
-    { isAuthenticated && !whiteList.includes(pathname) && <Header />}
-    { isAuthenticated && !whiteList.includes(pathname) && <SidebarMenu />}
+    { isAuthenticated && !whiteList.includes(pathname) && !isLandingRoute && <Header />}
+    { isAuthenticated && !whiteList.includes(pathname) && !isLandingRoute && <SidebarMenu />}
     <main
       className={`
         transition-all duration-400 ease-in-out px-[1.5rem]

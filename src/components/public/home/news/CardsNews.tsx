@@ -32,7 +32,7 @@ const CardNews: React.FC<{
             <p className="font-normal m-0 text-[0.875rem]">{fecha}</p>
             <div className="max-w-24">
             <ButtonComponent
-                className="secondary"
+                className="tertiary-outline"
                 type="button"
                 label="Ver más"
             />
