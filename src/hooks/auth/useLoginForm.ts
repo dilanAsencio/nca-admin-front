@@ -2,9 +2,9 @@ import { useState, useEffect, useCallback } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { login } from "@/providers/store";
-import { authService } from "@/services/auth-services";
-import { LoginFormData } from "@/types/auth";
-import showToast from "@/utils/toast";
+import { authService } from "@/services/auth/auth-services";
+import { LoginFormData } from "@/app/core/interfaces/auth-interfaces";
+import showToast from "@/utils/alerts";
 
 const MAX_TRIES = 3;
 const BLOCK_MINUTES = 15;

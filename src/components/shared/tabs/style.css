@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+.custom-tab {
+    @apply
+        bg-[#F4F4F4]
+        shadow-[0_7px_21px_0_#451A1A0A]
+        
+        hover:bg-gray-200;
+}
+
+.custom-tab.active {
+    @apply
+        bg-white;
+}
+
+
+.label-tab{
+    @apply
+        text-gray-900
+        leading-[1.25rem] text-[1rem] font-normal
+        inline-block w-min text-ellipsis whitespace-nowrap;
+}

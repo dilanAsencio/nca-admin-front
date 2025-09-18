@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { authService } from "@/services/auth-services";
+import { authService } from "@/services/auth/auth-services";
 
 export function useTokenRefresh() {
   useEffect(() => {

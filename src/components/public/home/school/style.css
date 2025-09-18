@@ -15,3 +15,13 @@
     shadow-[0_16px_32px_-4px_#FC455412];
 
 }
+
+.favorite-school {
+    @apply
+        bg-white;
+}
+        
+.favorite-school:hover {
+    @apply
+        hover:bg-red-300;
+}

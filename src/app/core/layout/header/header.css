@@ -1,0 +1,43 @@
+ @import "tailwindcss";
+
+.header {
+    @apply shadow-[0_7px_21px_0_#451A1A0A];
+}
+.user-info:hover  {
+    @apply
+        bg-[#fb7676df]
+        cursor-pointer
+        rounded-[0.5rem]
+        p-[0.75rem_1rem]
+}
+
+
+.p-inputtext {
+    @apply
+        border-[#C6B4B4] border-solid border
+        rounded-[2.25rem] h-10;
+}
+
+.hover-icon-header:hover {
+    @apply
+        cursor-pointer
+        bg-[#fb7676df]
+        rounded-[0.5rem]
+        p-[0.5rem]
+}
+
+.ul-items:hover .li-item {
+    @apply
+        bg-[#d1cfcf]
+        cursor-pointer
+}
+
+@media screen and (width <= 768px) {
+    .header {
+        @apply m-0;
+    }
+    .header-title {
+        @apply pl-[0.5rem];
+    }
+    
+}

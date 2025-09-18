@@ -3,17 +3,33 @@
 .btn-custom {
     @apply
         rounded-[2rem]
-        py-[0.75rem]
-        px-[1.25rem]
         font-normal
         text-[0.875rem]
         inline-flex
         items-center
         justify-center
         whitespace-nowrap
-        /* w-fit */
         min-w-fit
         max-w-full;
+}
+
+.btn-custom:not(:disabled):hover {
+    .icon-btn {
+        @apply
+            brightness-0
+            invert;
+    }
+}
+
+.btn-custom.normal {
+    @apply
+        py-[0.75rem]
+        px-[1.25rem];
+}
+.btn-custom.small {
+    @apply
+        py-[0.5rem]
+        px-[0.75rem];
 }
 
 .btn-chevron-custom {
@@ -33,12 +49,12 @@
 
         /* :focus */
         focus:bg-[#B086FA]
-        focus:border-[0.068rem]
+        focus:border
         focus:border-solid
         focus:border-[#610CF4]
 
         /* :disabled */
-        disabled:bg-[#EFE7FE]
+        disabled:opacity-15
 }
 
 .btn-custom.secondary {
@@ -52,12 +68,12 @@
 
         /* :focus */
         focus:bg-[#FFE193]
-        focus:border-[0.068rem]
+        focus:border
         focus:border-solid
         focus:border-[#FFD464]
 
         /* :disabled */
-        disabled:bg-[#FFF6E0]
+        disabled:opacity-15
         disabled:text-[#A8A8A8]
 }
 
@@ -73,18 +89,18 @@
 
         /* :focus */
         focus:bg-[#FF737F]
-        focus:border-[0.068rem]
+        focus:border
         focus:border-solid
         focus:border-[#FC4554]
 
         /* :disabled */
-        disabled:bg-[#CACACA]
+        disabled:opacity-15
 }
 
 .btn-custom.tertiary-outline {
     @apply
         text-[#262626]
-        border-2
+        border
         border-solid
         border-[#FC4554]
 
@@ -96,10 +112,10 @@
 
         /* :focus */
         focus:bg-[#FF737F]
-        focus:border-[0.068rem]
+        focus:border
         focus:border-solid
         focus:border-[#FC4554]
 
         /* :disabled */
-        disabled:bg-[#CACACA]
+        disabled:opacity-15
 }
