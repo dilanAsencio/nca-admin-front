@@ -14,7 +14,7 @@ const HeroSection: React.FC = () => {
       <div className="flex items-center justify-center">
         <div
           className="content-welcome
-          flex flex-col gap-6 items-center md:items-start          
+          flex flex-col gap-6 items-center md:items-start
           w-full max-w-sm md:max-w-md xl:max-w-2xl"
         >
           <div className="flex flex-col">

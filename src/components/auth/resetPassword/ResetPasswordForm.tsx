@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { authService } from "@/services/auth-services";
+import { authService } from "@/services/auth/auth-services";
 import { errorMessage, passwordRequeriments, ResetFormData } from "@/types/auth";
 import { resetPasswordSchema } from "@/types/auth-schemas";
 import { useUI } from "@/providers/ui-context";
@@ -63,7 +63,7 @@ const ResetPasswordForm = () => {
   };
   const validatePassword = (password: string = "") => {
     const minLength = password.length >= 8;
-    const hasUpperCase = /[A-Z][a-z]/.test(password);
+    const hasUpperCase = /^(?=.*[a-z])(?=.*[A-Z]).+$/.test(password);
     const hasNumber = /\d/.test(password);
     const hasSpecialCharacter = /[!@#$%&*.,+-:;]/.test(password);
 

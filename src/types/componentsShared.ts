@@ -1,11 +1,28 @@
+import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
+import { FontAwesomeIconProps, FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Icons } from "next/dist/lib/metadata/types/metadata-types";
+
 export interface ButtonComponentProps {
     blockAccess?: boolean;
     type?: "button" | "submit" | undefined;
+    size?: "small" | "normal";
     label?: string;
     icon?: {path: string; alt: string};
+    // iconFont?: IconDefinition;
     loading?: boolean;
     className?: string;
     onClick?: () => void;
+}
+
+interface PopUpOption {
+  label: string;
+  icon?: {path: string; alt: string};
+  onClick: () => void;
+}
+
+export interface ButtonPopUpProps extends ButtonComponentProps {
+  options: PopUpOption[];
+
 }
 
 export interface CheckComponentProps {

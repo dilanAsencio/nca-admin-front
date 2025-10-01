@@ -94,7 +94,7 @@ const DropdownComponent: React.FC<Props> = ({
                 <p className="m-0">{selectedOptions[0].label}</p>
               )
             ) : (
-              <p className="m-0 text-gray-400">{placeholder}</p>
+              <p className="m-0 text-[#B2B1B1]">{placeholder}</p>
             )}
           </div>
           <FontAwesomeIcon icon={open ? faChevronUp : faChevronDown} />

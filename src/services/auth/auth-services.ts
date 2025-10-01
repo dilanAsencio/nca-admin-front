@@ -175,10 +175,9 @@ export const authService = {
   ): Promise<Response> {
     try {
       const response: Response = await axios.post(
-        "/auth/reset-password-request",
+        "/public/auth/forgot-password",
         {
-          usernameOrEmail,
-          captchaToken,
+          email: usernameOrEmail,
         }
       );
       const { success, message } = response.data;

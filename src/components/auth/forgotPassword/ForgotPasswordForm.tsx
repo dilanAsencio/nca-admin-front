@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { authService } from "@/services/auth-services";
+import { authService } from "@/services/auth/auth-services";
 import { forgotPasswordFormData } from "@/types/auth";
 import { forgotPasswordSchema } from "@/types/auth-schemas";
 import ButtonComponent from "@/components/shared/button/ButtonComponent";

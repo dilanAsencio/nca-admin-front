@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+
+.card-schools, .card-level {
+    @apply
+        flex flex-col p-[1rem] gap-[1rem]
+        rounded-[0.5rem] bg-white shadow-[1px_6px_24px_0_#2626260a];
+        
+}
+
+.header-school-table {
+    @apply
+        flex justify-between p-[1rem]
+        rounded-t-[1.75rem]
+        border border-solid border-[#5409D5] border-b-0;
+}
+
+.header-school-table.no-active {
+    @apply
+        rounded-b-[1.75rem]
+        border border-solid border-[#5409D5];
+}
+
+.body-school-table {
+    @apply
+        p-[1rem] flex flex-col
+        gap-[1rem] rounded-[0.5rem]
+        border border-solid border-[#5409D5];
+}

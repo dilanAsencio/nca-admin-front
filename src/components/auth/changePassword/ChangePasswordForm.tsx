@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-// import { authService } from "@/services/auth-services";
 import {
   ChangeFormData,
   errorMessage,
@@ -18,7 +17,7 @@ import PasswordInput from "@/components/shared/input/PasswordInput";
 
 import "./style.css";
 import PasswordStrengthIndicator from "@/components/shared/input/PasswordStrengthIndicator";
-import { authService } from "@/services/auth-services";
+import { authService } from "@/services/auth/auth-services";
 
 const ChangePasswordForm = () => {
   const {

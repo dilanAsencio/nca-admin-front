@@ -19,6 +19,7 @@ import PasswordInput from "@/components/shared/input/PasswordInput";
 import AuthButton from "@/components/shared/button/AuthButton";
 
 import "./style.css";
+import { useUI } from "@/providers/ui-context";
 
 const LoginForm = () => {
   const {
@@ -28,7 +29,6 @@ const LoginForm = () => {
     setValue,
     setError,
     getValues,
-    clearErrors,
   } = useForm({ resolver: zodResolver(loginSchema) });
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
@@ -37,10 +37,10 @@ const LoginForm = () => {
   const [trys, setTrys] = useState(3);
   const [failedTry, setFailedTry] = useState(trys);
   const [showTry, setShowTry] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const {toggleLoading} = useUI();
 
   const onSubmit = async (data: LoginFormData) => {
-    setLoading(true);
+    toggleLoading(true);
 
     const payload = {
       username: data.username,
@@ -62,7 +62,7 @@ const LoginForm = () => {
         }else{
           router.push('/reset-password');
         }
-        setLoading(false);
+        toggleLoading(false);
       })
       .catch((error) => {
         setShowTry(true);
@@ -104,6 +104,7 @@ const LoginForm = () => {
             });
           }
         }
+        toggleLoading(false);
       });
   };
 
@@ -112,22 +113,6 @@ const LoginForm = () => {
       ? `3 intentos fallidos. esperar 15min para volver intentarlo`
       : `Intento fallido, quedan ${failedTry}/${trys} intentos`;
   };
-  // const useLocalStorage = (key: string, initialValue: string): any => {
-  //   const [value, setValu] = useState(initialValue);
-
-  //   useEffect(() => {
-  //     if (typeof window !== "undefined") {
-  //       const saved = localStorage.getItem(key);
-  //       if (saved) {
-  //         setValue("username", saved);
-  //         setValu(saved);
-  //         setRememberMe(true);
-  //       }
-  //     }
-  //   }, [key]);
-  //   return [value, setValu];
-  // };
-  // const [savedUsername, setSavedUsername] = useLocalStorage("username", "");
 
   useEffect(() => {
     if(rememberMe){

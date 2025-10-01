@@ -1,4 +1,4 @@
-import { authService } from "@/services/auth-services";
+import { authService } from "@/services/auth/auth-services";
 import { User } from "@/types/auth";
 import {
   combineReducers,

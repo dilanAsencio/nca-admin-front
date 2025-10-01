@@ -5,6 +5,11 @@
         text-[#FC4554];
 }
 
+.content-banner {
+    @apply
+        rounded-[0.5rem] border;
+}
+
 .p-errors {
     @apply
         text-[0.875rem]

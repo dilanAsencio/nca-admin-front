@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { login } from "@/providers/store";
-import { authService } from "@/services/auth-services";
+import { authService } from "@/services/auth/auth-services";
 import { LoginFormData } from "@/types/auth";
 import showToast from "@/utils/toast";
 

@@ -35,15 +35,6 @@ const SchoolPage: React.FC = () => {
     }
   };
 
-  // const getCampusSearch = async (search: string) => {
-  //   if(search.length >= 3){
-  //     getCampus(1, search);
-  //   } else {
-  //     getCampus(1,"");
-  //   }
-  //   setCurrentSearch(search);
-  // }
-
   const handleSearch = (term: string) => {
     const limitSearch = 3;
     setSearchTerm(term.length >= limitSearch ? term : "");

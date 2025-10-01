@@ -9,20 +9,28 @@ import Image from "next/image";
 const Admition2Section: React.FC = () => {
   return (
     <section
-      className={`${style["font-outfit"]} content-hero hidden
-      md:flex md:flex-col-reverse md:items-center
-      lg:flex-row md:gap-8`}
+      className={`${style["font-outfit"]}
+      flex flex-col items-center justify-center gap-[1rem]`}
     >
+      <div className="content-image relative flex items-center justify-center">
+        <Image
+          src="/assets/landing/img/admisiones-nexus-core-academico.png"
+          alt="admisiones-nexus-core-academico"
+          width={1112}
+          height={605}
+          loading="lazy"
+        />
+      </div>
       <div className="flex items-center justify-center">
         <div
           className="content-welcome
           flex flex-col gap-6 items-center
           lg:w-[28.25rem] lg:items-start"
         >
-          <span className="m-0 max-lg:text-center lg:text-start lg:max-w-[95%] custom-title">
-            Tu proceso en admisiones serán más rápidos y en un sólo lugar!
+          <span className="m-0 max-lg:text-center custom-title">
+            ¡Fácil, intuitivo y seguro!
           </span>
-          <p className="m-0 max-lg:text-center lg:text-start ">
+          <p className="m-0 max-lg:text-center ">
             Con Admisiones, puedes realizar tu proceso desde la comodidad de tu
             casa y de forma rápida.
           </p>
@@ -34,15 +42,6 @@ const Admition2Section: React.FC = () => {
             />
           </div>
         </div>
-      </div>
-      <div className="content-image relative ">
-        <Image
-          src="/assets/landing/img/admisiones-nexus-core-academico.png"
-          alt="admisiones-nexus-core-academico"
-          width={716}
-          height={501}
-          loading="lazy"
-        />
       </div>
     </section>
   );
