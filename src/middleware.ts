@@ -8,7 +8,7 @@ export function middleware(request: NextRequest) {
   
   
   // Rutas públicas
-  const publicRoutes = ["/login", "/forgot-password"];
+  const publicRoutes = ["/login", "/forgot-password", "/auth/register", "/auth/change-password"];
   const resetRoutes = ["/reset-password", "/change-password"];
 
   // Permitir acceso libre a /landing y subrutas

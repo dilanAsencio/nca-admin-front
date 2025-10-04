@@ -23,7 +23,7 @@ const PasswordStrengthIndicator: React.FC<PasswordStrengthIndicatorProps> = ({ p
       },
       {
         ...requerimentsList[1],
-        status: /[A-Z][a-b]/.test(password),
+        status: /^(?=.*[a-z])(?=.*[A-Z]).+$/.test(password),
       },
       {
         ...requerimentsList[2],

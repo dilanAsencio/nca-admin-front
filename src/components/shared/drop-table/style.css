@@ -2,6 +2,7 @@
 
 .custom-border-b {
     @apply
+        text-gray-900
         border-b
         border-solid
         border-[#DFDFDF];

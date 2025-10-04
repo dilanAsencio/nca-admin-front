@@ -1,5 +1,7 @@
 import React from "react";
 
+import "./style.css";
+
 interface TextAreaComponentProps {
   name: string;
   value?: string;
@@ -32,7 +34,7 @@ const TextAreaComponent: React.FC<TextAreaComponentProps> = ({
         placeholder={placeholder}
         rows={rows}
         disabled={disabled}
-        className={`form-control text-[1rem] w-full ${className}`}
+        className={`custom-textarea form-control text-[1rem] w-full ${className}`}
         {...register}
         />
     </>

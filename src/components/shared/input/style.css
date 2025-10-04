@@ -11,6 +11,12 @@
         bg-[#FFFFFF];
 }
 
+.custom-input::placeholder,
+.custom-textarea::placeholder {
+    @apply
+        text-[#B2B1B1];
+}
+
 .custom-input.input-search {
     @apply
         pl-[2.5rem]

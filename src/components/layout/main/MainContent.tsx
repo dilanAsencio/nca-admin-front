@@ -6,6 +6,7 @@ import SidebarMenu from "@/components/layout/sidebar/SidebarMenu";
 import { useSelector } from "react-redux";
 import { RootState } from "@/providers/store";
 import { usePathname, useRouter } from "next/navigation";
+import ReduxLoaderOverlay from "@/components/ui/ReduxLoaderOverlay";
 
 const MainContent: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { isOpenSidebar } = useUI();
@@ -13,16 +14,12 @@ const MainContent: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const router = useRouter();
   const pathname = usePathname();
   
-  const whiteList = ["/login", "/reset-password", "/forgot-password", "/change-password", "/landing"];
+  const whiteList = ["/login", "/reset-password", "/forgot-password", "/change-password", "/landing", "/auth/register", "/auth/change-password"];
   const isLandingRoute = pathname.startsWith("/landing");
-  // Redirige si ya está autenticado y está en una ruta pública
-  // useEffect(() => {
-  //   if (isAuthenticated && whiteList.includes(pathname)) {
-  //     router.replace("/");
-  //   }
-  // }, [isAuthenticated, pathname, router]);
+  
 
   return (<>
+    <ReduxLoaderOverlay />
     { isAuthenticated && !whiteList.includes(pathname) && !isLandingRoute && <Header />}
     { isAuthenticated && !whiteList.includes(pathname) && !isLandingRoute && <SidebarMenu />}
     <main

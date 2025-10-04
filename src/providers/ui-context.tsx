@@ -1,9 +1,10 @@
 "use client";
+
 import React, { createContext, useContext, useState } from 'react';
 
 interface SchoolFormData {
   basicData: any;
-  headquarters: any[];
+  branches: any[];
   certifications: any;
 }
 interface UiContextType {
@@ -13,20 +14,25 @@ interface UiContextType {
   toggleModule: (module: string) => void;
   isVisualCardMessage: boolean;
   toggleCardMessage: () => void;
-  isOppenModalColegio: boolean;
+  isOpenModalColegio: boolean;
   toggleModalColegio: () => void;
   isOpenModalNivel: boolean;
-  toggleModalNivel: () => void;
+  toggleModalNivel: (isOpen: boolean) => void;
   isOpenModalGrado: boolean;
-  toggleModalGrado: () => void;
+  toggleModalGrado: (isOpen: boolean) => void;
   logoNexus: string;
   logoSecure: string;
+  isLoading: boolean;
+  toggleLoading: (loading: boolean) => void;
+  iconsActions: { [key: string]: { path: string; alt: string } },
+  iconsActionsTable: { [key: string]: { path: string; alt: string } },
   
   stepsCreateSchool: { label: string; value: number; formChecked: boolean }[];
   handlerSteps: (s: number) => void;
+  handleCheckSteps: () => void;
   currentCampus: SchoolFormData;
   updateBasicData: (values: any) => void;
-  addHeadquarter: (headquarter: any[]) => void;
+  addBranches: (headquarter: any[]) => void;
   updateCertifications: (values: any) => void;
   resetForm: () => void;
 }
@@ -34,16 +40,32 @@ interface UiContextType {
 const UiContext = createContext<UiContextType | undefined>(undefined);
 
 export const UIProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [isOpenSidebar, setIsOpenSidebar] = useState(true);
-  const [isOppenModalColegio, setIsOppenModalColegio] = useState(false);
-  const [isOpenModalNivel, setIsOpenModalNivel] = useState(false);
-  const [isOpenModalGrado, setIsOpenModalGrado] = useState(false);
-  const [isVisualCardMessage, setIsVisualCardMessage] = useState(false);
+  const [isOpenSidebar, setIsOpenSidebar] = useState<boolean>(true);
+  const [isOpenModalColegio, setIsOppenModalColegio] = useState<boolean>(false);
+  const [isOpenModalNivel, setIsOpenModalNivel] = useState<boolean>(false);
+  const [isOpenModalGrado, setIsOpenModalGrado] = useState<boolean>(false);
+  const [isVisualCardMessage, setIsVisualCardMessage] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectedModule, setSelectedModule] = useState<string | null>("dashboard");
-  const [logoNexus, setLogoNexus] = useState("/assets/img/logo-nexuscore.png");
-  const [logoSecure, setLogoSecure] = useState("/assets/img/logo-secure.png");
+  const [logoNexus, setLogoNexus] = useState<string>("/assets/img/logo-nexuscore.png");
+  const [logoSecure, setLogoSecure] = useState<string>("/assets/img/logo-secure.png");
+
+  const iconsActions: { [key: string]: { path: string; alt: string } } = {
+    edit: { path: "/assets/icon/edit-contained.svg", alt: "Editar" },
+    delete: { path: "/assets/icon/trash-02.svg", alt: "Eliminar" },
+    add: { path: "/assets/icon/plus-03.svg", alt: "Agregar" },
+    // puedes agregar más acciones aquí
+  };
+
   
-  const [stepsCreateSchool, setStepsCreateSchool] = useState([
+  const iconsActionsTable: { [key: string]: { path: string; alt: string } } = {
+    edit: { path: "/assets/icon/edit-contained-purple.svg", alt: "Editar" },
+    delete: { path: "/assets/icon/trash-02-red.svg", alt: "Eliminar" },
+    add: { path: "/assets/icon/plus-03.svg", alt: "Agregar" },
+    // puedes agregar más acciones aquí
+  };
+  
+  const [stepsCreateSchool, setStepsCreateSchool] = useState<any[]>([
     { label: "Datos básicos", value: 1, formChecked: false },
     { label: "Datos infraestructura", value: 2, formChecked: false },
     { label: "Programas y Certificaciones", value: 3, formChecked: false },
@@ -56,9 +78,19 @@ export const UIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
     );
   };
   
+ const handleCheckSteps = () => {
+    setStepsCreateSchool((prevSteps) =>
+      prevSteps.map((step) => ({ ...step, formChecked: true }))
+    );
+  };
+
+  const toggleLoading = (loading: boolean) => {
+    setIsLoading(loading);
+  }
+  
   const [currentCampus, setCurrentCampus] = useState<SchoolFormData>({
     basicData: {},
-    headquarters: [],
+    branches: [],
     certifications: {},
   });
 
@@ -67,10 +99,10 @@ export const UIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
     storageData(currentCampus);
   };
 
-  const addHeadquarter = (headquarter: any[]) => {
+  const addBranches = (headquarter: any[]) => {
     setCurrentCampus((prev) => ({
       ...prev,
-      headquarters: [...headquarter],
+      branches: [...headquarter],
     }));
     storageData(currentCampus);
   };
@@ -81,7 +113,7 @@ export const UIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
   };
 
   const resetForm = () => {
-    setCurrentCampus({ basicData: {}, headquarters: [], certifications: {} });
+    setCurrentCampus({ basicData: {}, branches: [], certifications: {} });
   };
 
   const storageData = (data: any) => {
@@ -105,11 +137,11 @@ export const UIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
   const toggleModalColegio = () => {
     setIsOppenModalColegio(prev => !prev);
   };
-  const toggleModalNivel = () => {
-    setIsOpenModalNivel(prev => !prev);
+  const toggleModalNivel = (isOpen: boolean) => {
+    setIsOpenModalNivel(isOpen);
   };
-  const toggleModalGrado = () => {
-    setIsOpenModalGrado(prev => !prev);
+  const toggleModalGrado = (isOpen: boolean) => {
+    setIsOpenModalGrado(isOpen);
   };
 
   const value = { 
@@ -119,7 +151,7 @@ export const UIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
     toggleModule,
     isVisualCardMessage,
     toggleCardMessage,
-    isOppenModalColegio,
+    isOpenModalColegio,
     toggleModalColegio,
     isOpenModalNivel,
     toggleModalNivel,
@@ -127,7 +159,12 @@ export const UIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
     toggleModalGrado,
     logoNexus,
     logoSecure,
-    currentCampus, updateBasicData, addHeadquarter, updateCertifications, resetForm, stepsCreateSchool, handlerSteps
+    isLoading,
+    toggleLoading,
+    iconsActions,
+    handleCheckSteps,
+    iconsActionsTable,
+    currentCampus, updateBasicData, addBranches, updateCertifications, resetForm, stepsCreateSchool, handlerSteps
   };
 
   return (

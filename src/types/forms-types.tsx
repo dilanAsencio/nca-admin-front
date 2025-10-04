@@ -1,12 +1,39 @@
-export interface Branches {
+export interface AcademicLevel {
+  campusBranchId: string;
+  name: string;
+  description?: string;
+  code?: string;
+  levelOrder?: number;
+  status?: string,
+  valid?: boolean
+}
+
+export interface AcademicGrade {
+  academicLevelId: string;
+  name: string;
+  description?: string;
+  code?: string;
+  gradeOrder?: number;
+  maxCapacity?: number;
+  status?: string;
+  enrollmentOpen?: boolean;
+  defaultMaxCapacity?: number;
+  defaultEnrollmentOpen?: boolean;
+  defaultStatus?: string;
+  valid?: boolean;
+}
+
+export interface BranchesType {
   id?: string;
   name: string;
+  campus_id: string;
   title?: string;
   display?: boolean;
   department: string;
   city: string;
   neighborhood: string;
   photos: string[];
+  full_address?: string;
   street_type: string;
   street_name: string;
   number_primary: string;
@@ -16,6 +43,16 @@ export interface Branches {
   has_green_zones: boolean;
   has_laboratory: boolean;
   has_sports_zones: boolean;
+  academic_grade_count?: number;
+  academic_level_count?: number;
+  campus_info: CampusInfo;
+}
+
+interface CampusInfo {
+  code: string;
+  id: string;
+  logo_url: string;
+  name: string;
 }
 
 export interface Campus {

@@ -7,14 +7,14 @@ import style from "@/app/font.module.css";
 import Image from "next/image";
 import BreadcumbComponent from "@/components/shared/breadcumb/BreadcumbComponent";
 import StepComponent from "@/components/shared/stepByStep/StepComponent";
-import BasicDataForm from "./schoolForms/BasicDataForm";
-import HeadquartersForm from "./schoolForms/HeadquartersForm";
+import BasicDataForm from "./schoolForms/BasicData";
+import Branches from "./schoolForms/Branches";
 import CertifiedAndProgramsForm from "./schoolForms/Certified&Programs";
 
-const AcademicManagementForm: React.FC<{ onBack: () => void }> = ({
-  onBack,
+const AcademicManagementForm: React.FC<{ onBack: () => void, title: string }> = ({
+  onBack, title
 }) => {
-  const { stepsCreateSchool, handlerSteps, resetForm } = useUI();
+  const { stepsCreateSchool, handlerSteps, resetForm, handleCheckSteps } = useUI();
   const [currentStep, setCurrentStep] = useState(1);
   const handleBack = () => {
     onBack();
@@ -33,10 +33,10 @@ const AcademicManagementForm: React.FC<{ onBack: () => void }> = ({
             height={24}
           ></Image>
           <h5 className="text-[1.25rem] leading-[120%] font-medium m-0">
-            {"Crear Colegio - " + stepsCreateSchool[currentStep - 1].label}
+            {`${title} - ${stepsCreateSchool[currentStep - 1].label}`}
           </h5>
         </div>
-        <BreadcumbComponent items={[{ label: "Crear Colegio" }]} />
+        <BreadcumbComponent items={[{ label: title }]} />
       </div>
       <div
         className={
@@ -52,7 +52,7 @@ const AcademicManagementForm: React.FC<{ onBack: () => void }> = ({
         {currentStep === 1 && (
           <BasicDataForm onBack={handleBack} onNext={() => {handlerSteps(currentStep);setCurrentStep(currentStep + 1)}} />
         )}
-        {currentStep === 2 && <HeadquartersForm onBack={handleBack} onNext={() => {handlerSteps(currentStep);setCurrentStep(currentStep + 1)}} />}
+        {currentStep === 2 && <Branches onBack={handleBack} onNext={() => {handlerSteps(currentStep);setCurrentStep(currentStep + 1)}} />}
         {currentStep === 3 && <CertifiedAndProgramsForm onClose={handleBack} />}
       </div>
     </div>

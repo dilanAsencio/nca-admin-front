@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import DropdownComponent from "@/components/shared/dropdown/DropdownComponent";
 import InputComponent from "@/components/shared/input/InputComponent";
 import { InputImageComponent } from "@/components/shared/input/InputImage";
 import TextAreaComponent from "@/components/shared/input/TextAreaComponent";
@@ -11,7 +10,6 @@ import Image from "next/image";
 import ModalComponent from "@/components/ui/ModalComponent";
 import { useForm } from "react-hook-form";
 import { transformarCadena } from "@/utils/utils";
-import TooltipComponent from "@/components/ui/TooltipComponent";
 import ButtonComponent from "@/components/shared/button/ButtonComponent";
 
 const CertifiedAndProgramsForm: React.FC<{ onClose: () => void }> = ({onClose}) => {
@@ -25,7 +23,8 @@ const CertifiedAndProgramsForm: React.FC<{ onClose: () => void }> = ({onClose}) 
     setError,
   } = useForm();
 
-    const [showModalProgram, setShowModalProgram] = useState(false);
+    const [showModalProgram, setShowModalProgram] = useState<boolean>(false);
+    const [confirmation, setConfirmation] = useState<boolean>(false);
     const [previewLogoProgram, setPreviewLogoProgram] = useState<string | null>(null);
 
     const [models, setModels] = useState([
@@ -69,6 +68,10 @@ const CertifiedAndProgramsForm: React.FC<{ onClose: () => void }> = ({onClose}) 
         programs.push(program);
         
         clearModalProgram();
+    };
+
+    const onSubmit = () => {
+        setConfirmation(true);
     };
 
     const clearModalProgram = () => {
@@ -146,7 +149,7 @@ const CertifiedAndProgramsForm: React.FC<{ onClose: () => void }> = ({onClose}) 
                 />
                 <ButtonComponent
                     className="primary"
-                    onClick={onClose}
+                    onClick={() => onSubmit}
                     type="submit"
                     label="Guardar"
                 />
@@ -154,7 +157,7 @@ const CertifiedAndProgramsForm: React.FC<{ onClose: () => void }> = ({onClose}) 
             </div>
         </div>
         { showModalProgram &&
-            <ModalComponent handlerModal={toggleAddProgramModal} handlerSubmit={handleAddProgram} labelBtnAccept="Agregar" title="Agregar Programa">
+            <ModalComponent handleModal={toggleAddProgramModal} handleSubmit={handleAddProgram} labelBtnAccept="Agregar" title="Agregar Programa">
                 <div className="p-4">
                     <div className="grid grid-cols-2 gap-y-[1rem] gap-x-[1rem] pb-[1rem]">
                         <InputComponent
@@ -185,6 +188,14 @@ const CertifiedAndProgramsForm: React.FC<{ onClose: () => void }> = ({onClose}) 
                                 register={register("descriptionProgram")}/>
                         </div>
                     </div>
+                </div>
+            </ModalComponent>
+        }
+        
+        { confirmation &&
+            <ModalComponent handleModal={() => setConfirmation(prev => !prev)} handleSubmit={() => {setConfirmation(false); onClose();}} labelBtnAccept="Acepar" title="Crear Colegio">
+                <div className="p-[1rem] flex justify-center">
+                    <span className="m-0 text-center max-w-[80%]">Está seguro que desea  crear la el colegio con la información, e imágenes suministradas?</span>
                 </div>
             </ModalComponent>
         }
