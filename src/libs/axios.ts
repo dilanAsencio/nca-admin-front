@@ -1,17 +1,12 @@
 import axios from 'axios';
+import Router from 'next/router';
 
-const instance = axios.create({
-  baseURL: `${process.env.NEXT_PUBLIC_API_URL}`,
-  headers: {
-    'Content-Type': 'application/json',
-    'X-Tenant-ID': '292084ef-6338-41f9-82c5-9ea04997fca7'
-  },
-});
+const instance = axios.create({});
 
 // Interceptor de solicitud
 instance.interceptors.request.use((config) => {
   // se agrega el token de auth
-  const token = typeof window !== "undefined" ? localStorage.getItem("auth_token") : null;
+  const token = typeof window !== "undefined" ? localStorage.getItem("auth_token") : null;  
   if (token) {
     config.headers['Authorization'] = `Bearer ${token}`;
   }
@@ -23,7 +18,33 @@ instance.interceptors.request.use((config) => {
 // Interceptor de respuesta
 instance.interceptors.response.use(
   (response) => response,
-  (error) => {
+  async (error) => {
+    if (error.response?.status === 401) {
+      const refreshToken = localStorage.getItem("refresh_token");
+
+      if (refreshToken) {
+        try {
+          // intentar refrescar token
+          const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`, {
+            refreshToken,
+          });
+          const newToken = res.data.accessToken;
+
+          // guardar y reintentar request original
+          localStorage.setItem("auth_token", newToken);
+          error.config.headers.Authorization = `Bearer ${newToken}`;
+          return instance(error.config);
+        } catch (refreshError) {
+          // refresh falló → limpiar sesión
+          localStorage.clear();
+          Router.push("/login"); // App Router: router.push("/login")
+        }
+      } else {
+        // No hay refresh → logout directo
+        localStorage.clear();
+        Router.push("/login");
+      }
+    }
     const { response } = error;
     if (response) {
       return Promise.reject(error);

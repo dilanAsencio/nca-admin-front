@@ -4,13 +4,13 @@ import React, { useEffect, useState } from "react";
 import Search from "@/components/public/school/search/Search";
 import Filter from "@/components/public/school/filter/Filter";
 import "./style.css";
-import { SchoolService } from "@/services/managementAcademic/school-services";
-import { SchoolResponse } from "@/types/forms-types";
+import { CampusService } from "@/services/managementAcademic/campus-services";
+import { CampusForm } from "@/app/core/interfaces/campus-interfaces";
 import CardSchool from "@/components/public/home/school/CardSchool";
 import Pagination from "@/components/shared/paginate/pagination";
 
 const SchoolPage: React.FC = () => {
-  const [campus, setCampus] = useState<SchoolResponse[] | null>(null);
+  const [campus, setCampus] = useState<CampusForm[] | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [currentSearch, setCurrentSearch] = useState<string>("");
@@ -21,10 +21,10 @@ const SchoolPage: React.FC = () => {
 
   const fetchCampus  = async (page: number, search?: string) => {
     try {
-      const response = await SchoolService.getCampus(
-        page - 1,
-        itemsPerPage,
-        search
+      const response = await CampusService.getCampus(
+        {page: page - 1,
+        size: itemsPerPage,
+        search:search}
       );
       if (response?.success) {
         setCampus(response.data.content);

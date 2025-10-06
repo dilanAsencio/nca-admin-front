@@ -1,5 +1,5 @@
 import { authService } from "@/services/auth/auth-services";
-import { User } from "@/types/auth";
+import { User } from "@/app/core/interfaces/auth-interfaces";
 import {
   combineReducers,
   configureStore,
@@ -29,7 +29,8 @@ export const loginThunk = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await authService.login(username, password, rememberMe);
+      const response = await authService.login({username, password, rememberMe});
+      
       // Si success es false, rechaza con el mensaje
       if (!response.success) {
         return rejectWithValue({ success: false, message: response.message });
@@ -74,8 +75,8 @@ const authSlice = createSlice({
         if (state.infoUser && action.payload?.data?.username) {
           state.infoUser.username = action.payload.data.username;
         }
-        state.token = action.payload?.data?.accessToken;
-        state.infoUser = action.payload?.data?.user || null;
+        state.token = action.payload?.data?.accessToken || null;
+        // state.infoUser = action.payload?.data?.user || null;
         state.isFirstLogin = action.payload?.data?.isFirstLogin || false;
         state.isAuthenticated = true;
         state.loading = false;

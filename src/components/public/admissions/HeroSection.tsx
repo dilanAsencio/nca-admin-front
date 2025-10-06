@@ -34,15 +34,13 @@ const HeroSection: React.FC = () => {
           </div>
         </div>
       </div>
-      <div className="content-image relative">
-        <Image
-          src="/assets/landing/img/hero-admisiones.png"
-          alt="Alia nuestra NCAHero volando"
-          width={556}
-          height={514}
-          loading="lazy"
-        />
-      </div>
+      <Image
+        src="/assets/landing/img/hero-admisiones.png"
+        alt="Alia nuestra NCAHero volando"
+        width={556}
+        height={514}
+        loading="lazy"
+      />
     </section>
   );
 };

@@ -1,115 +1,70 @@
-import axios from "@/libs/axios";
-import { Response } from "@/types/auth";
-import { AcademicGrade, AcademicLevel } from "@/types/forms-types";
+import { apiProxy } from "@/helpers/api-proxy";
+import { PaginateIMPL, Response } from "@/app/core/interfaces/api-interfaces";
+import { AcademicLevelForm, AcademicLevelResponse } from "@/app/core/interfaces/academicManagement/academic-level-interfaces";
 
 const API_V = process.env.NEXT_PUBLIC_API_V || "v1";
 
 export const LevelService = {
 
-  async createLevel({campusBranchId, description = "", name, code = "", levelOrder = 0, status = "active", valid = true}: AcademicLevel): Promise<Response> {
-    try {
-      const level = {campusBranchId, description, name, code, levelOrder, status, valid};
-      const response: Response = await axios.post(`${API_V}/academic-levels`,
-        level
-      );
-      const { success, data, message } = response.data;
+  /**
+   * Creates a new academic level.
+   * @param data - The data of the level to be created.
+   * @returns A Promise with a Response object containing the response data.
+   * @throws { success: false, error: string } - If the creation fails.
+   */
+  createLevel: async (
+    data: AcademicLevelForm
+  ): Promise<AcademicLevelResponse> => 
+    apiProxy("POST", `${API_V}/academic-levels`, undefined, data),
 
-      return {
-        success: success,
-        data: data,
-        message: message || "Creation successful",
-      };
-    } catch (error: any) {
-      // Intenta extraer el mensaje del backend si existe
-      let message = "Creation failed";
-      if (error.response && error.response.data) {
-        message = error.response.data.error;
-      }
-
-      // Lanza el mensaje para que el thunk lo capture
-      throw { success: false, error: message };
-    }
-  },
-  async createGrade({academicLevelId, description = "", name, code = "", gradeOrder = 0, maxCapacity = 0, status = "active", enrollmentOpen = false, defaultMaxCapacity = 0, defaultEnrollmentOpen = false, defaultStatus = "active", valid = true}: AcademicGrade): Promise<Response> {
-    try {
-      const level = {academicLevelId, description, name, code, gradeOrder, maxCapacity, enrollmentOpen, defaultMaxCapacity, defaultEnrollmentOpen, defaultStatus, status, valid};
-      const response: Response = await axios.post(`${API_V}/academic-grades`,
-        level
-      );
-      const { success, data, message } = response.data;
-
-      return {
-        success: success,
-        data: data,
-        message: message || "Creation successful",
-      };
-    } catch (error: any) {
-      // Intenta extraer el mensaje del backend si existe
-      let message = "Creation failed";
-      if (error.response && error.response.data) {
-        message = error.response.data.error;
-      }
-
-      // Lanza el mensaje para que el thunk lo capture
-      throw { success: false, error: message };
-    }
-  },
-  async getLevels(page: number = 0, size: number = 20, sort: string = "levelOrder", direction: string = "ASC"): Promise<Response> {
-    try {
-        
-      const response: any = await axios.get(`${API_V}/academic-levels?page=${page}&size=${size}&sort=${sort}&direction=${direction}`);
-      const { success, data, message } = response.data;
-        
-      return response.data;
-    } catch (error: any) {
-      // Intenta extraer el mensaje del backend si existe
-      let message = "Creation failed";
-      if (error.response && error.response.data) {
-        message = error.response.data.error;
-      }
-
-      // Lanza el mensaje para que el thunk lo capture
-      throw { success: false, error: message };
-    }
-  },
-  async getLevelsCampusBranch(campusBranchId: string, page: number = 0, size: number = 5, sort: string = "levelOrder", direction: string = "ASC"): Promise<Response> {
-    try {
-        
-      const response: any = await axios.get(`${API_V}/academic-levels/campus-branch/${campusBranchId}?page=${page}&size=${size}&sort=${sort}&direction=${direction}`);
-      const { success, data, message } = response.data;
-        
-      return response.data;
-    } catch (error: any) {
-      // Intenta extraer el mensaje del backend si existe
-      let message = "Creation failed";
-      if (error.response && error.response.data) {
-        message = error.response.data.error;
-      }
-
-      // Lanza el mensaje para que el thunk lo capture
-      throw { success: false, error: message };
-    }
-  },
+    
+  /**
+   * Updates an existing academic level.
+   * @param {AcademicLevelForm} data - The data of the level to be updated.
+   * @param {string} levelId - The ID of the level to update.
+   * @returns A Promise with a Response object containing the response data.
+   * @throws { success: false, error: string } - If the update fails.
+   */
+  updateLevel: async (
+    data: AcademicLevelForm,
+    levelId: string
+  ): Promise<AcademicLevelResponse> => 
+    apiProxy("PUT", `${API_V}/academic-levels/${levelId}`, undefined, data),
   
-  async deleteLevel(levelId: string): Promise<Response> {
-    try {
-      const response: Response = await axios.delete(`${API_V}/academic-levels/${levelId}`);
-      const { success, data, message } = response.data;
+    
+  /**
+   * Retrieves a list of academic levels.
+   * @param {PaginateIMPL} [paginate] - The pagination data to use when retrieving the levels.
+   * @returns A Promise with a Response object containing the response data.
+   * @throws { success: false, error: string } - If the retrieval fails.
+   */
+  getLevels: async (
+    paginate?: PaginateIMPL
+  ): Promise<Response<AcademicLevelResponse>> => 
+    apiProxy("GET", `${API_V}/academic-levels`, paginate),
+  
 
-      return {
-        success: success,
-        data: data,
-        message: message || "Delete successful",
-      };
-    } catch (error: any) {
-      // Intenta extraer el mensaje del backend si existe
-      let message = "Delete failed";
-      if (error.response && error.response.data) {
-        message = error.response.data.error;
-      }
-
-      // Lanza el mensaje para que el thunk lo capture
-      throw { success: false, error: message };
-    }
-  },
+  /**
+   * Retrieves a list of academic levels filtered by a campus branch ID.
+   * @param brancheId - The ID of the campus branch to filter the levels by.
+   * @param {PaginateIMPL} [paginate] - The pagination data to use when retrieving the levels.
+   * @returns A Promise with a Response object containing the response data.
+   * @throws { success: false, error: string } - If the retrieval fails.
+   */
+  getLevelsCampusBranch: async (
+    brancheId: string,
+    paginate?: PaginateIMPL
+  ): Promise<Response<AcademicLevelResponse>> => 
+    apiProxy("GET", `${API_V}/academic-levels/campus-branch/${brancheId}`, paginate),
+  
+  /**
+   * Deletes an academic level given its ID.
+   * @param levelId - The ID of the academic level to delete.
+   * @returns A Promise with a Response object containing the response data.
+   * @throws { success: false, error: string } - If the deletion fails.
+   */
+  deleteLevel: async (
+    levelId: string,
+  ): Promise<Response> => 
+    apiProxy("DELETE", `${API_V}/academic-levels/${levelId}`),
 };

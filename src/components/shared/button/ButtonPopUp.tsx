@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ButtonPopUpProps } from "@/types/componentsShared";
+import { ButtonPopUpProps } from "@/app/core/interfaces/shared-interfaces";
 import "./style.css";
 import ButtonComponent from "./ButtonComponent";
 import Image from "next/image";

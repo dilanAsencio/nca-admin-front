@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 .content-hero {
-    @apply flex flex-col-reverse items-center md:flex-row md:gap-8;
+    @apply flex flex-col-reverse items-center md:flex-row md:gap-[1rem];
 }
 .content-hero {
     @apply text-gray-900;

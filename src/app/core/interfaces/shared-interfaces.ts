@@ -1,0 +1,82 @@
+import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
+import { FontAwesomeIconProps, FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Icons } from "next/dist/lib/metadata/types/metadata-types";
+
+export interface ButtonComponentProps {
+    blockAccess?: boolean;
+    type?: "button" | "submit" | undefined;
+    size?: "small" | "normal";
+    label?: string;
+    icon?: {path: string; alt: string};
+    // iconFont?: IconDefinition;
+    loading?: boolean;
+    className?: string;
+    onClick?: () => void;
+}
+
+interface PopUpOption {
+  label: string;
+  icon?: {path: string; alt: string};
+  onClick: () => void;
+}
+
+export interface ButtonPopUpProps extends ButtonComponentProps {
+  options: PopUpOption[];
+
+}
+
+export interface CheckComponentProps {
+    checked: boolean;
+    setChecked: () => void;
+    label?: string;
+    name: string;
+    typeCheck?: "checkbox" | "checkbadge";
+}
+
+export interface InputComponentProps {
+    value?: string | number;
+    disabled?: boolean;
+    isInputSearch?: boolean;
+    name: string;
+    label?: string;
+    typeInput?: string;
+    placeholder?: string;
+    register?: any;
+    className?: string;
+    onKeyUp?: (e: any) => void;
+    required?: boolean;
+    error?: string;
+}
+
+interface options {
+    label: string;
+    value: string;
+}
+export interface DropdownComponentProps {
+    isMulti?: boolean;
+    disabled?: boolean;
+    name: string;
+    label?: string;
+    placeholder?: string;
+    value?: string | string[];
+    className?: string;
+    options: options[];
+    onChange?: (value: string | string[]) => void;
+    required?: boolean;
+    error?: string;
+}
+
+
+export interface CountdownTimerProps {
+  initialSeconds: number;
+  onFinish?: () => void;
+}
+
+export interface AttemptCounterProps {
+  attempts: number;
+  maxAttempts?: number;
+}
+
+export interface ErrorAlertProps {
+  children: React.ReactNode;
+}

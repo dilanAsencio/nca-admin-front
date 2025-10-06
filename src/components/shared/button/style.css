@@ -9,7 +9,6 @@
         items-center
         justify-center
         whitespace-nowrap
-        /* w-fit */
         min-w-fit
         max-w-full;
 }
@@ -50,7 +49,7 @@
 
         /* :focus */
         focus:bg-[#B086FA]
-        focus:border-[0.068rem]
+        focus:border
         focus:border-solid
         focus:border-[#610CF4]
 
@@ -69,7 +68,7 @@
 
         /* :focus */
         focus:bg-[#FFE193]
-        focus:border-[0.068rem]
+        focus:border
         focus:border-solid
         focus:border-[#FFD464]
 
@@ -90,7 +89,7 @@
 
         /* :focus */
         focus:bg-[#FF737F]
-        focus:border-[0.068rem]
+        focus:border
         focus:border-solid
         focus:border-[#FC4554]
 
@@ -101,7 +100,7 @@
 .btn-custom.tertiary-outline {
     @apply
         text-[#262626]
-        border-2
+        border
         border-solid
         border-[#FC4554]
 
@@ -113,7 +112,7 @@
 
         /* :focus */
         focus:bg-[#FF737F]
-        focus:border-[0.068rem]
+        focus:border
         focus:border-solid
         focus:border-[#FC4554]
 

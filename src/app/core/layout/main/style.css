@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+@media screen and (width <= 768px) {
+    .sidebar {
+        @apply
+            hidden;
+    }
+    .content-main {
+        @apply
+            ml-0;
+    }
+    .sidebar.hv-active {
+        @apply
+            block
+            z-10;
+    }
+}
