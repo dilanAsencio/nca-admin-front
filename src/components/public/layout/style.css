@@ -4,5 +4,5 @@
     @apply
         bg-[url("/assets/landing/background.png")]
         bg-repeat-y
-        bg-auto;
+        bg-cover;
 }

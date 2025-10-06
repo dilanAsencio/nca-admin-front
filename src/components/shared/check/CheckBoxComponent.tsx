@@ -1,5 +1,5 @@
 import React from "react";
-import { CheckComponentProps } from "@/types/componentsShared";
+import { CheckComponentProps } from "@/app/core/interfaces/shared-interfaces";
 import "./style.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";

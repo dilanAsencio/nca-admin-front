@@ -1,12 +1,11 @@
 "use client";
 
-import { useSelector } from "react-redux";
-import { RootState } from "@/providers/store";
 import FullScreenLoader from "./FullScreenLoader";
+import { useUI } from "@/providers/ui-context";
 
 const ReduxLoaderOverlay = () => {
-  const loading = useSelector((state: RootState) => state.auth.loading);
-  return loading ? <FullScreenLoader /> : null;
+  const { isLoading } = useUI();
+  return isLoading ? <FullScreenLoader /> : null;
 };
 
 export default ReduxLoaderOverlay;

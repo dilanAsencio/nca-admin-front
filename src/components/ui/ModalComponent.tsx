@@ -8,10 +8,11 @@ import ButtonComponent from "../shared/button/ButtonComponent";
 const ModalComponent: React.FC<{
   title: string;
   children: React.ReactNode;
-  handlerModal: () => void;
-  handlerSubmit: () => void;
+  handleModal: () => void;
+  handleSubmit: () => void;
   labelBtnAccept?: string;
-}> = ({ title, children, handlerModal, handlerSubmit, labelBtnAccept }) => {
+  sizeModal?: 'small' | 'medium' | 'large';
+}> = ({ title, children, handleModal, handleSubmit, labelBtnAccept, sizeModal }) => {
 
   return (
     <>
@@ -20,16 +21,20 @@ const ModalComponent: React.FC<{
         className="fixed inset-0 z-20 flex justify-center items-center w-full h-full bg-[#6c757d7a]"
       >
         <div className={clsx(
-          "relative bg-white rounded-[0.5rem]",
-          "max-w-1/2 w-full"
+          "relative bg-white rounded-[0.5rem] w-full",
+          sizeModal === 'small' && "max-w-[30rem] max-h-[20rem]",
+          sizeModal === 'medium' && "max-w-[55rem] max-h-[21rem]",
+          sizeModal === 'large' && "max-w-[70rem] max-h-[65rem]",
+          !sizeModal && "max-w-[50rem]",
+          "flex flex-col",
         )}>
           {/* Modal header */}
-          <div className="flex items-center justify-between pt-[1.5rem] px-[1.5rem]">
-            <h3 className="text-xl font-semibold text-gray-900">{title}</h3>
+          <div className="absolute top-0 flex items-center w-full pt-[1.5rem] px-[1.5rem]">
+            <span className="m-0 text-[1.25rem] font-medium text-[#262626]">{title}</span>
             <button
               type="button"
               onClick={() => {
-                handlerModal();
+                handleModal();
               }}
               className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
             >
@@ -50,22 +55,25 @@ const ModalComponent: React.FC<{
               <span className="sr-only">Close modal</span>
             </button>
           </div>
-          {children}
-          <div className="flex justify-end gap-[0.75rem] px-[1.5rem] py-[0.5rem]">
+          <div className="mt-[60px] pt-[1.5rem] p-[1rem] h-[60vh] overflow-auto">
+            {children}
+          </div>
+          <div className="flex justify-end gap-[0.75rem] px-[1rem] py-[1rem]">
             <ButtonComponent
               className="secondary"
               label="Cancelar"
-              onClick={handlerModal}
+              onClick={handleModal}
             />
             <ButtonComponent
               className="primary"
               label={labelBtnAccept || "Agregar"}
-              onClick={handlerSubmit}
+              onClick={handleSubmit}
             />
           </div>
-          <div className="flex flex-row gap-4">
-            <div className="bg-[#FC4554] h-3 w-[85%] rounded-bl-[0.5rem]"></div>
-            <div className="bg-[#FFD464] h-3 w-[15%] rounded-br-[0.5rem]"></div>
+          <div className="absolute bottom-0 left-0 w-full h-[0.5rem] flex flex-row gap-[1rem]">
+            <div className="bg-[#FC4554] h-[0.5rem] w-[64%] rounded-bl-[0.5rem]"></div>
+            <div className="bg-[#FFD464] h-[0.5rem] w-[18%]"></div>
+            <div className="bg-[#610CF4] h-[0.5rem] w-[18%] rounded-br-[0.5rem]"></div>
           </div>
         </div>
       </div>

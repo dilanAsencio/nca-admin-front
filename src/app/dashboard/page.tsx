@@ -1,40 +1,363 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import BreadcumbComponent from "@/components/shared/breadcumb/BreadcumbComponent";
 import style from "@/app/font.module.css";
 import CardComponent from "@/components/dashboard/CardComponent";
-import AcademicManagementForm from "@/components/academicManagement/AcademicManagement";
+import AcademicManagementFormsComponent from "@/components/academicManagement/AcademicManagementComponent";
+import clsx from "clsx";
+import Image from "next/image";
+import { CampusService } from "@/services/managementAcademic/campus-services";
+import ButtonComponent from "@/components/shared/button/ButtonComponent";
+import { BranchesForm, BranchesResponse } from "@/app/core/interfaces/academicManagement/branches-interfaces";
+import BranchesViewer from "@/components/academicManagement/campusForms/BranchesViewerComponent";
+import { Response } from "@/app/core/interfaces/api-interfaces";
+
+import "./style.css";
+import { LevelService } from "@/services/managementAcademic/level-services";
+import * as alerts from "@/utils/alerts";
+import { useUI } from "@/providers/ui-context";
+import BranchesFormComponent from "@/components/academicManagement/campusForms/BranchesFormComponent";
+import ButtonPopUpComponent from "@/components/shared/button/ButtonPopUp";
+import { BranchesService } from "@/services/managementAcademic/branches-service";
+import ModalLevelForm from "@/components/dashboard/ModalLevelForm";
+import ModalGradeForm from "@/components/dashboard/ModalGradeForm";
 
 const AcademicDashboard: React.FC = () => {
-  const columns = [
-    { nameField: "Nombre del nivel académico" },
-    { nameField: "Periodo académico" },
-    { nameField: "Sede" },
-    { nameField: "Valor nivel académico" },
-    { nameField: "Acciones" },
-  ]
+  
+  const { 
+    toggleLoading,
+    isOpenModalNivel,
+    isOpenModalGrado,
+    updateBasicData,
+    addBranches,
+    resetForm,
+    iconsActions,
+    handlerSteps,
+    handleDownChecks,
+    activeNavSteps,
+    handleOptionLevel,
+  } = useUI();
+  const [viewFormSchool, setViewFormSchool] = useState<boolean>(false);
 
-const [openForm, setOpenForm] = useState(false);
+  const [campus, setCampus] = useState<any[] | null>(null);
+  const [campusBranchId, setCampusBranchId] = useState<string | null>(null);
 
-const toggleCreateSchool = () => {
-  setOpenForm(prev => !prev);
-};
+  const [titleAcademic, setTitleAcademic] = useState<string>("Crear Colegio");
 
-  return (<>
-  {
-    openForm ? <AcademicManagementForm onBack={toggleCreateSchool} /> :
-    <div className="content-dashboard grid gap-[1.5rem]">
-      <div className={`header-content flex flex-row justify-between items-center h-[3.125rem] ${style["font-roboto"]}`}>
-        <span className="font-[700] text-[1.25rem]">Gestión Académica</span>
-        <BreadcumbComponent />
-      </div>
-      <div className="flex flex-row justify-center gap-[1.5rem]">
-        <CardComponent handleClick={toggleCreateSchool} labelButton="Crear Colegio" />
-      </div>
-    </div>
+  const imgSchool = { path: "/assets/img/icon-school.png", alt: "crear colegio", w: 59.8, h: 55.36 };
+  const iconAdd = iconsActions.add;
+  const iconEdit = iconsActions.edit;
+  const iconDelete = iconsActions.delete;
+  const showToast = alerts.showToast;
+  const showConfirm = alerts.showConfirm;
+
+  const getCampusBranches = async () => {
+    toggleLoading(true);
+    try {
+      const campusResp = await CampusService.getCampus({ page: 0, size: 10 });
+      if (campusResp?.success) {
+        let campus: any[] = [];
+        let campusDrop: any[] = [];
+        if (!campusResp.data?.content) {
+          showToast("No se encontraron colegios", "warning");
+          return
+        };
+        for (const campusItem of campusResp.data.content) {
+          if (campusItem && campusItem.id) {
+            const branchesResp = await BranchesService.getBranchesByCampus(campusItem.id, { page: 0, size: 10 }) as Response<any>;
+            let branches: BranchesResponse[] = [];
+            if (branchesResp?.success && branchesResp.data?.content) {
+              branches = branchesResp.data.content.map((branch: BranchesResponse) => ({
+                ...branch,
+                display: false,
+                title: `${branch.name} - ${branch.full_address || ""}`
+              }));
+            }
+            campus.push({
+              ...campusItem,
+              branches: branches || [],
+              displayAddBranch: false,
+            })
+          }
+          
+          campusDrop.push({
+            value: campusItem.id,
+            label: campusItem.name
+          })
+        }
+        setCampus(campus);
+        toggleLoading(false);
+      }
+    } catch (error: any) {
+      toggleLoading(false);
+      console.error(error);
+    }
+  };
+
+  const getLevelsBranches = async (branchId: string) => {
+    try {
+      const levelsResp: any = await LevelService.getLevelsCampusBranch(branchId, {page: 0, size: 10});
+      if (levelsResp?.content) {
+        let levels: any[] = [];
+        let levelsDrop: any[] = [];
+        for (const item of levelsResp.content) {
+          levels.push({
+            ...item,
+            display: false,
+          })
+          levelsDrop.push({
+            value: item.id,
+            label: item.name
+          })
+        }
+        handleOptionLevel(levelsDrop);
+      }
+    } catch (error: any) {
+      console.error(error);
+    }
+  };
+
+  const toggleCreateSchool = () => {
+    resetForm();
+    setTitleAcademic("Crear Colegio");
+    viewFormSchool && initialData();
+    setViewFormSchool(prev => !prev);
+    handleDownChecks();
+  };
+  
+  const handleAddBranche = (campus: any) => {
+    updateBasicData(campus);
+    setCampus((prevCampus) =>
+        prevCampus && prevCampus.map((item) => {
+          if(item.id === campus.id) {
+            return {
+              ...item,
+              displayAddBranch: !item.displayAddBranch
+            };
+          }
+          return item;
+        }) || []
+    );
+  };
+  const closedAddBranche = (campus: any) => {
+    setCampus((prevCampus) =>
+        prevCampus && prevCampus.map((item) => {
+          if(item.id === campus.id) {
+            return {
+              ...item,
+              displayAddBranch: false
+            };
+          }
+          return item;
+        }) || []
+    );
+    initialData();
   }
-  </>);
+
+  const handleBranches = (branche: any) => {
+    setCampus((prevCampus) =>
+        prevCampus && prevCampus.map((item) => {
+          if(item.id === branche.campus_id) {
+            return {
+              ...item,
+              branches: item.branches.map((branch: BranchesForm) =>
+                branch.name === branche.name
+                  ? {...branch, display: !branch.display}
+                  : branch
+              )
+            };
+          }
+          return item;
+        }) || []
+    );
+  };
+
+  const handleActions = (branche: any, op: "level" | "grade") => {
+    if(op === "level") {
+      setCampusBranchId(branche.id);
+    }
+    if(op === "grade") {
+      getLevelsBranches(branche.id);
+    }
+  }
+
+  const handleEditSchool = (infoCampus: any) => {    
+    updateBasicData(infoCampus);
+    addBranches(infoCampus.branches);
+    handlerSteps(1);
+    activeNavSteps(2);
+    setViewFormSchool(true);
+  }
+
+  const handleDeleteCampus = async (item: any) => {
+    const consfirm = await showConfirm(
+      "Está seguro?",
+      `está apunto de eliminar el colegio "${item.name}"`,
+      "warning",
+    );
+    if(consfirm) {
+      toggleLoading(true);
+      try {
+        CampusService.deleteCampus(item.id)
+          .then((response) => {
+            if (response?.success) {
+              toggleLoading(false);
+              showToast(`Colegio "${item.name}", eliminado con exito!`, "info");
+              initialData();
+            }
+          })
+          .catch((error) => {
+            toggleLoading(false);
+            console.error(error); 
+        });
+      } catch (error: any) {
+        console.error(error);
+      }
+    }
+  }
+
+  const optionsCampus = (item: any): { label: string; onClick: () => void, icon: {path: string; alt: string} }[] =>{
+    return [
+      {
+        label: "Editar colegio",
+        onClick: () => {
+          handleEditSchool(item);
+          setTitleAcademic("Editar Colegio");
+        },
+        icon: iconEdit,
+      },
+      {
+        label: "Eliminar colegio",
+        onClick: () => handleDeleteCampus(item),
+        icon: iconDelete,
+      },
+      {
+        label: "Crear otra sede",
+        onClick: () => handleAddBranche(item),
+        icon: iconAdd,
+      },
+    ]
+  }
+
+  const initialData = () => {
+    getCampusBranches();
+  }
+
+  useEffect(() => {
+    initialData();
+  },[]);
+
+  useEffect(() => {
+    if (!viewFormSchool) {
+      initialData();
+    }
+  }, [viewFormSchool]);
+  
+  return (
+    <>
+      {viewFormSchool ? (
+        <AcademicManagementFormsComponent title={titleAcademic} onBack={toggleCreateSchool} />
+      ) : (
+        <div
+          className={clsx(
+            "content-dashboard flex flex-col gap-[1.5rem]",
+            `${style["font-outfit"]}`,
+            "h-[85vh]"
+          )}
+        >
+          <div
+            className={`header-content flex flex-row justify-between items-center h-[3.125rem]`}
+          >
+            <span className="font-semibold text-[1.25rem]">
+              Gestión Académica
+            </span>
+            <BreadcumbComponent items={[{label:"Gestión Académica"}]} />
+          </div>
+          <div className="flex flex-row justify-center gap-[1.5rem]">
+            <CardComponent
+              checked={campus && campus.length > 0 ? true : false}
+              handleClick={toggleCreateSchool}
+              labelButton="Crear Colegio"
+              img={imgSchool}
+            />
+          </div>
+          <div className="flex flex-col flex-1 overflow-auto gap-[1rem]">
+            {campus && campus.length && (
+              <div className="card-schools">
+                <div className="content-school-table">
+                    <div className="body-school-table gap-[1rem]">
+                      {campus?.map((item: any, index: number) => (
+                        <div className="flex flex-col gap-[1rem]" key={index}>
+                          <div className="flex justify-between">
+                            <div className="flex gap-[0.5rem] max-[450px]:w-1/2">
+                              <Image
+                                src={`/assets/landing/icon/cards/school-icon-01.svg`}
+                                alt="icon-school"
+                                width={24}
+                                height={24}
+                                loading="lazy"
+                              />
+                              <span className={clsx(
+                                "m-0 font-medium text-[1rem] leading-[1.25rem] self-center",
+                                "inline-block w-min overflow-hidden text-ellipsis whitespace-nowrap",
+                              )}>
+                                {item?.name}
+                              </span>
+                            </div>
+                            <div className="flex gap-[0.75rem]">
+                              <ButtonPopUpComponent
+                                size="small"
+                                className="tertiary-outline"
+                                label="Acciones colegio"
+                                options={optionsCampus(item)}
+                              />
+                            </div>
+                          </div>
+                          { item.displayAddBranch && <>
+                            <hr className="m-0" />
+                            <BranchesFormComponent
+                              resetForm={true}
+                              hideForm={() => closedAddBranche(item)} /></>
+                          }
+                          <hr className="m-0" />
+                          {item.branches && item.branches?.map(
+                            (branche: BranchesResponse, index: number) => (
+                              <BranchesViewer
+                                branche={branche}
+                                key={index}
+                                ishandleBranche={handleBranches}
+                                deleteBranches={() => initialData()}
+                                handleActions={handleActions}
+                              />
+                            )
+                          )}
+                        </div>
+                      ))}
+                      <div className="flex justify-end">
+                        <ButtonComponent
+                          onClick={() => {setViewFormSchool(true); handlerSteps(1);}}
+                          className="primary"
+                          label="Crear otro colegio"
+                        />
+                      </div>
+                    </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+      
+      { isOpenModalNivel.isOpen && (
+        <ModalLevelForm onSubmit={() => {initialData()}} campusBranchId={campusBranchId} />
+      )}
+      
+      { isOpenModalGrado.isOpen && (
+        <ModalGradeForm onSubmit={() => {initialData()}} />
+      )}
+    </>
+  );
 }
 
 export default AcademicDashboard;

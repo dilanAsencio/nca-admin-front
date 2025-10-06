@@ -6,9 +6,15 @@
         py-[0.75rem]
         px-[1.25rem]
         rounded-[2.25rem]
-        border-[0.068rem]
+        border
         border-[#DFDFDF]
         bg-[#FFFFFF];
+}
+
+.custom-input::placeholder,
+.custom-textarea::placeholder {
+    @apply
+        text-[#B2B1B1];
 }
 
 .custom-input.input-search {
@@ -21,21 +27,21 @@
 
 .custom-input:focus {
     @apply
-        border-[0.068rem]
+        border
         border-solid
         border-[#610CF4]
         shadow-none;
 }
 .custom-input:invalid {
     @apply
-        border-[0.068rem]
+        border
         border-solid
         border-[#FC4554];
 }
 .custom-input:disabled {
     @apply
         bg-[#DFDFDF]
-        border-[0.068rem]
+        border
         border-solid
         border-[#DFDFDF]
         text-[#B2B1B1];

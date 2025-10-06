@@ -2,17 +2,20 @@
 
 .dropdown.drop {
     .custom-dropdown {
-        @apply rounded-t-[1.5rem] rounded-b-[0] border-b-0 border-[#610CF4];
+        @apply rounded-t-[1.5rem] rounded-b-[0] border-[#610CF4] border-b-0;
     }
     .custom-items > li:last-child {
         @apply rounded-b-[1.5rem]
     }
     .custom-items {
-        @apply rounded-t-[0] rounded-b-[1.5rem] border-[0.068rem] border-t-0 border-[#610CF4];
+        @apply rounded-t-[0] rounded-b-[1.5rem] border border-t-0 border-[#610CF4];
 
         .item-drop:hover {
             @apply bg-[#610CF4] text-white cursor-pointer;
         }
-    }
-    
+    }   
+}
+.custom-dropdown {
+    @apply
+        border border-solid border-[#DFDFDF] rounded-[2.25rem] p-[0.75rem];
 }

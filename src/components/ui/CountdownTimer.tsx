@@ -1,4 +1,4 @@
-import { CountdownTimerProps } from "@/types/componentsShared";
+import { CountdownTimerProps } from "@/app/core/interfaces/shared-interfaces";
 import React, { useEffect, useState } from "react";
 
 const CountdownTimer: React.FC<CountdownTimerProps> = ({

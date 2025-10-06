@@ -12,7 +12,7 @@ const menuItems = [
   { label: 'Home', name: 'home', href: '/landing', width: "auto" },
   { label: 'Colegios', name: 'colegios', href: '/landing/school', width: "auto" },
   { label: 'Inscríbete', name: 'inscripcion', href: '/landing', width: "auto" },
-  { label: 'Admisiones', name: 'admisiones', href: '/landing', width: "auto" },
+  { label: 'Admisiones', name: 'admisiones', href: '/landing/admissions', width: "auto" },
   { label: 'Certificaciones', name: 'certificaciones', href: '/landing', width: "auto" },
   { label: 'Noticias', name: 'noticias', href: '/landing', width: "auto" },
   { label: '¿Quienes Somos?', name: 'quienes-somos', href: '/landing', width: "8rem" },

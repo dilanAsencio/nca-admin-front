@@ -4,12 +4,12 @@
     @apply flex flex-col-reverse items-center md:flex-row md:gap-8;
 }
 .content-hero {
-    @apply text-[#262626];
+    @apply text-gray-900;
 }
 
 .custom-title {
     @apply
-        text-[#262626]
+        text-gray-900
         font-semibold
         text-[1.938rem]
         leading-[120%];

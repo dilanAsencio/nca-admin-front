@@ -8,7 +8,7 @@
   .content-profile {
     & .custom-profile {
       @apply 
-        border-[0.068rem]
+        border
         border-solid
         border-[#676767]
     }
@@ -18,7 +18,7 @@
     .content-profile {
       .custom-profile {
         @apply
-          border-[0.068rem]
+          border
           border-solid
           border-[#b086fa];
       }

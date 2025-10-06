@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import ButtonComponent from "@/components/shared/button/ButtonComponent";
 import style from "@/app/font.module.css";
 import "./style.css";
+import Image from "next/image";
+import clsx from "clsx";
 
 const CardSchool: React.FC<{
   nameSchool: string;
@@ -20,7 +22,7 @@ const CardSchool: React.FC<{
   return (
     <div
       className={`card-school ${style["font-outfit"]}
-        flex flex-col w-[21.438rem] rounded-[0.5rem] p-4 gap-4
+        flex flex-col w-[21.438rem] h-max rounded-[0.5rem] p-4 gap-4
         md:w-[21rem]
         lg:w-full`}
     >
@@ -35,6 +37,19 @@ const CardSchool: React.FC<{
           src="/assets/landing/icon/cards/logo-school-img.svg"
           alt="logo-school"
         />
+        <div className={clsx(
+          "favorite-school cursor-pointer",
+          `p-[0.5rem] absolute top-[0.5rem] right-[0.5rem] rounded-full`,
+          )}>
+          <Image
+            src={"/assets/icon/icon-heart.svg"}
+            alt="img-heart"
+            width={28}
+            height={28}
+            loading="lazy"
+            className="icon-favorite"
+          />
+        </div>
       </div>
       <div className="name-school p-1">
         <h5 className="font-medium text-[1.25rem]">{nameSchool}</h5>

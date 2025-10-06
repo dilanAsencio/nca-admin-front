@@ -1,17 +1,11 @@
 import axios from 'axios';
 
-const instance = axios.create({
-  baseURL: `${process.env.NEXT_PUBLIC_API_URL}`,
-  headers: {
-    'Content-Type': 'application/json',
-    'X-Tenant-ID': '2a9a9956-7eed-40d3-921a-cf40ea06ac6e'
-  },
-});
+const instance = axios.create({});
 
 // Interceptor de solicitud
 instance.interceptors.request.use((config) => {
   // se agrega el token de auth
-  const token = typeof window !== "undefined" ? localStorage.getItem("auth_token") : null;
+  const token = typeof window !== "undefined" ? localStorage.getItem("auth_token") : null;  
   if (token) {
     config.headers['Authorization'] = `Bearer ${token}`;
   }
