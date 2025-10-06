@@ -1,5 +1,5 @@
 import React from "react";
-import { ErrorAlertProps } from "@/types/componentsShared";
+import { ErrorAlertProps } from "@/app/core/interfaces/shared-interfaces";
 import "./style.css";
 
 const ErrorAlert: React.FC<ErrorAlertProps> = ({ children }) => (

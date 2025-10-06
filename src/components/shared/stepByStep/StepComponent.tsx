@@ -9,6 +9,7 @@ interface StepItem {
   label: string;
   value: number;
   formChecked: boolean;
+  navCheck: boolean;
 }
 
 interface StepIndicatorProps {
@@ -40,7 +41,7 @@ const StepComponent: React.FC<StepIndicatorProps> = ({ steps, currentStep, onSte
               />
             )}
             <div
-              onClick={() => {onStepClick(step.value)}} 
+              onClick={() => {step.navCheck && onStepClick(step.value)}}
               className={clsx(
                 "w-8 h-8 rounded-full z-10 flex items-center justify-center border-2 text-sm font-bold cursor-pointer",
                 // step.formChecked ? "cursor-pointer" : "cursor-not-allowed",

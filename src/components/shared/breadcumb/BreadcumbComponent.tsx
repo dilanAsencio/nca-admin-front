@@ -1,5 +1,6 @@
 "use client";
 
+import { useUI } from "@/providers/ui-context";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -18,6 +19,8 @@ export default function BreadcumbComponent({items}: BreadcumbComponentProps) {
   const pathname = usePathname();
   const segments = pathname.split("/").filter(Boolean);
 
+  const { toggleModule } = useUI();
+
   // Construye los items del breadcrumb
   const breadcrumbs: BreadcrumbItem[] = items
   ? items
@@ -30,7 +33,7 @@ export default function BreadcumbComponent({items}: BreadcumbComponentProps) {
     <nav aria-label="Breadcrumb">
       <ol className="flex items-center space-x-2 text-sm m-0 text-gray-500">
         <li>
-          <Link href="/" className="font-medium text-[0.75rem]" style={{ textDecoration: "none", color: "#515151" }}>
+          <Link href="/" className="font-medium text-[0.75rem]" onClick={() => toggleModule("dashboard")} style={{ textDecoration: "none", color: "#515151" }}>
             Dashboard
           </Link>
         </li>

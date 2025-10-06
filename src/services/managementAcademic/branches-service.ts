@@ -1,92 +1,77 @@
-import axios from "@/libs/axios";
-import { Response } from "@/types/auth";
+import { apiProxy } from "@/helpers/api-proxy";
+import { PaginateIMPL, Response } from "@/app/core/interfaces/api-interfaces";
+import { BranchesForm, BranchesResponse } from "@/app/core/interfaces/academicManagement/branches-interfaces";
 
 const API_V = process.env.NEXT_PUBLIC_API_V || "v1";
 
 export const BranchesService = {
-  async createBranch(campusId: string, branch: any): Promise<Response> {
-    try {
-        
-      const response: Response = await axios.post(`${API_V}/campus/${campusId}/branches`, branch);
-      const { success, data, message } = response.data;        
-      return {
-        success: success,
-        data: data,
-        message: message || "Creation successful",
-      };
-    } catch (error: any) {
-      // Intenta extraer el mensaje del backend si existe
-      let message = "Creation failed";
-      if (error.response && error.response.data) {
-        message = error.response.data.error;
-      }
 
-      // Lanza el mensaje para que el thunk lo capture
-      throw { success: false, error: message };
-    }
-  },
-  async getBranches(page: number = 0, size: number = 10, search: string = ""): Promise<Response> {
-    try {
-        
-      const response: Response = await axios.get(`${API_V}/campus/branches?page=${page}&size=${size}&sort=&search=${search}`);
-      const { success, data, message } = response.data;
-        
-      return {
-        success: success,
-        data: data,
-        message: message || "Creation successful",
-      };
-    } catch (error: any) {
-      // Intenta extraer el mensaje del backend si existe
-      let message = "Creation failed";
-      if (error.response && error.response.data) {
-        message = error.response.data.error;
-      }
+  /**
+   * Creates multiple branches at once given a campus ID and the branch data.
+   * @param campusId - The ID of the campus to create the branches in.
+   * @param data - The data of the branches to be created.
+   * @returns A Promise with a Response object containing the response data.
+   * @throws { success: false, error: string } - If the creation fails.
+   */
+  createBranche: async (
+    campusId: string,
+    data: BranchesForm
+  ): Promise<Response<BranchesResponse>> => 
+    apiProxy("POST", `${API_V}/campus/${campusId}/branches`, undefined, data),
 
-      // Lanza el mensaje para que el thunk lo capture
-      throw { success: false, error: message };
-    }
-  },
-  async getBranchesByCampus(idCampus: string, page: number = 0, size: number = 10, search: string = ""): Promise<Response> {
-    try {
-      const response: Response = await axios.get(`${API_V}/campus/${idCampus}/branches?page=${page}&size=${size}&sort=&search=${search}`);
-      const { success, data, message } = response.data;
-        
-      return {
-        success: success,
-        data: data,
-        message: message || "Creation successful",
-      };
-    } catch (error: any) {
-      // Intenta extraer el mensaje del backend si existe
-      let message = "Creation failed";
-      if (error.response && error.response.data) {
-        message = error.response.data.error;
-      }
+    
+  /**
+   * Updates a branch given its campus ID and branch ID, with the provided branch data.
+   * @param campusId - The ID of the campus the branch belongs to.
+   * @param brancheId - The ID of the branch to update.
+   * @param data - The data of the branch to update.
+   * @returns A Promise with a Response object containing the response data.
+   * @throws { success: false, error: string } - If the update fails.
+   */
+  updateBranches: async (
+    campusId: string,
+    brancheId: string,
+    data: BranchesForm
+  ): Promise<Response<BranchesResponse>> => 
+    apiProxy("POST", `${API_V}/campus/${campusId}/branches${brancheId}`, undefined, data),
 
-      // Lanza el mensaje para que el thunk lo capture
-      throw { success: false, error: message };
-    }
-  },
-  async deleteBranches(campusId: string, branchId: string): Promise<Response> {
-    try {
-      const response: Response = await axios.delete(`${API_V}/campus/${campusId}/branches/${branchId}`);
-      const { success, data, message } = response.data;
 
-      return {
-        success: success,
-        data: data,
-        message: message || "Delete successful",
-      };
-    } catch (error: any) {
-      // Intenta extraer el mensaje del backend si existe
-      let message = "Delete failed";
-      if (error.response && error.response.data) {
-        message = error.response.data.error;
-      }
+  /**
+   * Retrieves a list of branches from the database.
+   * @param {PaginateIMPL} [paginate] - The pagination data to use when retrieving the branches.
+   * @returns A Promise with a Response object containing the response data.
+   * @throws { success: false, error: string } - If the retrieval fails.
+   */
+  getBranches: async (
+    paginate?: PaginateIMPL
+  ): Promise<Response<BranchesResponse>> => 
+    apiProxy("GET", `${API_V}/campus/branches`, paginate),
 
-      // Lanza el mensaje para que el thunk lo capture
-      throw { success: false, error: message };
-    }
-  },
+
+  /**
+   * Retrieves a list of branches from the database, filtered by a campus ID.
+   * @param idCampus - The ID of the campus to filter the branches by.
+   * @param paginate - The pagination data to use when retrieving the branches.
+   * @returns A Promise with a Response object containing the response data.
+   * @throws { success: false, error: string } - If the retrieval fails.
+   */
+  getBranchesByCampus: async (
+    idCampus: string,
+    paginate?: PaginateIMPL,
+  ): Promise<Response<BranchesResponse>> => 
+    apiProxy("GET", `${API_V}/campus/${idCampus}/branches`, paginate),
+
+    
+  /**
+   * Deletes a branch from the database, given its campus ID and branch ID.
+   * @param campusId - The ID of the campus to delete the branch from.
+   * @param brancheId - The ID of the branch to delete.
+   * @returns A Promise with a Response object containing the response data.
+   * @throws { success: false, error: string } - If the deletion fails.
+   */
+  deleteBramchesByCampus: async (
+    campusId: string,
+    brancheId: string,
+  ): Promise<Response> => 
+    apiProxy("DELETE", `${API_V}/campus/${campusId}/branches/${brancheId}`),
 };

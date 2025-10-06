@@ -1,18 +1,15 @@
 @import "tailwindcss";
 
-.dropdown.drop {
-    .custom-dropdown {
-        @apply rounded-t-[1.5rem] rounded-b-[0] border-b-0 border-[#610CF4];
-    }
-    .custom-items > li:last-child {
-        @apply rounded-b-[1.5rem]
-    }
-    .custom-items {
-        @apply rounded-t-[0] rounded-b-[1.5rem] border-[0.068rem] border-t-0 border-[#610CF4];
+.p-dropdown.custom-dropdown , .p-multiselect.custom-dropdown-multi {
+    @apply
+        rounded-[1.5rem]
+        shadow-none
+        
+        in-active:rounded-b-none
+        has-active:border-b-0;
+}
 
-        .item-drop:hover {
-            @apply bg-[#610CF4] text-white cursor-pointer;
-        }
-    }
-    
+.p-dropdown-panel .p-dropdown-items {
+    @apply
+        p-0 m-0;
 }

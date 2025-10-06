@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
-import LoginForm from "@/components/auth/login/LoginForm";
-import AuthLayout from "@/components/auth/AuthLayout";
+import LoginForm from "@/app/core/auth/login/LoginForm";
+import AuthLayout from "@/app/core/auth/AuthLayout";
 
 const LoginPage = () => {
   return (

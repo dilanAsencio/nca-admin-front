@@ -5,7 +5,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { UIProvider } from "@/providers/ui-context";
 import { Provider } from "react-redux";
 import store, { persistor } from "@/providers/store";
-import MainContent from "@/components/layout/main/MainContent";
+import MainContent from "@/app/core/layout/main/MainContent";
 import { PrimeReactProvider } from 'primereact/api';
 
 import dynamic from "next/dynamic";

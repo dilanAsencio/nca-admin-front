@@ -5,7 +5,7 @@
 
   .content-profile {
     .custom-profile {
-      @apply border-[0.068rem] border-[#676767];
+      @apply border border-[#676767];
     }
   }
 

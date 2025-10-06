@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
-import AuthLayout from "@/components/auth/AuthLayout";
-import ChangePasswordForm from "@/components/auth/changePassword/ChangePasswordForm";
+import AuthLayout from "@/app/core/auth/AuthLayout";
+import ChangePasswordForm from "@/app/core/auth/changePassword/ChangePasswordForm";
 
 const ChangePasswordPage = () => {
   return (

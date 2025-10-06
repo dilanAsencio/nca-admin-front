@@ -1,6 +1,8 @@
 import React from "react";
 
 import "./style.css";
+import ErrorAlert from "@/components/ui/ErrorAlert";
+import { Tooltip } from "primereact/tooltip";
 
 interface TextAreaComponentProps {
   name: string;
@@ -12,6 +14,8 @@ interface TextAreaComponentProps {
   className?: string;
   register?: any; // para react-hook-form
   label?: string;
+  required?: boolean
+  error?: string
 }
 
 const TextAreaComponent: React.FC<TextAreaComponentProps> = ({
@@ -23,10 +27,15 @@ const TextAreaComponent: React.FC<TextAreaComponentProps> = ({
   disabled = false,
   className = "",
   register,
-  label
+  label,
+  required = false,
+  error
 }) => {
   return (<>
-        { label && <label className="font-normal text-[0.875rem]" htmlFor={name}>{label}</label>}
+        { label && (<>
+          {required && <Tooltip target={`.tp-text-${name}`} />}
+          <label className={`font-normal text-[0.875rem] tp-text-${name}`} htmlFor={name} data-pr-at="Este campo es requerido" data-pr-position="top" ><b className="text-red-500">{required && "* " }</b>{label}</label>
+        </>)}
         <textarea
         name={name}
         value={value}
@@ -37,6 +46,9 @@ const TextAreaComponent: React.FC<TextAreaComponentProps> = ({
         className={`custom-textarea form-control text-[1rem] w-full ${className}`}
         {...register}
         />
+        {error && 
+          <ErrorAlert>{error as string}</ErrorAlert>
+        }
     </>
   );
 };

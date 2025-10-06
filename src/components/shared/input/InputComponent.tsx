@@ -1,6 +1,7 @@
 import React from "react";
-import { InputComponentProps } from "@/types/componentsShared";
+import { InputComponentProps } from "@/app/core/interfaces/shared-interfaces";
 import "./style.css";
+import ErrorAlert from "@/components/ui/ErrorAlert";
 
 const InputComponent: React.FC<InputComponentProps> = (
     { 
@@ -12,7 +13,9 @@ const InputComponent: React.FC<InputComponentProps> = (
         name,
         onKeyUp,
         label,
-        isInputSearch = false
+        isInputSearch = false,
+        required = false,
+        error,
     }
 ) => {
 
@@ -37,7 +40,7 @@ const InputComponent: React.FC<InputComponentProps> = (
                             alt="search-icon"
                         />
                     </div>) : (<>
-                    {label && name && <label className="font-normal text-[0.875rem]" htmlFor={name}>{label}</label>}
+                    {label && name && <label className="font-normal text-[0.875rem]" htmlFor={name}><b className="text-red-500">{required && "* " }</b>{label}</label>}
                     <input
                         inputMode={typeInput === "number" ? "number" : "text"}
                         placeholder={placeholder}
@@ -47,7 +50,11 @@ const InputComponent: React.FC<InputComponentProps> = (
                         className={"custom-input form-control " + className}
                         onKeyUp={onKeyUp}
                         {...register}
-                    /></>) 
+                    />
+                    {error && 
+                        <ErrorAlert>{error as string}</ErrorAlert>
+                    }
+                    </>) 
             }
         </div>
     );

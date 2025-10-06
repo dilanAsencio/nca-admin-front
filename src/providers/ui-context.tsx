@@ -1,37 +1,47 @@
 "use client";
 
+import { AcademicGradeForm, AcademicGradeResponse } from '@/app/core/interfaces/academicManagement/academic-grade-interfaces';
+import { AcademicLevelForm, AcademicLevelResponse } from '@/app/core/interfaces/academicManagement/academic-level-interfaces';
+import { CampusForm } from '@/app/core/interfaces/academicManagement/campus-interfaces';
 import React, { createContext, useContext, useState } from 'react';
 
 interface SchoolFormData {
-  basicData: any;
+  basicData: any | {};
   branches: any[];
   certifications: any;
 }
 interface UiContextType {
   isOpenSidebar: boolean;
   toggleSidebar: () => void;
+  closeSidebar: () => void;
   selectedModule: string | null;
   toggleModule: (module: string) => void;
   isVisualCardMessage: boolean;
   toggleCardMessage: () => void;
   isOpenModalColegio: boolean;
   toggleModalColegio: () => void;
-  isOpenModalNivel: boolean;
-  toggleModalNivel: (isOpen: boolean) => void;
-  isOpenModalGrado: boolean;
-  toggleModalGrado: (isOpen: boolean) => void;
+  isOpenModalNivel: { isOpen: boolean; op: 0 | 1, data?: AcademicLevelResponse | null };
+  toggleModalNivel: (isOpen: boolean, op: 0 | 1, data?: AcademicLevelResponse | null) => void;
+  isOpenModalGrado: { isOpen: boolean; op: 0 | 1, data?: AcademicGradeResponse | null };
+  toggleModalGrado: (isOpen: boolean, op: 0 | 1, data?: AcademicGradeResponse | null) => void;
+  optionsLevels: {label: string; value: string}[];
+  handleOptionLevel: (levels: {label: string; value: string}[]) => void;
   logoNexus: string;
   logoSecure: string;
   isLoading: boolean;
   toggleLoading: (loading: boolean) => void;
   iconsActions: { [key: string]: { path: string; alt: string } },
   iconsActionsTable: { [key: string]: { path: string; alt: string } },
+  hoverSidebar: boolean;
+  setHoverSidebar: (value: boolean) => void;
   
-  stepsCreateSchool: { label: string; value: number; formChecked: boolean }[];
+  stepsCreateSchool: { label: string; value: number; formChecked: boolean, navCheck: boolean }[];
+  handleDownChecks: () => void;
   handlerSteps: (s: number) => void;
+  activeNavSteps: (s: number) => void;
   handleCheckSteps: () => void;
   currentCampus: SchoolFormData;
-  updateBasicData: (values: any) => void;
+  updateBasicData: (values: CampusForm) => void;
   addBranches: (headquarter: any[]) => void;
   updateCertifications: (values: any) => void;
   resetForm: () => void;
@@ -42,21 +52,26 @@ const UiContext = createContext<UiContextType | undefined>(undefined);
 export const UIProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isOpenSidebar, setIsOpenSidebar] = useState<boolean>(true);
   const [isOpenModalColegio, setIsOppenModalColegio] = useState<boolean>(false);
-  const [isOpenModalNivel, setIsOpenModalNivel] = useState<boolean>(false);
-  const [isOpenModalGrado, setIsOpenModalGrado] = useState<boolean>(false);
+  const [isOpenModalNivel, setIsOpenModalNivel] = useState<{ isOpen: boolean; op: 0 | 1, data?: AcademicLevelResponse | null}>({ isOpen: false, op: 0 });
+  const [isOpenModalGrado, setIsOpenModalGrado] = useState<{ isOpen: boolean; op: 0 | 1, data?: AcademicGradeResponse | null}>({ isOpen: false, op: 0 });
   const [isVisualCardMessage, setIsVisualCardMessage] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectedModule, setSelectedModule] = useState<string | null>("dashboard");
   const [logoNexus, setLogoNexus] = useState<string>("/assets/img/logo-nexuscore.png");
   const [logoSecure, setLogoSecure] = useState<string>("/assets/img/logo-secure.png");
+  const [hoverSidebar, setHoverSidebar] = useState<boolean>(false);
+  const [optionsLevels, setOptionsLevels] = useState<{label: string; value: string}[]>([]);
 
   const iconsActions: { [key: string]: { path: string; alt: string } } = {
-    edit: { path: "/assets/icon/edit-contained.svg", alt: "Editar" },
-    delete: { path: "/assets/icon/trash-02.svg", alt: "Eliminar" },
+    edit: { path: "/assets/icon/edit-contained-purple.svg", alt: "Editar" },
+    delete: { path: "/assets/icon/trash-02-red.svg", alt: "Eliminar" },
     add: { path: "/assets/icon/plus-03.svg", alt: "Agregar" },
     // puedes agregar más acciones aquí
   };
 
+  const handleOptionLevel = (levels: {label: string; value: string}[]) => {
+    setOptionsLevels(levels || []);
+  }
   
   const iconsActionsTable: { [key: string]: { path: string; alt: string } } = {
     edit: { path: "/assets/icon/edit-contained-purple.svg", alt: "Editar" },
@@ -66,14 +81,23 @@ export const UIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
   };
   
   const [stepsCreateSchool, setStepsCreateSchool] = useState<any[]>([
-    { label: "Datos básicos", value: 1, formChecked: false },
-    { label: "Datos infraestructura", value: 2, formChecked: false },
-    { label: "Programas y Certificaciones", value: 3, formChecked: false },
+    { label: "Datos básicos", value: 1, formChecked: false, navCheck: false },
+    { label: "Datos infraestructura", value: 2, formChecked: false, navCheck: false },
+    { label: "Programas y Certificaciones", value: 3, formChecked: false, navCheck: false },
   ]);
  const handlerSteps = (s: number) => {
     setStepsCreateSchool((prevSteps) =>
       prevSteps.map((step) =>
-        step.value === s ? { ...step, formChecked: true } : step
+        step.value === s ? { ...step, formChecked: true} : step
+      )
+    );
+    activeNavSteps(s);
+  };
+
+  const activeNavSteps = (s: number) => {
+    setStepsCreateSchool((prevSteps) =>
+      prevSteps.map((step) =>
+        step.value === s ? { ...step, navCheck: true } : step
       )
     );
   };
@@ -81,6 +105,11 @@ export const UIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
  const handleCheckSteps = () => {
     setStepsCreateSchool((prevSteps) =>
       prevSteps.map((step) => ({ ...step, formChecked: true }))
+    );
+  };
+  const handleDownChecks = () => {
+    setStepsCreateSchool((prevSteps) =>
+      prevSteps.map((step) => ({ ...step, formChecked: false, navCheck: false }))
     );
   };
 
@@ -94,7 +123,7 @@ export const UIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
     certifications: {},
   });
 
-  const updateBasicData = (values: any) => {
+  const updateBasicData = (values: CampusForm) => {
     setCurrentCampus((prev) => ({ ...prev, basicData: values }));
     storageData(currentCampus);
   };
@@ -102,7 +131,7 @@ export const UIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
   const addBranches = (headquarter: any[]) => {
     setCurrentCampus((prev) => ({
       ...prev,
-      branches: [...headquarter],
+      branches: [...prev.branches, ...headquarter],
     }));
     storageData(currentCampus);
   };
@@ -125,6 +154,10 @@ export const UIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
     localStorage.setItem("sidebarOpen", isOpenSidebar ? "0" : "1");
     setIsOpenSidebar(prev => !prev);
   };
+  const closeSidebar = () => {
+    localStorage.setItem("sidebarOpen", "0");
+    setIsOpenSidebar(false);
+  };
 
   const toggleModule = (module: string) => {
     setSelectedModule(module);
@@ -137,16 +170,19 @@ export const UIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
   const toggleModalColegio = () => {
     setIsOppenModalColegio(prev => !prev);
   };
-  const toggleModalNivel = (isOpen: boolean) => {
-    setIsOpenModalNivel(isOpen);
+  const toggleModalNivel = (isOpen: boolean, op: 0 | 1, data?: AcademicLevelResponse | null) => {
+    setIsOpenModalNivel({isOpen, op, data});
   };
-  const toggleModalGrado = (isOpen: boolean) => {
-    setIsOpenModalGrado(isOpen);
+  const toggleModalGrado = (isOpen: boolean, op: 0 | 1, data?: AcademicGradeResponse | null) => {
+    setIsOpenModalGrado({isOpen, op, data});
   };
 
-  const value = { 
+  const value = {
+    hoverSidebar,
+    setHoverSidebar,
     isOpenSidebar,
     toggleSidebar,
+    closeSidebar,
     selectedModule,
     toggleModule,
     isVisualCardMessage,
@@ -157,6 +193,8 @@ export const UIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
     toggleModalNivel,
     isOpenModalGrado,
     toggleModalGrado,
+    handleOptionLevel,
+    optionsLevels,
     logoNexus,
     logoSecure,
     isLoading,
@@ -164,6 +202,8 @@ export const UIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
     iconsActions,
     handleCheckSteps,
     iconsActionsTable,
+    handleDownChecks,
+    activeNavSteps,
     currentCampus, updateBasicData, addBranches, updateCertifications, resetForm, stepsCreateSchool, handlerSteps
   };
 
