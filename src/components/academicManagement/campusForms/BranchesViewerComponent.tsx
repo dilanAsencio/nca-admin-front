@@ -196,7 +196,7 @@ const BranchesViewer: React.FC<{
           title={`Sede del colegio: ${branche.campus_info &&branche?.campus_info.name}`}
           labelBtnAccept="Crear"
           sizeModal="large"
-          handleSubmit={() => {}}
+          buttonAcceptVisible={false}
           handleModal={() => setIsOpenModalBranche(false)} >
             <BranchesFormComponent
                 writeData={branche}

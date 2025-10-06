@@ -14,10 +14,12 @@ import ErrorAlert from "@/components/ui/ErrorAlert";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { campusSchema } from "@/app/core/schemas/forms-academic-schemas";
 import clsx from "clsx";
+import { Response } from "@/app/core/interfaces/api-interfaces";
+import { CampusForm } from "@/app/core/interfaces/academicManagement/campus-interfaces";
 
-const BasicDataForm: React.FC<{onBack: () => void, onNext: () => void}> = ({onBack, onNext}) => {
+const BasicDataForm: React.FC<{onBack: () => void, onNext: () => void, isEdit: boolean}> = ({onBack, onNext, isEdit}) => {
     const showToast = alerts.showToast;
-    const { updateBasicData, currentCampus, handlerSteps, activeNavSteps } = useUI();
+    const { updateBasicData, currentCampus, handlerSteps, activeNavSteps, toggleLoading } = useUI();
     const {
         control,
         register,
@@ -37,16 +39,28 @@ const BasicDataForm: React.FC<{onBack: () => void, onNext: () => void}> = ({onBa
     const [previewImg, setPreviewImg] = useState("");
 
     const onSubmit = async (data: any) => {
+        toggleLoading(true);
         try {
-            const response = await CampusService.createCampus(data);
+            let response: any;
+            if(isEdit){
+                response = await CampusService.updateCampus(currentCampus.basicData.id,data) as Response;
+            } else {
+                response = await CampusService.createCampus(data) as Response;
+            }
             if(response.success){
-                showToast(`Colegio ${response.data.name}, creado con exito!`, "success");
+                showToast(`Colegio ${response.data.name}, fue ${isEdit ? "actualizado" : "creado"} con exito!`, "success");
                 updateBasicData(response.data);
                 handlerSteps(1);
                 activeNavSteps(2);
+                toggleLoading(false);
                 onNext();
+            } else {
+                toggleLoading(false);
+                showToast(`Error al ${isEdit ? "actualizar" : "crear"} el colegio`, "error");
             }
         } catch (error: any) {
+            toggleLoading(false);
+            showToast(`Error al ${isEdit ? "actualizar" : "crear"} el colegio`, "error");
             console.error(error);
         }
     };
@@ -186,18 +200,48 @@ const BasicDataForm: React.FC<{onBack: () => void, onNext: () => void}> = ({onBa
                     placeholder='Año en que se fundó el colegio'
                     name="foundation_year"
                     register={register("foundation_year", {
-                        valueAsNumber: true
+                        valueAsNumber: true,
+                         onChange(e) {
+                            const value = e.target.value;
+                            if (value > new Date().getFullYear() - 4) {
+                                setError("foundation_year", {
+                                    type: "manual",
+                                    message: "El colegio debe haber sido fundado 4 años antes de la fecha actual",
+                                })
+                            } else if(value < 1){
+                                setError("foundation_year", {
+                                    type: "manual",
+                                    message: "El año debe ser mayor a 0",
+                                })
+                            } else {
+                                setError("foundation_year", { type: "manual", message: "" });
+                                setValue("foundation_year", value);
+                            }
+                         }
                     })}
                     required
                     error={errors.foundation_year && errors.foundation_year.message as string}
                     />
                 <InputComponent
                     typeInput="number"
-                    label="Canitad de estudiantes"
+                    label="Cantidad de estudiantes"
                     placeholder='Cantidad de estudiantes'
                     name="max_students"
                     register={register("max_students", {
-                        valueAsNumber: true
+                        valueAsNumber: true,
+                        min: 1,
+                        onChange(event) {
+                            const value = event.target.value;
+                            if (value < 1) {
+                                setError("max_students", {
+                                    type: "manual",
+                                    message: "La capacidad debe ser mayor a 0",
+                                });
+                            } else {
+                                setError("max_students", { type: "manual", message: "" });
+                                setValue("max_students", value);
+                            }
+                        },
                     })}
                     required
                     error={errors.max_students && errors.max_students.message as string}
@@ -273,7 +317,7 @@ const BasicDataForm: React.FC<{onBack: () => void, onNext: () => void}> = ({onBa
             </div>
         </div>
         <div className="w-full absolute bottom-0 bg-white">
-            <div className="flex justify-end gap-[1.25rem]">
+            <div className="flex justify-end gap-[1.25rem] pr-[3rem]">
             <ButtonComponent
                 onClick={onBack}
                 className="secondary"
@@ -284,7 +328,7 @@ const BasicDataForm: React.FC<{onBack: () => void, onNext: () => void}> = ({onBa
                 className="primary"
                 onClick={handleSubmit(onSubmit)}
                 type="submit"
-                label="Siguiente"
+                label={isEdit ? "Actualizar" : "Siguiente"}
             />
             </div>
         </div>

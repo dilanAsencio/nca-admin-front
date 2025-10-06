@@ -1,6 +1,6 @@
 import { apiProxy } from "@/helpers/api-proxy";
 import { PaginateIMPL, Response } from "@/app/core/interfaces/api-interfaces";
-import { CampusForm, CampusResponse } from "@/app/core/interfaces/campus-interfaces";
+import { CampusForm, CampusResponse } from "@/app/core/interfaces/academicManagement/campus-interfaces";
 
 const API_V = process.env.NEXT_PUBLIC_API_V || "v1";
 
@@ -14,8 +14,15 @@ export const CampusService = {
    */
   createCampus: async (
     data: CampusForm
-  ): Promise<CampusResponse> => 
+  ): Promise<Response<CampusResponse>> => 
     apiProxy("POST", `${API_V}/campus`, undefined, data),
+
+    
+  updateCampus: async (
+    campusId: string,
+    data: CampusForm
+  ): Promise<Response<CampusResponse>> => 
+    apiProxy("PUT", `${API_V}/campus/${campusId}`, undefined, data),
   
   
   /**

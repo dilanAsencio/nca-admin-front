@@ -25,7 +25,7 @@ interface BranchesFormProps {
   title?: string;
   hideForm?: () => void;
   dataBranches?: (data: BranchesForm[]) => BranchesForm[];
-  writeData?: BranchesForm;
+  writeData?: BranchesResponse;
   resetForm?: boolean;
 }
 
@@ -57,6 +57,7 @@ const BranchesFormComponent: React.FC<BranchesFormProps> = ({
   const [checkSportsAreas, setCheckSportsAreas] = useState<boolean>(false);
   const [openMap, setOpenMap] = useState<boolean>(false);
   const [levels, setLevels] = useState<any[]>([]);
+  const [loadLevels, setLoadLevels] = useState<boolean>(true);
   const showToast = alerts.showToast;
   const showConfirm = alerts.showConfirm;
 
@@ -80,6 +81,7 @@ const BranchesFormComponent: React.FC<BranchesFormProps> = ({
   const [barrios, setBarrios] = useState<{ label: string; value: string }[]>([]);
   const [branches, setBranches] = useState<BranchesForm[] | null>(null);
   const [isLandingTable, setIsLoadingTable] = useState<boolean>(true);
+  const [campusId, setCampusId] = useState<string | null>(null);
 
   const columnsLevels: Columns<LevelColumnsDropTable>[] = [
     { nameField: "Nombre nivel", key: "displayName" },
@@ -143,7 +145,9 @@ const BranchesFormComponent: React.FC<BranchesFormProps> = ({
         setLevels(levels);
       }
       setIsLoadingTable(false);
+      setLoadLevels(false);
     } catch (error: any) {
+      setLoadLevels(false);
       setIsLoadingTable(false);
       console.error(error);
     }
@@ -151,8 +155,13 @@ const BranchesFormComponent: React.FC<BranchesFormProps> = ({
 
   const addBranche = async (data: BranchesForm) => {
     try {
-        if(currentCampus.basicData && currentCampus.basicData.id){
-          const response = await BranchesService.createBranche(currentCampus.basicData.id, data) as any;
+        if(campusId){
+          let response = null;
+          if(isEdit && data.id){
+            response = await BranchesService.updateBranches(campusId, data.id, data) as any;
+          } else {
+            response = await BranchesService.createBranche(campusId, data) as any;
+          }
           if(response?.success){
               const sede: BranchesResponse = {
                 ...response.data,
@@ -165,7 +174,7 @@ const BranchesFormComponent: React.FC<BranchesFormProps> = ({
                 updatedBranches.push(item);
               })
               
-              showToast(`Sede ${response.data.name}, creada con exito!`, "success");
+              showToast(`Sede ${response.data.name}, fue ${isEdit ? "actualizada" : "creada"} con exito!`, "success");
               addBranches(updatedBranches);
               dataBranches && dataBranches(updatedBranches);
               setBranches(updatedBranches);
@@ -283,6 +292,8 @@ const BranchesFormComponent: React.FC<BranchesFormProps> = ({
       setValue("has_green_zones", writeData.has_green_zones);
       setValue("has_laboratory", writeData.has_laboratory);
       setValue("has_sports_zones", writeData.has_sports_zones);
+      setValue("id", writeData.id);
+      setCampusId(writeData.campus_id || null);
       getLevelsCampusBranche(writeData.id || "");
     }
   }, [writeData]);
@@ -435,7 +446,7 @@ const BranchesFormComponent: React.FC<BranchesFormProps> = ({
       />
     </div>
     <hr className="my-[0.5rem]" />
-    { levels.length === 0 ?
+    { loadLevels ?
       <div className="flex flex-col justify-center text-center">
         <ProgressSpinner aria-label="Cargando..." />
         <span className="text-gray-800 font-bold text-[1rem]">Cargando...</span>

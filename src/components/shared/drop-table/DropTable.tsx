@@ -86,7 +86,7 @@ function DropTableComponent<T, C = T>({
           <tbody >
             {data.length === 0 ? (
               <tr>
-                <td colSpan={columns.length + 1} className="text-center py-4">
+                <td colSpan={columns.length + 2} className="text-center py-4">
                   Sin datos
                 </td>
               </tr>

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import BreadcumbComponent from "@/components/shared/breadcumb/BreadcumbComponent";
 import style from "@/app/font.module.css";
-import CardComponent from "@/components/dashboard/CardComponent";
+import CardActionComponent from "@/components/shared/cardAction/CardActionComponent";
 import AcademicManagementFormsComponent from "@/components/academicManagement/AcademicManagementComponent";
 import clsx from "clsx";
 import Image from "next/image";
@@ -20,8 +20,8 @@ import { useUI } from "@/providers/ui-context";
 import BranchesFormComponent from "@/components/academicManagement/campusForms/BranchesFormComponent";
 import ButtonPopUpComponent from "@/components/shared/button/ButtonPopUp";
 import { BranchesService } from "@/services/managementAcademic/branches-service";
-import ModalLevelForm from "@/components/dashboard/ModalLevelForm";
-import ModalGradeForm from "@/components/dashboard/ModalGradeForm";
+import ModalLevelForm from "@/components/academicManagement/ModalLevelForm";
+import ModalGradeForm from "@/components/academicManagement/ModalGradeForm";
 
 const AcademicDashboard: React.FC = () => {
   
@@ -44,6 +44,7 @@ const AcademicDashboard: React.FC = () => {
   const [campusBranchId, setCampusBranchId] = useState<string | null>(null);
 
   const [titleAcademic, setTitleAcademic] = useState<string>("Crear Colegio");
+  const [isEditCampus, setIsEditCampus] = useState<boolean>(false);
 
   const imgSchool = { path: "/assets/img/icon-school.png", alt: "crear colegio", w: 59.8, h: 55.36 };
   const iconAdd = iconsActions.add;
@@ -55,7 +56,7 @@ const AcademicDashboard: React.FC = () => {
   const getCampusBranches = async () => {
     toggleLoading(true);
     try {
-      const campusResp = await CampusService.getCampus({ page: 0, size: 10 });
+      const campusResp = await CampusService.getCampus({ page: 0, size: 10 }) as Response<any>;
       if (campusResp?.success) {
         let campus: any[] = [];
         let campusDrop: any[] = [];
@@ -124,6 +125,7 @@ const AcademicDashboard: React.FC = () => {
     viewFormSchool && initialData();
     setViewFormSchool(prev => !prev);
     handleDownChecks();
+    setIsEditCampus(false);
   };
   
   const handleAddBranche = (campus: any) => {
@@ -183,6 +185,7 @@ const AcademicDashboard: React.FC = () => {
   }
 
   const handleEditSchool = (infoCampus: any) => {    
+    setIsEditCampus(true);
     updateBasicData(infoCampus);
     addBranches(infoCampus.branches);
     handlerSteps(1);
@@ -257,7 +260,7 @@ const AcademicDashboard: React.FC = () => {
   return (
     <>
       {viewFormSchool ? (
-        <AcademicManagementFormsComponent title={titleAcademic} onBack={toggleCreateSchool} />
+        <AcademicManagementFormsComponent title={titleAcademic} onBack={toggleCreateSchool} isEditCampus={isEditCampus} />
       ) : (
         <div
           className={clsx(
@@ -275,7 +278,7 @@ const AcademicDashboard: React.FC = () => {
             <BreadcumbComponent items={[{label:"Gestión Académica"}]} />
           </div>
           <div className="flex flex-row justify-center gap-[1.5rem]">
-            <CardComponent
+            <CardActionComponent
               checked={campus && campus.length > 0 ? true : false}
               handleClick={toggleCreateSchool}
               labelButton="Crear Colegio"

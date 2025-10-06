@@ -46,6 +46,7 @@ const Header = () => {
               />
             </InputIcon>
             <InputText className={clsx(
+              "input-search",
               "focus:w-max",
               "w-min bg-[#FFFFFF]",
               "max-[425px]:w-1/6",

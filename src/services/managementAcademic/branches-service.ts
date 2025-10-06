@@ -19,6 +19,22 @@ export const BranchesService = {
   ): Promise<Response<BranchesResponse>> => 
     apiProxy("POST", `${API_V}/campus/${campusId}/branches`, undefined, data),
 
+    
+  /**
+   * Updates a branch given its campus ID and branch ID, with the provided branch data.
+   * @param campusId - The ID of the campus the branch belongs to.
+   * @param brancheId - The ID of the branch to update.
+   * @param data - The data of the branch to update.
+   * @returns A Promise with a Response object containing the response data.
+   * @throws { success: false, error: string } - If the update fails.
+   */
+  updateBranches: async (
+    campusId: string,
+    brancheId: string,
+    data: BranchesForm
+  ): Promise<Response<BranchesResponse>> => 
+    apiProxy("POST", `${API_V}/campus/${campusId}/branches${brancheId}`, undefined, data),
+
 
   /**
    * Retrieves a list of branches from the database.

@@ -1,9 +1,9 @@
 import React from "react";
-import ButtonComponent from "../shared/button/ButtonComponent";
+import ButtonComponent from "../button/ButtonComponent";
 import Image from "next/image";
 import clsx from "clsx";
 
-const CardComponent: React.FC<{
+const CardActionComponent: React.FC<{
   labelButton: string;
   handleClick?: () => void;
   blockBtn?: boolean;
@@ -53,4 +53,4 @@ const CardComponent: React.FC<{
   );
 };
 
-export default CardComponent;
+export default CardActionComponent;

@@ -12,7 +12,7 @@
 }
 
 
-.p-inputtext {
+.p-inputtext.input-search {
     @apply
         border-[#C6B4B4] border-solid border
         rounded-[2.25rem] h-10;

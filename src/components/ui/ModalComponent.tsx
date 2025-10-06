@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { useUI } from "@/providers/ui-context";
 import clsx from "clsx";
 import ButtonComponent from "../shared/button/ButtonComponent";
 
@@ -9,10 +8,11 @@ const ModalComponent: React.FC<{
   title: string;
   children: React.ReactNode;
   handleModal: () => void;
-  handleSubmit: () => void;
+  handleSubmit?: () => void;
   labelBtnAccept?: string;
+  buttonAcceptVisible?: boolean;
   sizeModal?: 'small' | 'medium' | 'large';
-}> = ({ title, children, handleModal, handleSubmit, labelBtnAccept, sizeModal }) => {
+}> = ({ title, children, handleModal, handleSubmit, labelBtnAccept, sizeModal, buttonAcceptVisible = true }) => {
 
   return (
     <>
@@ -64,11 +64,13 @@ const ModalComponent: React.FC<{
               label="Cancelar"
               onClick={handleModal}
             />
-            <ButtonComponent
-              className="primary"
-              label={labelBtnAccept || "Agregar"}
-              onClick={handleSubmit}
-            />
+            { buttonAcceptVisible &&
+              <ButtonComponent
+                className="primary"
+                label={labelBtnAccept || "Agregar"}
+                onClick={handleSubmit}
+              />
+            }
           </div>
           <div className="absolute bottom-0 left-0 w-full h-[0.5rem] flex flex-row gap-[1rem]">
             <div className="bg-[#FC4554] h-[0.5rem] w-[64%] rounded-bl-[0.5rem]"></div>

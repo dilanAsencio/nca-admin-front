@@ -8,6 +8,7 @@ export interface AcademicGradeForm {
   gradeOrder: number;
   maxCapacity: number;
   valor: number;
+  valorString?: string;
   customFields?: {
       [key: string]: Record<string, any>;
   };

@@ -2,10 +2,11 @@
 
 import { AcademicGradeForm, AcademicGradeResponse } from '@/app/core/interfaces/academicManagement/academic-grade-interfaces';
 import { AcademicLevelForm, AcademicLevelResponse } from '@/app/core/interfaces/academicManagement/academic-level-interfaces';
+import { CampusForm } from '@/app/core/interfaces/academicManagement/campus-interfaces';
 import React, { createContext, useContext, useState } from 'react';
 
 interface SchoolFormData {
-  basicData: any;
+  basicData: any | {};
   branches: any[];
   certifications: any;
 }
@@ -40,7 +41,7 @@ interface UiContextType {
   activeNavSteps: (s: number) => void;
   handleCheckSteps: () => void;
   currentCampus: SchoolFormData;
-  updateBasicData: (values: any) => void;
+  updateBasicData: (values: CampusForm) => void;
   addBranches: (headquarter: any[]) => void;
   updateCertifications: (values: any) => void;
   resetForm: () => void;
@@ -122,7 +123,7 @@ export const UIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
     certifications: {},
   });
 
-  const updateBasicData = (values: any) => {
+  const updateBasicData = (values: CampusForm) => {
     setCurrentCampus((prev) => ({ ...prev, basicData: values }));
     storageData(currentCampus);
   };

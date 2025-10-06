@@ -1,4 +1,4 @@
-import { CalendarType, Gender } from "../enums/academic-enums";
+import { CalendarType, Gender } from "../../enums/academic-enums";
 
 export interface CampusForm {
     id?: string;
