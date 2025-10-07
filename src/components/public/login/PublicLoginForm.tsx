@@ -4,10 +4,10 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
-import showToast from "@/utils/toast";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser as faUserRegular, faEye, faEyeSlash } from "@fortawesome/free-regular-svg-icons";
 import { publicLoginThunk, AppDispatch } from "@/providers/store/public-auth-store";
+import * as alerts from "@/utils/alerts";
 
 interface LoginFormData {
   username: string;
@@ -29,13 +29,13 @@ export default function PublicLoginForm({ onClose }: PublicLoginFormProps) {
   const dispatch = useDispatch<AppDispatch>();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const showToast = alerts.showToast;
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     setError,
-    setValue,
     reset
   } = useForm<LoginFormData>();
 
