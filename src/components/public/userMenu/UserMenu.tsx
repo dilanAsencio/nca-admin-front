@@ -10,7 +10,7 @@ import {
 } from "@/providers/store/public-auth-store";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
-import showToast from "@/utils/toast";
+import * as alerts from "@/utils/alerts";
 
 interface UserMenuProps {
   onLogout?: () => void;
@@ -19,6 +19,7 @@ interface UserMenuProps {
 const UserMenu: React.FC<UserMenuProps> = ({ onLogout }) => {
   const dispatch = useDispatch<AppDispatch>();
   const username = localStorage.getItem("username");
+  const showToast = alerts.showToast;
 
   const handleLogout = async () => {
     dispatch(publicLogoutThunk())
