@@ -6,11 +6,11 @@ import Swal from "sweetalert2";
  * @param message The message to show.
  * @param type The type of the notification to show. Can be 'success', 'error', 'info' or 'warning'.
  */
-export const showToast = (message: string, type: 'success' | 'error' | 'info' | 'warning') => {
+export const showToast = (message: string, type: 'success' | 'error' | 'info' | 'warning', duration?: number) => {
     switch (type) {
         case 'success':
             toast.success(message, {
-                duration: 3000,
+                duration: duration ?? 5000,
                 progress: true,
                 position: "top-right",
                 transition: "popUp",
@@ -20,7 +20,7 @@ export const showToast = (message: string, type: 'success' | 'error' | 'info' | 
             break;
         case 'error':
             toast.error(message, {
-                duration: 3000,
+                duration: duration ?? 5000,
                 progress: true,
                 position: "top-right",
                 transition: "popUp",
@@ -30,7 +30,7 @@ export const showToast = (message: string, type: 'success' | 'error' | 'info' | 
             break;
         case 'info':
             toast.info(message, {
-                duration: 3000,
+                duration: duration ?? 5000,
                 progress: true,
                 position: "top-right",
                 transition: "popUp",
@@ -40,7 +40,7 @@ export const showToast = (message: string, type: 'success' | 'error' | 'info' | 
             break;
         case 'warning':
             toast.warning(message, {
-                duration: 3000,
+                duration: duration ?? 5000,
                 progress: true,
                 position: "top-right",
                 transition: "popUp",

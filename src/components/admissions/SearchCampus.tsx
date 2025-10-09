@@ -5,6 +5,7 @@ import clsx from "clsx"
 import DropdownComponent from "../shared/dropdown/DropdownComponent";
 import { useUI } from "@/providers/ui-context";
 import { CampusService } from "@/services/managementAcademic/campus-services";
+import { Response } from "@/app/core/interfaces/api-interfaces";
 
 const SearchCampusComponent: React.FC<{
     changeValue?: (values: { campus: string | null, grade: string | null, status: string | null }) => void
@@ -22,7 +23,7 @@ const SearchCampusComponent: React.FC<{
     const getCampus = async () => {
         toggleLoading(true);
         try {
-            const campusResp = await CampusService.getCampus();
+            const campusResp = await CampusService.getCampus() as Response;
             if (campusResp?.success) {
                 let campus: any[] = [];
                 campus.push({ value: "all", label: "Todos" });
@@ -39,6 +40,7 @@ const SearchCampusComponent: React.FC<{
             toggleLoading(false);
             console.error(error);
         }
+        toggleLoading(false);
     };
 
     const handleSelect = (value: string | string[], op: "campus" | "grade" | "status") => {

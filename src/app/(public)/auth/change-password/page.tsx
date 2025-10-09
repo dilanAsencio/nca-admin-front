@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import AuthLayout from "@/components/auth/AuthLayout";
+import AuthLayout from "@/app/core/auth/AuthLayout";
 import PublicChangePasswordForm from "@/components/public/publicChangePassword/PublicChangePasswordForm";
 
 const PublicChangePasswordPage = () => {

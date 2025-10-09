@@ -37,9 +37,6 @@ export async function apiProxy<T = any, R = any>(
     const response = await axios(config);
     return response.data as R;
   } catch (error: any) {
-    return {
-      success: false,
-      error: error,
-    } as R;
+    return error.details as R;
   }
 }

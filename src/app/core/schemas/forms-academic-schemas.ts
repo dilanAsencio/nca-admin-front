@@ -75,10 +75,12 @@ export const nivelAcademicoSchema = z.object({
     .nonempty("Este campo es requerido!")
     .min(2, "El codigo debe tener al menos 2 caracteres!"),
   levelOrder: z
-    .number()
-    .int()
-    .positive("Debe ser mayor a 0")
-    .min(1, "El orden debe ser mayor a 0"),
+    .preprocess((val) => (
+      val === "" || isNaN(val as number) ? undefined : Number(val)
+    ), z
+    .number({ required_error: "Este campo es requerido!"})
+    .min(1, "El orden debe ser mayor a 0")
+    ),
   campusBranchId: z
     .string()
 });
@@ -91,11 +93,12 @@ export const gradoAcademicoSchema = z.object({
     .string()
     .nonempty("Este campo es requerido!"),
   maxCapacity: z
-    .number()
-    .int()
-    .positive("Debe ser mayor a 0")
-    .min(1, "La capacidad debe ser mayor a 0")
-    .max(30, "La capacidad maxima debe ser de 30"),
+    .preprocess((val) => (
+      val === "" || isNaN(val as number) ? undefined : Number(val)
+    ), z
+    .number({ required_error: "Este campo es requerido!"})
+    .min(1, "El orden debe ser mayor a 0")
+    ),
   code: z
     .string()
     .nonempty("Este campo es requerido!")
@@ -104,14 +107,18 @@ export const gradoAcademicoSchema = z.object({
     .string()
     .nonempty("Este campo es requerido!"),
   gradeOrder: z
-    .number()
-    .int()
-    .positive("Debe ser mayor a 0")
-    .min(1, "El orden debe ser mayor a 0"),
+    .preprocess((val) => (
+      val === "" || isNaN(val as number) ? undefined : Number(val)
+    ), z
+    .number({ required_error: "Este campo es requerido!"})
+    .min(1, "El orden debe ser mayor a 0")
+    ),
   valorString: z
     .string()
+    .regex(/^\$?\s?\d{1,3}(\.\d{3})*$/, "El valor debe ser un número válido con hasta dos decimales")
     .nonempty("Este campo es requerido!")
     .optional(),
   academicLevelId: z
-    .string()
+    .string({ required_error: "Este campo es requerido!"})
+    .nonempty("Este campo es requerido!"),
 });

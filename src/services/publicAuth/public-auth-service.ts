@@ -1,5 +1,5 @@
 import axios from "@/libs/axios";
-import { Response } from "@/types/auth";
+import { ResponseAuth } from "@/app/core/interfaces/auth-interfaces";
 
 export interface LoginPayload {
   username: string;
@@ -59,7 +59,7 @@ export interface UpdateProfilePayload {
 }
 
 export const authService = {
-  async publicLogin(payload: LoginPayload): Promise<Response> {
+  async publicLogin(payload: LoginPayload): Promise<ResponseAuth> {
     localStorage.setItem("username", payload.username);
     try {
       const response = await axios.post("/public/auth/login", payload);
@@ -104,7 +104,7 @@ export const authService = {
     }
   },
 
-  async publicRegister(payload: RegisterPayload): Promise<Response> {
+  async publicRegister(payload: RegisterPayload): Promise<ResponseAuth> {
     try {
       const response = await axios.post("/public/auth/register", payload);
       const { success, data, message, timestamp } = response.data;
@@ -124,7 +124,7 @@ export const authService = {
     }
   },
 
-  async publicForgotPassword(payload: ForgotPasswordPayload): Promise<Response> {
+  async publicForgotPassword(payload: ForgotPasswordPayload): Promise<ResponseAuth> {
     try {
       const response = await axios.post("/public/auth/forgot-password", payload);
       const { success, message, timestamp } = response.data;
@@ -143,7 +143,7 @@ export const authService = {
     }
   },
 
-  async publicResetPassword(payload: ResetPasswordPayload): Promise<Response> {
+  async publicResetPassword(payload: ResetPasswordPayload): Promise<ResponseAuth> {
     try {
       const response = await axios.post("/public/auth/reset-password", payload);
       const { success, data, message, timestamp } = response.data;
@@ -163,7 +163,7 @@ export const authService = {
     }
   },
 
-  async publicChangePassword(payload: ChangePasswordPayload): Promise<Response> {
+  async publicChangePassword(payload: ChangePasswordPayload): Promise<ResponseAuth> {
     try {
       const response = await axios.post("/public/auth/change-password", payload);
       const { success, data, message, timestamp } = response.data;
@@ -183,7 +183,7 @@ export const authService = {
     }
   },
 
-  async publicRefreshToken(payload: RefreshTokenPayload): Promise<Response> {
+  async publicRefreshToken(payload: RefreshTokenPayload): Promise<ResponseAuth> {
     try {
       const response = await axios.post("/public/auth/refresh-token", payload);
       const { success, data, message, timestamp } = response.data;
@@ -211,7 +211,7 @@ export const authService = {
     }
   },
 
-  async publicVerifyEmail(payload: VerifyEmailPayload): Promise<Response> {
+  async publicVerifyEmail(payload: VerifyEmailPayload): Promise<ResponseAuth> {
     try {
       const response = await axios.post("/public/auth/verify-email", payload);
       return response.data;
@@ -224,7 +224,7 @@ export const authService = {
     }
   },
 
-  async publicResendVerification(payload: ResendVerificationPayload): Promise<Response> {
+  async publicResendVerification(payload: ResendVerificationPayload): Promise<ResponseAuth> {
     try {
       const response = await axios.post("/public/auth/resend-verification", payload);
       return response.data;
@@ -237,7 +237,7 @@ export const authService = {
     }
   },
 
-  async publicGetProfile(): Promise<Response> {
+  async publicGetProfile(): Promise<ResponseAuth> {
     try {
       const response = await axios.get("/public/auth/profile");
       return response.data;
@@ -250,7 +250,7 @@ export const authService = {
     }
   },
 
-  async publicUpdateProfile(payload: UpdateProfilePayload): Promise<Response> {
+  async publicUpdateProfile(payload: UpdateProfilePayload): Promise<ResponseAuth> {
     try {
       const response = await axios.put("/public/auth/profile", payload);
       return response.data;

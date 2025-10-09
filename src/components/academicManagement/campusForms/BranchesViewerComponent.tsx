@@ -199,8 +199,8 @@ const BranchesViewer: React.FC<{
           buttonAcceptVisible={false}
           handleModal={() => setIsOpenModalBranche(false)} >
             <BranchesFormComponent
+                isSubmited={() => setIsOpenModalBranche(false)}
                 writeData={branche}
-                hideForm={() => hideForm && hideForm()}
                 title={branche.title} />
         </ModalComponent> 
       )}

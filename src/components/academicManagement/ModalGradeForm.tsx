@@ -53,13 +53,16 @@ const ModalGradeForm: React.FC<{
       if(isOpenModalGrado.op === 1) {
         dat.id = isOpenModalGrado.data?.id;
         if(!dat.id) return showToast("No hay identificador de grado asociado", "warning");
-        GradeService.updateLevel(dat,dat.id)
+        GradeService.updateGrade(dat,dat.id)
           .then((response: any) => {
-            if (response) {
+            if (response.id) {
               showToast(`Grado ${response.name}, creado con exito!`, "success");
               toggleModalGrado(false, 0, null);
               resetGrade();
               onSubmit();
+              toggleLoading(false);
+            } else {
+              showToast(`Error al actualizar el grado: ${response.message}`, "error");
               toggleLoading(false);
             }
           })
@@ -70,11 +73,14 @@ const ModalGradeForm: React.FC<{
       } else {
         GradeService.createGrade(dat)
           .then((response: any) => {
-            if (response) {
+            if (response.id) {
               showToast(`Grado ${response.name}, creado con exito!`, "success");
               toggleModalGrado(false, 0, null);
               resetGrade();
               onSubmit();
+              toggleLoading(false);
+            } else {
+              showToast(`Error al crear el grado: ${response.message}`, "error");
               toggleLoading(false);
             }
           })
@@ -157,21 +163,6 @@ const ModalGradeForm: React.FC<{
               name="maxCapacity"
               register={registerGrade("maxCapacity", {
                 valueAsNumber: true,
-                onChange(event) {
-                  const value = parseInt(event.target.value);
-                  if (value < 1) {
-                    setErrorGrade("maxCapacity", {
-                      type: "manual",
-                      message: "La capacidad debe ser mayor a 0",
-                    });
-                  } else {
-                    setErrorGrade("maxCapacity", {
-                      type: "manual",
-                      message: "",
-                    });
-                    setValueGrade("maxCapacity", value);
-                  }
-                },
               })}
               required
               error={errorsGrade.maxCapacity && errorsGrade.maxCapacity.message}
@@ -184,21 +175,6 @@ const ModalGradeForm: React.FC<{
               name="gradeOrder"
               register={registerGrade("gradeOrder", {
                 valueAsNumber: true,
-                onChange: (e) => {
-                  const value = parseInt(e.target.value);
-                  if (value < 1) {
-                    setErrorGrade("gradeOrder", {
-                      type: "manual",
-                      message: "El orden debe ser mayor a 0",
-                    });
-                  } else {
-                    setErrorGrade("gradeOrder", {
-                      type: "manual",
-                      message: "",
-                    });
-                    setValueGrade("gradeOrder", value);
-                  }
-                },
               })}
               required
               error={errorsGrade.gradeOrder && errorsGrade.gradeOrder.message}
@@ -238,7 +214,11 @@ const ModalGradeForm: React.FC<{
               name="valorString"
               register={registerGrade("valorString", {
                 onChange: (e) => {
-                  const value = e.target.value;
+                  const value = e.target.value.replace(/[^0-9]/g, '');
+                  if (value === '') {
+                    setValueGrade("valorString", "");
+                    return;
+                  }                  
                   if(unformatCurrency(value) === 0) {
                     setErrorGrade("valorString", {
                       type: "manual",

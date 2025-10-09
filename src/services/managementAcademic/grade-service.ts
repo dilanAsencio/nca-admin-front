@@ -19,7 +19,7 @@ export const GradeService = {
     
   
 
-  updateLevel: async (
+  updateGrade: async (
     data: AcademicGradeForm,
     gradeId: string
   ): Promise<AcademicGradeResponse> => 

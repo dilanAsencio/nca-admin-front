@@ -18,25 +18,10 @@ export class PaginateIMPL implements Paginate {
 interface DataResponse<T = any> {
     totalPages: number,
     totalElements: number,
-    pageable: {
-      pageNumber: number,
-      pageSize: number,
-      offset: number,
-      sort: {
-        sorted: boolean,
-        empty: boolean,
-        unsorted: boolean,
-      },
-      paged: boolean,
-      unpaged: boolean,
-    },
+    pageable: Pageable,
     size: number,
     number: number,
-    sort: {
-      sorted: boolean,
-      empty: boolean,
-      unsorted: boolean,
-    },
+    sort: Sort,
     first: boolean,
     last: boolean,
     numberOfElements: number,
@@ -52,5 +37,41 @@ export interface Response<T = any> {
   error?: any;
   path?: string;
   status?: number;
+}/**
+ * Representa la configuración de ordenamiento en una paginación.
+ */
+export interface Sort {
+  sorted: boolean;
+  empty: boolean;
+  unsorted: boolean;
+}
+
+/**
+ * Representa la información de paginación del backend.
+ */
+export interface Pageable {
+  pageNumber: number;
+  pageSize: number;
+  sort: Sort;
+  offset: number;
+  paged: boolean;
+  unpaged: boolean;
+}
+
+/**
+ * Representa la respuesta completa del endpoint de instituciones paginadas.
+ */
+export interface InstitutionsPaginatedResponse {
+  content: any[];
+  pageable: Pageable;
+  last: boolean;
+  totalPages: number;
+  totalElements: number;
+  size: number;
+  number: number;
+  sort: Sort;
+  first: boolean;
+  numberOfElements: number;
+  empty: boolean;
 }
 

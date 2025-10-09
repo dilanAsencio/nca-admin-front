@@ -10,12 +10,15 @@ const TabsComponent: React.FC<{
     label: string,
     icon?: { path: string, alt: string }
     isActive: boolean,
+    handleClick?: () => void
 }> = ({
-    label, icon, isActive = false
+    label, icon, isActive = false, handleClick
 }) => {
     
     return (
-        <div className={clsx(
+        <div
+            onClick={() => handleClick} 
+            className={clsx(
             styleFont["font-outfit"],
             isActive && "active",
             "inline-flex items-center custom-tab",

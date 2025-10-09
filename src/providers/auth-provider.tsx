@@ -34,7 +34,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setLoading(true);
     setError(null);
     try {
-      await authService.login(username, password, rememberMe);
+      await authService.login({username, password, rememberMe});
       setInfoUser({ username } as User);
       setIsAuthenticated(true);
     } catch (e: any) {

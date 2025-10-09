@@ -37,7 +37,7 @@ const AcademicManagementFormsComponent: React.FC<{ onBack: () => void, title: st
             {`${title} - ${stepsCreateSchool[currentStep - 1].label}`}
           </h5>
         </div>
-        <BreadcumbComponent items={[{ label: title }]} />
+        <BreadcumbComponent items={[{ label: "Gestion Academica", href: "/" },{label: title }]} />
       </div>
       <div
         className={

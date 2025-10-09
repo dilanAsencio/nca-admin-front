@@ -9,7 +9,8 @@ import clsx from "clsx";
 
 const CardSchool: React.FC<{
   nameSchool: string;
-}> = ({ nameSchool = "School Name" }) => {
+  onSubmit?: () => void;
+}> = ({ nameSchool = "School Name", onSubmit }) => {
   const [imgSchool, setImgSchool] = useState(
     "/assets/landing/img/df-checker.png"
   );
@@ -62,7 +63,7 @@ const CardSchool: React.FC<{
           </div>
         ))}
       </div>
-      <ButtonComponent className="primary" type="button" label="Saber más" />
+      <ButtonComponent className="primary" type="button" onClick={() => onSubmit && onSubmit()} label="Saber más" />
     </div>
   );
 };
