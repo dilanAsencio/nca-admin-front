@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import Link from 'next/link';
 import RenderIcon from './RenderIconsMenu';
 import style from '@/app/font.module.css';
@@ -20,6 +20,12 @@ const menuItems = [
 
 const NavigationMenu: React.FC<{openMenu: boolean}> = ({openMenu}) => {
   const {handleMenu, menuSelected} = useLanding();
+  useEffect(() => {
+    const storedMenu = localStorage.getItem("selectedModuleLanding");
+    if (storedMenu) {
+      handleMenu(storedMenu);
+    }
+  }, []);
   return (
     <nav className="bg-white xl:border-0 xl:bg-transparent">
       <div className="max-w-7xl flex items-center">

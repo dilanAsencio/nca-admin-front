@@ -12,6 +12,7 @@ import ModalComponent from "../ui/ModalComponent";
 import { LevelService } from "@/services/managementAcademic/level-services";
 import TextAreaComponent from "../shared/input/TextAreaComponent";
 import { AcademicLevelForm, AcademicLevelResponse } from "@/app/core/interfaces/academicManagement/academic-level-interfaces";
+import { number } from "zod";
 
 const ModalLevelForm: React.FC<{
   campusBranchId: string | null,
@@ -39,27 +40,37 @@ const ModalLevelForm: React.FC<{
 
   const showToast = alerts.showToast;
   
-  const onSubmitLevel = (data: any) => {    
-    toggleLoading(true);
+  const onSubmitLevel = (data: any) => {
     if(!getValuesLevel("campusBranchId")) return showToast("No hay sede asociada", "warning");
-
+    if(!data.levelOrder) {
+      setErrorLevel("levelOrder", {
+        type: "manual",
+        message: "Este campo es requerido!",
+      });
+      return;
+    }
     const dat: AcademicLevelResponse = {
       campusBranchId: getValuesLevel("campusBranchId"),
       description: data.description,
       name: data.name,
       code: data.code,
-      levelOrder: parseInt(data.levelOrder),
-      periodoAcademico: data.periodoAcademico
+      levelOrder: data.levelOrder,
+      periodoAcademico: "",
     }
+    toggleLoading(true);
     if(isOpenModalNivel.op === 1) {
       data.id = getValuesLevel("id");
+      if(!data.id) return showToast("No hay identificador de nivel asociado", "warning");
       try {
         LevelService.updateLevel(dat, data.id)
           .then((response: any) => {
-            if (response) {
+            if (response.id) {
               showToast(`Nivel ${response?.name}, Actualizado con exito!`, "success");
               onSubmit();
               handleCloseModal();
+              toggleLoading(false);
+            } else {
+              showToast(`Error al actualizar el nivel: ${response.message}`, "error");
               toggleLoading(false);
             }
           })
@@ -75,10 +86,13 @@ const ModalLevelForm: React.FC<{
       try {
         LevelService.createLevel(dat)
           .then((response: any) => {
-            if (response) {
+            if (response.id) {
               showToast(`Nivel ${response?.name}, creado con exito!`, "success");
               onSubmit();
               handleCloseModal();
+              toggleLoading(false);
+            } else {
+              showToast(`Error al crear el nivel: ${response.message}`, "error");
               toggleLoading(false);
             }
           })
@@ -136,7 +150,7 @@ const ModalLevelForm: React.FC<{
                 label="Orden"
                 placeholder="Orden del nivel académico (+)"
                 name="levelOrder"
-                register={registerLevel("levelOrder",{
+                register={registerLevel("levelOrder", {
                   valueAsNumber: true,
                 })}
                 required

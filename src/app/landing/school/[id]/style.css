@@ -1,0 +1,9 @@
+@import "tailwindcss";
+
+.content-school-details {
+    @apply 
+        flex flex-col
+        gap-[2.75rem] px-[1rem]
+        bg-[#ffffff66] backdrop-blur-[2.65rem]
+        shadow-[0px_16px_32px_-4px_#FC455412];
+}

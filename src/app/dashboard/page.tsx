@@ -94,6 +94,7 @@ const AcademicDashboard: React.FC = () => {
       toggleLoading(false);
       console.error(error);
     }
+    toggleLoading(false);
   };
 
   const getLevelsBranches = async (branchId: string) => {
@@ -217,6 +218,7 @@ const AcademicDashboard: React.FC = () => {
       } catch (error: any) {
         console.error(error);
       }
+      toggleLoading(false);
     }
   }
 
@@ -320,6 +322,7 @@ const AcademicDashboard: React.FC = () => {
                           { item.displayAddBranch && <>
                             <hr className="m-0" />
                             <BranchesFormComponent
+                              isSubmited={() => closedAddBranche(item)}
                               resetForm={true}
                               hideForm={() => closedAddBranche(item)} /></>
                           }

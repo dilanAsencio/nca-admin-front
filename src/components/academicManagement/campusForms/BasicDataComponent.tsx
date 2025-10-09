@@ -47,6 +47,8 @@ const BasicDataForm: React.FC<{onBack: () => void, onNext: () => void, isEdit: b
             } else {
                 response = await CampusService.createCampus(data) as Response;
             }
+            console.log("Response create/update campus:", response);
+            
             if(response.success){
                 showToast(`Colegio ${response.data.name}, fue ${isEdit ? "actualizado" : "creado"} con exito!`, "success");
                 updateBasicData(response.data);
@@ -56,7 +58,7 @@ const BasicDataForm: React.FC<{onBack: () => void, onNext: () => void, isEdit: b
                 onNext();
             } else {
                 toggleLoading(false);
-                showToast(`Error al ${isEdit ? "actualizar" : "crear"} el colegio`, "error");
+                showToast(`Error al ${isEdit ? "actualizar" : "crear"} el colegio: ${response.message}`, "error");
             }
         } catch (error: any) {
             toggleLoading(false);

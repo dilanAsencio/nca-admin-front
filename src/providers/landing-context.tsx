@@ -14,7 +14,9 @@ export const LandingProvider: React.FC<{ children: React.ReactNode }> = ({
   const [menuSelected, setMenuSelected] = useState<string | null>(null);
 
   const handleMenu = (selected: string) => {
+    localStorage.removeItem("selectedModuleLanding");
     setMenuSelected(selected);
+    localStorage.setItem("selectedModuleLanding", selected);
   };
 
   const value = {

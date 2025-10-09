@@ -2,7 +2,7 @@
 .font-outfit {
     font-family: var(--font-sans-outfit);
     font-weight: 500;
-    color: #646363;
+    /* color: #646363; */
 }
 .font-sidebar {
     font-family: var(--font-sans-outfit);

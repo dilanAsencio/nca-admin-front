@@ -17,9 +17,6 @@ import { ButtonActions, Columns } from "@/app/core/interfaces/tables-interfaces"
 import { GradeService } from "@/services/managementAcademic/grade-service";
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { GradeLevelChildColumnsDropTable, LevelColumnsDropTable } from "@/app/core/interfaces/columns-interfaces";
-import { Response } from "@/app/core/interfaces/api-interfaces";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { brancheSchema } from "@/app/core/schemas/forms-academic-schemas";
 
 interface BranchesFormProps {
   title?: string;
@@ -27,12 +24,23 @@ interface BranchesFormProps {
   dataBranches?: (data: BranchesForm[]) => BranchesForm[];
   writeData?: BranchesResponse;
   resetForm?: boolean;
+  isSubmited: () => void;
 }
 
 const BranchesFormComponent: React.FC<BranchesFormProps> = ({
-    title, hideForm, dataBranches, writeData, resetForm = false
+    title, hideForm, dataBranches, writeData, resetForm = false, isSubmited
 }) => {
-  
+  const {
+    currentCampus,
+    iconsActionsTable,
+    handleOptionLevel,
+    toggleModalNivel,
+    toggleModalGrado,
+    toggleLoading,
+    addBranches,
+    handlerSteps,
+    activeNavSteps,
+  } = useUI();
   const {
     control,
     register,
@@ -80,8 +88,7 @@ const BranchesFormComponent: React.FC<BranchesFormProps> = ({
   const [ciudades, setCiudades] = useState<{ label: string; value: string }[]>([]);
   const [barrios, setBarrios] = useState<{ label: string; value: string }[]>([]);
   const [branches, setBranches] = useState<BranchesForm[] | null>(null);
-  const [isLandingTable, setIsLoadingTable] = useState<boolean>(true);
-  const [campusId, setCampusId] = useState<string | null>(null);
+  const [campusId, setCampusId] = useState<string>("");
 
   const columnsLevels: Columns<LevelColumnsDropTable>[] = [
     { nameField: "Nombre nivel", key: "displayName" },
@@ -94,8 +101,6 @@ const BranchesFormComponent: React.FC<BranchesFormProps> = ({
     { nameField: "Capacidad máxima", key: "maxCapacity" },
     { nameField: "Valor grado", key: "formattedPrice" },
   ]
-
-  const {currentCampus, iconsActionsTable, handleOptionLevel, toggleModalNivel, toggleModalGrado, toggleLoading, addBranches, handlerSteps, activeNavSteps} = useUI();
 
   const iconEdit = iconsActionsTable.edit;
   const iconDelete = iconsActionsTable.delete;
@@ -122,7 +127,7 @@ const BranchesFormComponent: React.FC<BranchesFormProps> = ({
   };
   
   const getLevelsCampusBranche = async (brancheId: string) => {
-    setIsLoadingTable(true);
+    setLoadLevels(true);
     try {
       const response: any = await LevelService.getLevelsCampusBranch(brancheId);
       if (response?.content) {
@@ -144,23 +149,23 @@ const BranchesFormComponent: React.FC<BranchesFormProps> = ({
         handleOptionLevel(levelsDrop);
         setLevels(levels);
       }
-      setIsLoadingTable(false);
       setLoadLevels(false);
     } catch (error: any) {
       setLoadLevels(false);
-      setIsLoadingTable(false);
       console.error(error);
     }
   };
 
   const addBranche = async (data: BranchesForm) => {
     try {
-        if(campusId){
+        toggleLoading(true);
+        const campus = isEdit ? campusId : currentCampus?.basicData?.id;
+        if(campus){
           let response = null;
           if(isEdit && data.id){
-            response = await BranchesService.updateBranches(campusId, data.id, data) as any;
+            response = await BranchesService.updateBranches(campus, data.id, data) as any;
           } else {
-            response = await BranchesService.createBranche(campusId, data) as any;
+            response = await BranchesService.createBranche(campus, data) as any;
           }
           if(response?.success){
               const sede: BranchesResponse = {
@@ -181,7 +186,12 @@ const BranchesFormComponent: React.FC<BranchesFormProps> = ({
               handlerSteps(2);
               activeNavSteps(2);
               activeNavSteps(3);
+              isSubmited();
               hideForm && hideForm();
+              toggleLoading(false);
+          } else {
+              showToast(`Error al ${isEdit ? "actualizar" : "crear"} la sede: ${response.message}`, "error");
+              toggleLoading(false);
           }
         } else {
           showToast("Debe haber un colegio asociado", "warning");
@@ -189,6 +199,7 @@ const BranchesFormComponent: React.FC<BranchesFormProps> = ({
     } catch (error: any) {
         console.error(error);
     }
+    toggleLoading(false);
   };
   
   const btnActionsNivel = (item: any): ButtonActions[] =>{
@@ -293,7 +304,7 @@ const BranchesFormComponent: React.FC<BranchesFormProps> = ({
       setValue("has_laboratory", writeData.has_laboratory);
       setValue("has_sports_zones", writeData.has_sports_zones);
       setValue("id", writeData.id);
-      setCampusId(writeData.campus_id || null);
+      setCampusId(writeData.campus_id);
       getLevelsCampusBranche(writeData.id || "");
     }
   }, [writeData]);
@@ -309,6 +320,7 @@ const BranchesFormComponent: React.FC<BranchesFormProps> = ({
       setCheckLabs(false);
       setCheckSportsAreas(false);
       setOpenMap(false);
+      setLoadLevels(false);
     }
   }, [resetForm]);
   

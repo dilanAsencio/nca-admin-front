@@ -33,7 +33,7 @@ export const BranchesService = {
     brancheId: string,
     data: BranchesForm
   ): Promise<Response<BranchesResponse>> => 
-    apiProxy("POST", `${API_V}/campus/${campusId}/branches${brancheId}`, undefined, data),
+    apiProxy("PUT", `${API_V}/campus/${campusId}/branches/${brancheId}`, undefined, data),
 
 
   /**

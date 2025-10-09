@@ -21,7 +21,7 @@ instance.interceptors.response.use(
   async (error) => {
     if (error.response?.status === 401) {
       const refreshToken = localStorage.getItem("refresh_token");
-
+      console.log("Intentando refrescar token...", refreshToken);
       if (refreshToken) {
         try {
           // intentar refrescar token
@@ -41,13 +41,13 @@ instance.interceptors.response.use(
         }
       } else {
         // No hay refresh → logout directo
-        localStorage.clear();
-        Router.push("/login");
+        localStorage.clear();        
+        Router.push("/");
       }
     }
     const { response } = error;
     if (response) {
-      return Promise.reject(error);
+      return Promise.reject(response.data);
     }
     return Promise.reject(new Error('Network error or server not responding'));
   }

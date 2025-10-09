@@ -37,7 +37,7 @@ const BranchesComponent: React.FC<{onNext: () => void, onBack: () => void}> = ({
           <div className="">
             <ButtonComponent
               className="primary"
-              icon={{ path: "/assets/icon/Group.svg", alt: "school-icon" }}
+              icon={{ path: "/assets/icon/school-icon.svg", alt: "school-icon" }}
               label="Crear sede"
               onClick={() => {setShowForm(true)}}
             />
@@ -55,7 +55,7 @@ const BranchesComponent: React.FC<{onNext: () => void, onBack: () => void}> = ({
         <div className="flex justify-end">
           <ButtonComponent
             className="primary"
-            icon={{ path: "/assets/icon/Group.svg", alt: "school-icon" }}
+            icon={{ path: "/assets/icon/school-icon.svg", alt: "school-icon" }}
             label="Crear otra sede"
             onClick={() => {setShowForm(true)}}
           />
@@ -63,6 +63,7 @@ const BranchesComponent: React.FC<{onNext: () => void, onBack: () => void}> = ({
       ) : (
         <BranchesFormComponent
           resetForm={true}
+          isSubmited={() => setShowForm(false)}
           hideForm={() => setShowForm(false)} />
       )}
       <hr className="my-[0.5rem]" />
