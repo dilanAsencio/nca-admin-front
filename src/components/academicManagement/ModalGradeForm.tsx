@@ -50,14 +50,14 @@ const ModalGradeForm: React.FC<{
         valor: unformatCurrency(data.valorString) || 0,
         gradeOrder: parseInt(data.gradeOrder),
       }
-      if(isOpenModalGrado.op === 1) {
+      if(isOpenModalGrado.op === "edit") {
         dat.id = isOpenModalGrado.data?.id;
         if(!dat.id) return showToast("No hay identificador de grado asociado", "warning");
         GradeService.updateGrade(dat,dat.id)
           .then((response: any) => {
             if (response.id) {
               showToast(`Grado ${response.name}, creado con exito!`, "success");
-              toggleModalGrado(false, 0, null);
+              toggleModalGrado(false, "add", null);
               resetGrade();
               onSubmit();
               toggleLoading(false);
@@ -75,7 +75,7 @@ const ModalGradeForm: React.FC<{
           .then((response: any) => {
             if (response.id) {
               showToast(`Grado ${response.name}, creado con exito!`, "success");
-              toggleModalGrado(false, 0, null);
+              toggleModalGrado(false, "add", null);
               resetGrade();
               onSubmit();
               toggleLoading(false);
@@ -106,9 +106,15 @@ const ModalGradeForm: React.FC<{
   }
 
   const handleCloseModal = () => {
-    toggleModalGrado(false, 0, null);
+    toggleModalGrado(false, "add", null);
     resetGrade();
     setSelectLevel(null);
+  }
+  const handleTitleModal = () => {
+    if(isOpenModalGrado.op === "add") return "Crear grado académico";
+    if(isOpenModalGrado.op === "edit") return "Editar grado académico";
+    if(isOpenModalGrado.op === "view") return "Detalle grado académico";
+    return "Grado académico";
   }
 
   useEffect(() => {
@@ -127,8 +133,9 @@ const ModalGradeForm: React.FC<{
   return (
     <>
       <ModalComponent
-        title={`${isOpenModalGrado.op === 0 ? "Crear" : "Editar"} grado académico`}
-        labelBtnAccept={`${isOpenModalGrado.op === 0 ? "Crear" : "Actualizar"}`}
+        title={handleTitleModal()}
+        labelBtnAccept={`${isOpenModalGrado.op === "add" ? "Crear" : "Actualizar"}`}
+        buttonAcceptVisible={isOpenModalGrado.op !== "view"}
         sizeModal="medium"
         handleSubmit={handleSubmitGrade(onSubmitGrade)}
         handleModal={() => handleCloseModal()}
@@ -141,6 +148,8 @@ const ModalGradeForm: React.FC<{
               name="name"
               className="capitalize"
               typeInput="text"
+              readOnly={isOpenModalGrado.op === "view"}
+              disabled={isOpenModalGrado.op === "view"}
               register={registerGrade("name")}
               required
               error={errorsGrade.name && errorsGrade.name.message}
@@ -151,6 +160,8 @@ const ModalGradeForm: React.FC<{
               name="code"
               className="capitalize"
               typeInput="text"
+              readOnly={isOpenModalGrado.op === "view"}
+              disabled={isOpenModalGrado.op === "view"}
               register={registerGrade("code")}
               required
               error={errorsGrade.code && errorsGrade.code.message}
@@ -161,6 +172,8 @@ const ModalGradeForm: React.FC<{
               label="Capacidad mx. de estudiantes"
               placeholder="Ingrese cantidad de estudiantes"
               name="maxCapacity"
+              readOnly={isOpenModalGrado.op === "view"}
+              disabled={isOpenModalGrado.op === "view"}
               register={registerGrade("maxCapacity", {
                 valueAsNumber: true,
               })}
@@ -173,6 +186,8 @@ const ModalGradeForm: React.FC<{
               placeholder="Orden del grado académico (+)"
               className="text-right"
               name="gradeOrder"
+              readOnly={isOpenModalGrado.op === "view"}
+              disabled={isOpenModalGrado.op === "view"}
               register={registerGrade("gradeOrder", {
                 valueAsNumber: true,
               })}
@@ -188,6 +203,8 @@ const ModalGradeForm: React.FC<{
                   label="Nivel academico"
                   className="primary"
                   placeholder="Escoger nivel academico"
+                  readOnly={isOpenModalGrado.op === "view"}
+              disabled={isOpenModalGrado.op === "view"}
                   options={
                     optionsLevels && optionsLevels.length > 0
                       ? optionsLevels
@@ -212,6 +229,8 @@ const ModalGradeForm: React.FC<{
               placeholder="Valor grado académico"
               className="text-right"
               name="valorString"
+              readOnly={isOpenModalGrado.op === "view"}
+              disabled={isOpenModalGrado.op === "view"}
               register={registerGrade("valorString", {
                 onChange: (e) => {
                   const value = e.target.value.replace(/[^0-9]/g, '');
@@ -231,7 +250,7 @@ const ModalGradeForm: React.FC<{
                     });
                     setValueGrade("valorString", handleFormatCurrency(value));
                   }
-                },
+                }
               })}
               required
               error={errorsGrade.valorString && errorsGrade.valorString.message}
@@ -244,6 +263,8 @@ const ModalGradeForm: React.FC<{
               placeholder="Descripción"
               label="Descripción"
               register={registerGrade("description")}
+              readOnly={isOpenModalGrado.op === "view"}
+              disabled={isOpenModalGrado.op === "view"}
               required
               error={errorsGrade.description && errorsGrade.description.message}
             />

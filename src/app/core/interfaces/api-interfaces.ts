@@ -61,8 +61,8 @@ export interface Pageable {
 /**
  * Representa la respuesta completa del endpoint de instituciones paginadas.
  */
-export interface InstitutionsPaginatedResponse {
-  content: any[];
+export interface ResponseApiPublic<T = any> {
+  content: T[];
   pageable: Pageable;
   last: boolean;
   totalPages: number;

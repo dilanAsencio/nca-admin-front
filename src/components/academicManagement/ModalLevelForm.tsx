@@ -6,13 +6,11 @@ import InputComponent from "../shared/input/InputComponent";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { nivelAcademicoSchema } from "@/app/core/schemas/forms-academic-schemas";
-import ErrorAlert from "../ui/ErrorAlert";
 import * as alerts from "@/utils/alerts";
 import ModalComponent from "../ui/ModalComponent";
 import { LevelService } from "@/services/managementAcademic/level-services";
 import TextAreaComponent from "../shared/input/TextAreaComponent";
-import { AcademicLevelForm, AcademicLevelResponse } from "@/app/core/interfaces/academicManagement/academic-level-interfaces";
-import { number } from "zod";
+import { AcademicLevelResponse } from "@/app/core/interfaces/academicManagement/academic-level-interfaces";
 
 const ModalLevelForm: React.FC<{
   campusBranchId: string | null,
@@ -58,7 +56,7 @@ const ModalLevelForm: React.FC<{
       periodoAcademico: "",
     }
     toggleLoading(true);
-    if(isOpenModalNivel.op === 1) {
+    if(isOpenModalNivel.op === "edit") {
       data.id = getValuesLevel("id");
       if(!data.id) return showToast("No hay identificador de nivel asociado", "warning");
       try {
@@ -108,9 +106,16 @@ const ModalLevelForm: React.FC<{
   };
 
   const handleCloseModal = () => {
-    toggleModalNivel(false, 0, null);
+    toggleModalNivel(false, "add", null);
     resetLevel();
   };
+
+  const handleTitleModal = () => {
+    if(isOpenModalNivel.op === "add") return "Crear nivel académico";
+    if(isOpenModalNivel.op === "edit") return "Editar nivel académico";
+    if(isOpenModalNivel.op === "view") return "Detalle nivel académico";
+    return "Nivel académico";
+  }
 
   useEffect(() => {
     if(campusBranchId === null) return;
@@ -127,8 +132,9 @@ const ModalLevelForm: React.FC<{
   return (
     <>
         <ModalComponent
-          title={`${isOpenModalNivel.op === 0 ? "Crear" : "Editar"} nivel académico`}
-          labelBtnAccept={`${isOpenModalNivel.op === 0 ? "Crear" : "Actualizar"}`}
+          title={handleTitleModal()}
+          labelBtnAccept={`${isOpenModalNivel.op === "add" ? "Crear" : "Actualizar"}`}
+          buttonAcceptVisible={isOpenModalNivel.op !== "view"}
           sizeModal="medium"
           handleSubmit={handleSubmitLevel(onSubmitLevel)}
           handleModal={() => {handleCloseModal()}}
@@ -141,7 +147,10 @@ const ModalLevelForm: React.FC<{
                 name="name"
                 className="capitalize"
                 typeInput="text"
-                register={registerLevel("name")}
+                readOnly={isOpenModalNivel.op === "view"}
+                register={registerLevel("name", {
+                  disabled: isOpenModalNivel.op === "view",
+                })}
                 required
                 error={errorsLevel.description && errorsLevel.description.message}
               />
@@ -150,8 +159,10 @@ const ModalLevelForm: React.FC<{
                 label="Orden"
                 placeholder="Orden del nivel académico (+)"
                 name="levelOrder"
+                readOnly={isOpenModalNivel.op === "view"}
                 register={registerLevel("levelOrder", {
                   valueAsNumber: true,
+                  disabled: isOpenModalNivel.op === "view",
                 })}
                 required
                 error={errorsLevel.levelOrder && errorsLevel.levelOrder.message}
@@ -161,11 +172,13 @@ const ModalLevelForm: React.FC<{
                   label="Codigo nivel académico"
                   placeholder="Codigo nivel académico"
                   name="code"
+                  readOnly={isOpenModalNivel.op === "view"}
                   register={registerLevel("code",{
                     onChange: (e) => {
                       const value = e.target.value.toUpperCase();
                       setValueLevel("code", value);
-                    }
+                    },
+                    disabled: isOpenModalNivel.op === "view",
                   })}
                   required
                   error={errorsLevel.code && errorsLevel.code.message}
@@ -177,7 +190,10 @@ const ModalLevelForm: React.FC<{
                   rows={4}
                   placeholder="Descripción"
                   label="Descripción"
-                  register={registerLevel("description")}
+                  readOnly={isOpenModalNivel.op === "view"}
+                  register={registerLevel("description", {
+                    disabled: isOpenModalNivel.op === "view",
+                  })}
                   required
                   error={errorsLevel.description && errorsLevel.description.message}
                   />

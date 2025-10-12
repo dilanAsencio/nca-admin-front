@@ -30,7 +30,8 @@ const BranchesViewer: React.FC<{
     const iconAdd = iconsActions.add;
     const iconDelete = iconsActions.delete;
     const iconEdit = iconsActions.edit;
-    const [isOpenModalBranche, setIsOpenModalBranche] = React.useState<boolean>(false);
+    const iconDetail = iconsActions.view;
+    const [isOpenModalBranche, setIsOpenModalBranche] = React.useState<{display: boolean, op: "edit" | "detail" | null}>({display: false, op: null});
     const [labelPopUp, setLabelPopUp] = React.useState<string | undefined>("Acciones sede");
     const showToast = alerts.showToast;
 
@@ -39,12 +40,17 @@ const BranchesViewer: React.FC<{
             return [
                 {
                     label: "Agregar nivel",
-                    onClick: () => {toggleModalNivel(true, 0); handleActions && handleActions(branche, "level")},
+                    onClick: () => {toggleModalNivel(true, "add"); handleActions && handleActions(branche, "level")},
                     icon: iconAdd,
                 },
                 {
+                    label: "Detalle sede",
+                    onClick: () => setIsOpenModalBranche({display: true, op: "detail"}),
+                    icon: iconDetail,
+                },
+                {
                     label: "Editar sede",
-                    onClick: () => setIsOpenModalBranche(true),
+                    onClick: () => setIsOpenModalBranche({display: true, op: "edit"}),
                     icon: iconEdit,
                 },
                 {
@@ -57,20 +63,25 @@ const BranchesViewer: React.FC<{
         return [
             {
                 label: "Agregar nivel",
-                onClick: () => {toggleModalNivel(true, 0); handleActions && handleActions(branche, "level");},
+                onClick: () => {toggleModalNivel(true, "add"); handleActions && handleActions(branche, "level");},
                 icon: iconAdd,
             },
             {
                 label: "Agregar grado",
                 onClick: () => {
-                    toggleModalGrado(true, 0);
+                    toggleModalGrado(true, "add");
                     handleActions && handleActions(branche, "grade");
                 },
                 icon: iconAdd,
             },
             {
+                label: "Detalle sede",
+                onClick: () => setIsOpenModalBranche({display: true, op: "detail"}),
+                icon: iconDetail,
+            },
+            {
                 label: "Editar sede",
-                onClick: () => setIsOpenModalBranche(true),
+                onClick: () => setIsOpenModalBranche({display: true, op: "edit"}),
                 icon: iconEdit,
             },
             {
@@ -149,8 +160,8 @@ const BranchesViewer: React.FC<{
                 <Image
                     src="/assets/img/marker-03.png"
                     alt="school-icon"
-                    width={24}
-                    height={24}
+                    width={22}
+                    height={22}
                     loading="lazy"
                 />
                 <Tooltip target={".tg-tooltip"} />
@@ -191,15 +202,16 @@ const BranchesViewer: React.FC<{
         </div>
         <hr className="m-0" />
         
-      { isOpenModalBranche && (
+      { isOpenModalBranche.display && (
         <ModalComponent
           title={`Sede del colegio: ${branche.campus_info &&branche?.campus_info.name}`}
           labelBtnAccept="Crear"
           sizeModal="large"
           buttonAcceptVisible={false}
-          handleModal={() => setIsOpenModalBranche(false)} >
+          handleModal={() => setIsOpenModalBranche({display: false, op: null})} >
             <BranchesFormComponent
-                isSubmited={() => setIsOpenModalBranche(false)}
+                isDetail={isOpenModalBranche.op === "detail"}
+                isSubmited={() => setIsOpenModalBranche({display: false, op: null})}
                 writeData={branche}
                 title={branche.title} />
         </ModalComponent> 

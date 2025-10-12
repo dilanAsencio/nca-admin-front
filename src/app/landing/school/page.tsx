@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Search from "@/components/public/school/search/Search";
-import Filter from "@/components/public/school/filter/Filter";
+import Search from "@/app/landing/school/components/search/Search";
+import Filter from "@/app/landing/school/components/filter/Filter";
 import "./style.css";
 import CardSchool from "@/components/public/home/school/CardSchool";
 import Pagination from "@/components/shared/paginate/pagination";
@@ -11,25 +11,34 @@ import { Institution } from "@/app/core/interfaces/public/campus-interfaces";
 import { useRouter } from "next/navigation";
 
 const SchoolPage: React.FC = () => {
-  const [campus, setCampus] = useState<Institution[] | null>(null);
+  const [campus, setCampus] = useState<any[] | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [currentSearch, setCurrentSearch] = useState<string>("");
   const [totalItems, setTotalItems] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const itemsPerPage = 6;
+  const itemsPerPage = 9;
   const router = useRouter();
 
   const fetchCampus  = async (page: number, search?: string) => {
     try {
       const response = await CampusPublicService.getCampus(
         {page: page - 1,
-        size: itemsPerPage},
-        search
-      )
-      if (response?.content) {
-        setCampus(response.content);
+        size: itemsPerPage,
+        sort: ["name", "asc"],
+      });
+      if (response?.content) {        
+        let campus: any = [];
+        response.content.forEach((item) => {
+          if (item.campuses && item.campuses.length > 0) {
+            item.campuses.forEach((camp: any) => {
+              campus.push({...camp, tenantId: item.tenantId});
+            });
+          }
+        });
+        
+        setCampus(campus);
         setTotalItems(response.totalElements);
       }
     } catch (error: any) {
@@ -44,7 +53,7 @@ const SchoolPage: React.FC = () => {
   };
 
   const viewCampus = (item: Institution) => {
-    router.push(`/landing/school/${item.id}`);
+    router.push(`/landing/school/${item.id}/${item.tenantId}`, );
   }
 
   useEffect(() => {
@@ -62,7 +71,7 @@ const SchoolPage: React.FC = () => {
           <div className="content-grid-school basis-3/4 grid grid-cols-3 gap-3">
             {
               campus?.map((item, index) => {
-                return <CardSchool key={index} nameSchool={item.display_name} onSubmit={() => viewCampus(item)}></CardSchool>;
+                return <CardSchool key={index} nameSchool={item.name} onSubmit={() => viewCampus(item)}></CardSchool>;
               })
             }
           </div>

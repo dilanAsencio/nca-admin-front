@@ -17,7 +17,7 @@ const TabsComponent: React.FC<{
     
     return (
         <div
-            onClick={() => handleClick} 
+            onClick={() => handleClick && handleClick()} 
             className={clsx(
             styleFont["font-outfit"],
             isActive && "active",

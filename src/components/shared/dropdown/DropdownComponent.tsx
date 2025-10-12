@@ -32,6 +32,7 @@ const DropdownComponent: React.FC<Props> = ({
   label,
   isMulti = false,
   required = false,
+  readOnly = false,
   error,
 }) => {
   const handleChange = (e: any) => {
@@ -54,6 +55,7 @@ const DropdownComponent: React.FC<Props> = ({
           options={options}
           optionLabel="label"
           optionValue="value"
+          readOnly={readOnly}
           placeholder={placeholder}
           disabled={disabled}
           className="w-full custom-dropdown-multi"
@@ -68,6 +70,7 @@ const DropdownComponent: React.FC<Props> = ({
           options={options}
           optionLabel="label"
           optionValue="value"
+          readOnly={readOnly}
           placeholder={placeholder}
           disabled={disabled}
           className="w-full custom-dropdown"

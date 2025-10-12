@@ -23,7 +23,7 @@ const ModalComponent: React.FC<{
         <div className={clsx(
           "relative bg-white rounded-[0.5rem] w-full",
           sizeModal === 'small' && "max-w-[30rem] max-h-[20rem]",
-          sizeModal === 'medium' && "max-w-[55rem] max-h-[21rem]",
+          sizeModal === 'medium' && "max-w-[55rem] max-h-[25rem]",
           sizeModal === 'large' && "max-w-[70rem] max-h-[65rem]",
           !sizeModal && "max-w-[50rem]",
           "flex flex-col",

@@ -11,8 +11,13 @@ import BasicDataForm from "./campusForms/BasicDataComponent";
 import BranchesComponent from "./campusForms/BranchesComponent";
 import CertifiedAndProgramsForm from "./campusForms/Certified&ProgramsComponent";
 
-const AcademicManagementFormsComponent: React.FC<{ onBack: () => void, title: string, isEditCampus: boolean }> = ({
-  onBack, title, isEditCampus
+const AcademicManagementFormsComponent: React.FC<{
+  onBack: () => void,
+  title: string,
+  isEditCampus: boolean,
+  isDetailCampus: boolean
+}> = ({
+  onBack, title, isEditCampus, isDetailCampus
 }) => {
   const { stepsCreateSchool, resetForm, handleDownChecks } = useUI();
   const [currentStep, setCurrentStep] = useState(1);
@@ -51,9 +56,9 @@ const AcademicManagementFormsComponent: React.FC<{ onBack: () => void, title: st
         />
         <hr className="my-[0.5rem]" />
         {currentStep === 1 && (
-          <BasicDataForm isEdit={isEditCampus} onBack={handleBack} onNext={() => {setCurrentStep(currentStep + 1)}} />
+          <BasicDataForm isEdit={isEditCampus} isDetail={isDetailCampus} onBack={handleBack} onNext={() => {setCurrentStep(currentStep + 1)}} />
         )}
-        {currentStep === 2 && <BranchesComponent onBack={handleBack} onNext={() => {setCurrentStep(currentStep + 1)}} />}
+        {currentStep === 2 && <BranchesComponent isDetail={isDetailCampus} onBack={handleBack} onNext={() => {setCurrentStep(currentStep + 1)}} />}
         {currentStep === 3 && <CertifiedAndProgramsForm onClose={handleBack} />}
       </div>
     </div>
