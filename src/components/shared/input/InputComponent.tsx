@@ -15,6 +15,7 @@ const InputComponent: React.FC<InputComponentProps> = (
         label,
         isInputSearch = false,
         required = false,
+        readOnly = false,
         error,
     }
 ) => {
@@ -44,6 +45,7 @@ const InputComponent: React.FC<InputComponentProps> = (
                     <input
                         inputMode={typeInput === "number" ? "number" : "text"}
                         placeholder={placeholder}
+                        readOnly={readOnly}
                         name={name}
                         type={typeInput}
                         disabled={disabled}

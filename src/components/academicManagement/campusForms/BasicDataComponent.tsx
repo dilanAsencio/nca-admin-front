@@ -17,7 +17,7 @@ import clsx from "clsx";
 import { Response } from "@/app/core/interfaces/api-interfaces";
 import { CampusForm } from "@/app/core/interfaces/academicManagement/campus-interfaces";
 
-const BasicDataForm: React.FC<{onBack: () => void, onNext: () => void, isEdit: boolean}> = ({onBack, onNext, isEdit}) => {
+const BasicDataForm: React.FC<{onBack: () => void, onNext: () => void, isEdit: boolean, isDetail: boolean}> = ({onBack, onNext, isEdit, isDetail}) => {
     const showToast = alerts.showToast;
     const { updateBasicData, currentCampus, handlerSteps, activeNavSteps, toggleLoading } = useUI();
     const {
@@ -101,7 +101,9 @@ const BasicDataForm: React.FC<{onBack: () => void, onNext: () => void, isEdit: b
                 </div>
                 <div className="basis-3/4">
                     <TextAreaComponent
-                        register={register("description")}
+                        register={register("description", {
+                            disabled: isDetail,
+                        })}
                         name="description"
                         rows={6}
                         placeholder="Descripción del colegio"
@@ -122,7 +124,9 @@ const BasicDataForm: React.FC<{onBack: () => void, onNext: () => void, isEdit: b
                     className="capitalize"
                     name="name"
                     typeInput="text"
-                    register={register("name")}
+                    register={register("name", {
+                        disabled: isDetail,
+                    })}
                     required
                     error={errors.name && errors.name.message as string}
                     />
@@ -132,7 +136,9 @@ const BasicDataForm: React.FC<{onBack: () => void, onNext: () => void, isEdit: b
                     className="capitalize"
                     name="legal_name"
                     typeInput="text"
-                    register={register("legal_name")}
+                    register={register("legal_name", {
+                        disabled: isDetail,
+                    })}
                     required
                     error={errors.legal_name && errors.legal_name.message as string}
                     />
@@ -147,6 +153,7 @@ const BasicDataForm: React.FC<{onBack: () => void, onNext: () => void, isEdit: b
                             const replace = e.target.value.replace(/[^a-zA-Z0-9-]/g, '');
                             setValue("code", replace.toUpperCase());
                         },
+                        disabled: isDetail,
                     })}
                     required
                     error={errors.code && errors.code.message as string}
@@ -168,6 +175,7 @@ const BasicDataForm: React.FC<{onBack: () => void, onNext: () => void, isEdit: b
                         ]}
                         onChange={(value) => field.onChange(value)}
                         value={field.value}
+                        disabled={isDetail}
                         required
                         error={errors.gender && errors.gender.message as string}
                         />
@@ -192,6 +200,7 @@ const BasicDataForm: React.FC<{onBack: () => void, onNext: () => void, isEdit: b
                         onChange={(value) => field.onChange(value)}
                         value={field.value}
                         required
+                        disabled={isDetail}
                         error={errors.languages && errors.languages.message as string}
                         />
                     )}
@@ -203,7 +212,7 @@ const BasicDataForm: React.FC<{onBack: () => void, onNext: () => void, isEdit: b
                     name="foundation_year"
                     register={register("foundation_year", {
                         valueAsNumber: true,
-                         onChange(e) {
+                        onChange(e) {
                             const value = e.target.value;
                             if (value > new Date().getFullYear() - 4) {
                                 setError("foundation_year", {
@@ -219,7 +228,8 @@ const BasicDataForm: React.FC<{onBack: () => void, onNext: () => void, isEdit: b
                                 setError("foundation_year", { type: "manual", message: "" });
                                 setValue("foundation_year", value);
                             }
-                         }
+                        },
+                        disabled: isDetail,
                     })}
                     required
                     error={errors.foundation_year && errors.foundation_year.message as string}
@@ -244,6 +254,7 @@ const BasicDataForm: React.FC<{onBack: () => void, onNext: () => void, isEdit: b
                                 setValue("max_students", value);
                             }
                         },
+                        disabled: isDetail,
                     })}
                     required
                     error={errors.max_students && errors.max_students.message as string}
@@ -266,6 +277,7 @@ const BasicDataForm: React.FC<{onBack: () => void, onNext: () => void, isEdit: b
                         onChange={(value) => field.onChange(value)}
                         value={field.value}
                         required
+                        disabled={isDetail}
                         error={errors.religion && errors.religion.message as string}
                         />
                     )}
@@ -288,6 +300,7 @@ const BasicDataForm: React.FC<{onBack: () => void, onNext: () => void, isEdit: b
                         onChange={(value) => field.onChange(value)}
                         value={field.value}
                         required
+                        disabled={isDetail}
                         error={errors.calendar_type && errors.calendar_type.message as string}
                         />
                     )}
@@ -303,12 +316,15 @@ const BasicDataForm: React.FC<{onBack: () => void, onNext: () => void, isEdit: b
                         placeholder="Misión del colegio"
                         error={errors.mission && errors.mission.message as string}
                         required
+                        disabled={isDetail}
                         />
                 </div>
                 <div className="flex flex-col basis-1/2 max-md:basis-full">
                     <label htmlFor="vision" className="font-bold text-[1.25rem]"><b className="text-red-500">{"*"}</b> Visión</label>
                     <TextAreaComponent
-                        register={register("vision")}
+                        register={register("vision", {
+                            disabled: isDetail,
+                        })}
                         name="vision"
                         rows={4}
                         placeholder="Visión del colegio"
@@ -325,13 +341,13 @@ const BasicDataForm: React.FC<{onBack: () => void, onNext: () => void, isEdit: b
                 className="secondary"
                 label="Cancelar"
             />
-            <ButtonComponent
+            {isDetail ? null : <ButtonComponent
                 blockAccess={blockForm}
                 className="primary"
                 onClick={handleSubmit(onSubmit)}
                 type="submit"
                 label={isEdit ? "Actualizar" : "Siguiente"}
-            />
+            />}
             </div>
         </div>
     </>);

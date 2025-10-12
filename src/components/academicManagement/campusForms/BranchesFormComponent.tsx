@@ -25,14 +25,15 @@ interface BranchesFormProps {
   writeData?: BranchesResponse;
   resetForm?: boolean;
   isSubmited: () => void;
+  isDetail?: boolean;
 }
 
 const BranchesFormComponent: React.FC<BranchesFormProps> = ({
-    title, hideForm, dataBranches, writeData, resetForm = false, isSubmited
+    title, hideForm, dataBranches, writeData, resetForm = false, isSubmited, isDetail = false
 }) => {
   const {
     currentCampus,
-    iconsActionsTable,
+    iconsActions,
     handleOptionLevel,
     toggleModalNivel,
     toggleModalGrado,
@@ -102,8 +103,9 @@ const BranchesFormComponent: React.FC<BranchesFormProps> = ({
     { nameField: "Valor grado", key: "formattedPrice" },
   ]
 
-  const iconEdit = iconsActionsTable.edit;
-  const iconDelete = iconsActionsTable.delete;
+  const iconEdit = iconsActions.edit;
+  const iconDetail = iconsActions.view;
+  const iconDelete = iconsActions.delete;
   const isEdit = writeData ? true : false; 
 
   const handleDepartamentoChange = (value: any) => {
@@ -205,8 +207,13 @@ const BranchesFormComponent: React.FC<BranchesFormProps> = ({
   const btnActionsNivel = (item: any): ButtonActions[] =>{
     return [
       {
+        tooltip: "Detalle nivel",
+        action: () => toggleModalNivel(true, "view", item),
+        icon: iconDetail,
+      },
+      {
         tooltip: "Editar nivel",
-        action: () => toggleModalNivel(true, 1, item),
+        action: () => toggleModalNivel(true, "edit", item),
         icon: iconEdit,
       },
       {
@@ -219,8 +226,13 @@ const BranchesFormComponent: React.FC<BranchesFormProps> = ({
   const btnActionsNivelGrados = (item: any): ButtonActions[] =>{
     return [
       {
+        tooltip: "Detalle grado",
+        action: () => toggleModalGrado(true, "view", item),
+        icon: iconDetail,
+      },
+      {
         tooltip: "Editar grado",
-        action: () => toggleModalGrado(true, 1, item),
+        action: () => toggleModalGrado(true, "edit", item),
         icon: iconEdit,
       },
       {
@@ -336,7 +348,9 @@ const BranchesFormComponent: React.FC<BranchesFormProps> = ({
         name="name"
         className="capitalize"
         typeInput="text"
-        register={register("name")}
+        register={register("name", {
+          disabled: isDetail,
+        })}
         required
         error=""
       />
@@ -346,6 +360,7 @@ const BranchesFormComponent: React.FC<BranchesFormProps> = ({
         defaultValue=""
         render={({ field }) => (
           <DropdownComponent
+            disabled={isDetail}
             name="street_type"
             label="Calle/Carrera"
             className="primary"
@@ -367,14 +382,18 @@ const BranchesFormComponent: React.FC<BranchesFormProps> = ({
         name="street_name"
         className="capitalize"
         typeInput="text"
-        register={register("street_name")}
+        register={register("street_name", {
+          disabled: isDetail,
+        })}
       />
       <InputComponent
         typeInput="number"
         label="Número"
         placeholder=""
         name="number_primary"
-        register={register("number_primary")}
+        register={register("number_primary", {
+          disabled: isDetail,
+        })}
       />
       <InputComponent
         label="Complemento"
@@ -382,14 +401,18 @@ const BranchesFormComponent: React.FC<BranchesFormProps> = ({
         name="complement_primary"
         className="capitalize"
         typeInput="text"
-        register={register("complement_primary")}
+        register={register("complement_primary", {
+          disabled: isDetail,
+        })}
       />
       <InputComponent
         typeInput="number"
         label="# Número"
         placeholder=""
         name="number_secondary"
-        register={register("number_secondary")}
+        register={register("number_secondary", {
+          disabled: isDetail,
+        })}
       />
       <InputComponent
         label="Complemento"
@@ -397,7 +420,9 @@ const BranchesFormComponent: React.FC<BranchesFormProps> = ({
         name="complement_secondary"
         className="capitalize"
         typeInput="text"
-        register={register("complement_secondary")}
+        register={register("complement_secondary", {
+          disabled: isDetail,
+        })}
       />
       <Controller
         name="department"
@@ -405,6 +430,7 @@ const BranchesFormComponent: React.FC<BranchesFormProps> = ({
         defaultValue=""
         render={({ field }) => (
           <DropdownComponent
+            disabled={isDetail}
             name="department"
             label="Departamento"
             className="primary"
@@ -424,6 +450,7 @@ const BranchesFormComponent: React.FC<BranchesFormProps> = ({
         defaultValue=""
         render={({ field }) => (
           <DropdownComponent
+            disabled={isDetail}
             name="city"
             label="Ciudad"
             className="primary"
@@ -443,6 +470,7 @@ const BranchesFormComponent: React.FC<BranchesFormProps> = ({
         defaultValue=""
         render={({ field }) => (
           <DropdownComponent
+            disabled={isDetail}
             name="neighborhood"
             label="Barrio / Localidad"
             className="primary"
@@ -539,12 +567,14 @@ const BranchesFormComponent: React.FC<BranchesFormProps> = ({
         label="Cancelar"
         onClick={() => hideForm()}
       />}
+      { isDetail ? null :
         <ButtonComponent
-        className="primary"
-        type="submit"
-        label={`${isEdit ? "Actualizar" : "Crear"} sede`}
-        onClick={handleSubmit(addBranche)}
-      />
+          className="primary"
+          type="submit"
+          label={`${isEdit ? "Actualizar" : "Crear"} sede`}
+          onClick={handleSubmit(addBranche)}
+        />
+      }
     </div>
     {openMap && <MapComponent />}
   </div>

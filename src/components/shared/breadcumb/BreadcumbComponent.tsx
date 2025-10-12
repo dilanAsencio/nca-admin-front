@@ -28,7 +28,7 @@ export default function BreadcumbComponent({items}: BreadcumbComponentProps) {
     label: capitalize(seg),
     href: "/" + segments.slice(0, idx + 1).join("/"),
   }));
-  console.log("Breadcrumbs:", breadcrumbs);
+  
   return (
     <nav aria-label="Breadcrumb">
       <ol className="flex items-center space-x-2 text-sm m-0 text-gray-700">

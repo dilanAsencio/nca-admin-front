@@ -7,40 +7,59 @@ import Image from "next/image";
 import style from "@/app/font.module.css";
 import clsx from "clsx";
 import BreadcumbComponent from "@/components/shared/breadcumb/BreadcumbComponent";
-import { CampusDetail, CampusDetailBackend } from "@/app/core/interfaces/public/campus-interfaces";
+import { BranchResponse, CampusDetail, CampusDetailBackend } from "@/app/core/interfaces/public/campus-interfaces";
 import { mapCampusDetail } from "@/utils/mappers/campus.mapper";
 import TabsComponent from "@/components/shared/tabs/TabsComponent";
-import "./style.css";
+import "../style.css";
 import ButtonComponent from "@/components/shared/button/ButtonComponent";
-import CardProcessComponent from "../components/CardProcess";
+import CardProcessComponent from "../../components/CardProcess";
 
 const SchoolDetailsPage: React.FC = () => {
-  const { id } = useParams<{id: string}>();
+  const { id, tenantId } = useParams<{id: string, tenantId: string}>();
   const [campusData, setCampusData] = useState<CampusDetail | null>(null);
+  const [ branches, setBranches ] = useState<BranchResponse[]>([]);
   const [ breadcrumbs, setBreadcrumbs ] = useState<{ label: string; href?: string }[]>([]);
   const [ selectedTab, setSelectedTab ] = useState<number>(0);
+  const [ infoTab, setInfoTab ] = useState<BranchResponse | null>(null);
 
   const getCampusDetails = async (campusId: string) => {
-    console.log("Obteniendo detalles para el campus con ID:", campusId);
     try {
       const response = await CampusPublicService.getCampusById(campusId) as CampusDetailBackend;
-      console.log("Detalles del campus:", response);
       setCampusData(mapCampusDetail(response));
       setBreadcrumbs([{ label: "Colegio", href: "/landing/school" }, { label: response.display_name }]);
     } catch (error: any) {
       console.error(error);
     }
   }
+  
+  const getBranchesByCampus = async (campusId: string, tenantId: string) => {
+    try {
+      const response = await CampusPublicService.getBranchesCampus(tenantId, campusId);
+      console.log("sedes del campus:", response);
+      if (response.length > 0) {
+        setBranches(response);
+        setSelectedTab(0);
+        setInfoTab(response[0]);
+      }
+    } catch (error: any) {
+      console.error(error);
+    }
+  }
 
-  const handleSedeClick = () => {
-    console.log("Sede clicked");
-    setSelectedTab(0);
+  const handleSedeClick = (idx: number, data: any) => {
+    console.log("Sede clicked", data);
+    setSelectedTab(idx);
+    setInfoTab(data);
+  }
+
+  const initialData = () => {
+    getBranchesByCampus(id, tenantId);
+    getCampusDetails(tenantId);
   }
 
   useEffect(() => {
-    console.log("ID de la escuela:", id);
-    getCampusDetails(id);
-  }, [id]);
+    initialData();
+  }, [id && tenantId]);
 
   return (
     <main className={clsx(
@@ -59,19 +78,24 @@ const SchoolDetailsPage: React.FC = () => {
             className="cursor-pointer"
           />
 
-          <h5 className="m-0 text-[1.25rem] text-gray-900 leading-[120%] font-medium">Colegio - { campusData?.displayName }</h5>
+          <h5 className="m-0 text-[1.25rem] text-gray-900 leading-[120%] font-medium">Colegio - { infoTab ? infoTab.campusInfo.name : "*" }</h5>
         </div>
 
         <BreadcumbComponent items={breadcrumbs} />
       </header>
       <div className="flex flex-col">
         <div className="flex">
-          <TabsComponent
-            handleClick={() => handleSedeClick()}
-            label={"Sede Norte"}
-            isActive={false}
-            icon={{ path: `/assets/icon/${false ? "school-icon-02" : "school-icon-01"}.svg`, alt: "icon-school" }}
-          />
+          {
+            branches.length > 0 && branches.map((branch, index) => (
+              <TabsComponent
+                key={index}
+                handleClick={() => handleSedeClick(index, branch)}
+                label={branch.name}
+                isActive={selectedTab === index}
+                icon={{ path: `/assets/icon/${selectedTab === index ? "school-icon-02" : "school-icon-01"}.svg`, alt: "icon-school" }}
+              />
+            ))
+          }
         </div>
         <section className="content-school-details">
           {/* GALLERY */}
@@ -80,12 +104,12 @@ const SchoolDetailsPage: React.FC = () => {
               <div className="flex gap-[1rem]">
                 <Image
                   src={'/assets/landing/img/df-checker.png'}
-                  alt={`logo de la escuela ${campusData?.displayName}`}
+                  alt={`logo de la escuela `}
                   width={50}
                   height={50}
                   loading="lazy"
                 />
-                <h3 className="m-0 text-gray-900 leading-[120%] font-medium self-center">{ campusData?.displayName }</h3>
+                <h3 className="m-0 text-gray-900 leading-[120%] font-medium self-center">{ infoTab && infoTab.campusInfo.name }</h3>
               </div>
 
               <div className="flex gap-[0.5rem]">
@@ -97,7 +121,7 @@ const SchoolDetailsPage: React.FC = () => {
                   height={24}
                   loading="lazy"
                 />
-                <span className="m-0">Calle 209 No. 45 - 80 - Bogotá - a 5km</span>
+                <span className="m-0">{infoTab && infoTab.fullAddress}</span>
               </div>
 
               <div className="flex gap-[1rem]">
@@ -129,7 +153,7 @@ const SchoolDetailsPage: React.FC = () => {
             <div className="h-[23.06rem] w-fill flex gap-[1.25rem]">
               <Image
                 src={'/assets/landing/img/df-checker.png'}
-                alt={`imagen de la escuela ${campusData?.displayName}`}
+                alt={`imagen de la escuela `}
                 className="rounded-[1rem] w-[-webkit-fill-available] h-[-webkit-fill-available]"
                 width={600}
                 height={400}
@@ -142,7 +166,7 @@ const SchoolDetailsPage: React.FC = () => {
               >
                 <Image
                   src={'/assets/landing/img/df-checker.png'}
-                  alt={`imagen de la escuela ${campusData?.displayName}`}
+                  alt={`imagen de la escuela `}
                   className="rounded-[1rem] w-[-webkit-fill-available] h-[-webkit-fill-available]"
                   width={600}
                   height={400}
@@ -150,7 +174,7 @@ const SchoolDetailsPage: React.FC = () => {
                 />
                 <Image
                   src={'/assets/landing/img/df-checker.png'}
-                  alt={`imagen de la escuela ${campusData?.displayName}`}
+                  alt={`imagen de la escuela `}
                   className="rounded-[1rem] w-[-webkit-fill-available] h-[-webkit-fill-available]"
                   width={600}
                   height={400}
@@ -158,7 +182,7 @@ const SchoolDetailsPage: React.FC = () => {
                 />
                 <Image
                   src={'/assets/landing/img/df-checker.png'}
-                  alt={`imagen de la escuela ${campusData?.displayName}`}
+                  alt={`imagen de la escuela `}
                   className="rounded-[1rem] w-[-webkit-fill-available] h-[-webkit-fill-available]"
                   width={600}
                   height={400}
@@ -166,7 +190,7 @@ const SchoolDetailsPage: React.FC = () => {
                 />
                 <Image
                   src={'/assets/landing/img/df-checker.png'}
-                  alt={`imagen de la escuela ${campusData?.displayName}`}
+                  alt={`imagen de la escuela `}
                   className="rounded-[1rem] w-[-webkit-fill-available] h-[-webkit-fill-available]"
                   width={600}
                   height={400}
@@ -210,7 +234,7 @@ const SchoolDetailsPage: React.FC = () => {
             <h3 className="text-gray-900 text-[1.95rem] text-center font-semibold">Partes del proceso</h3>
             <div className="flex h-[11.5625rem] gap-[1rem] max-lg:flex-col">
               <CardProcessComponent
-                icon={{ path: '/assets/icon/calendar.svg', alt: `imagen de la escuela ${campusData?.displayName}` }}
+                icon={{ path: '/assets/icon/calendar.svg', alt: `imagen de la escuela ` }}
                 label="Programa tu visita"
               />
 
@@ -218,7 +242,7 @@ const SchoolDetailsPage: React.FC = () => {
               </div>
 
               <CardProcessComponent
-                icon={{ path: '/assets/icon/file-05.svg', alt: `imagen de la escuela ${campusData?.displayName}` }}
+                icon={{ path: '/assets/icon/file-05.svg', alt: `imagen de la escuela ` }}
                 label="Llena tu formulario en admisiones by Éccole!"
               />
 
@@ -226,7 +250,7 @@ const SchoolDetailsPage: React.FC = () => {
               </div>
 
               <CardProcessComponent
-                icon={{ path: '/assets/icon/upload-01.svg', alt: `imagen de la escuela ${campusData?.displayName}` }}
+                icon={{ path: '/assets/icon/upload-01.svg', alt: `imagen de la escuela ` }}
                 label="Anexa los documentos"
               />
 
@@ -234,7 +258,7 @@ const SchoolDetailsPage: React.FC = () => {
               </div>
 
               <CardProcessComponent
-                icon={{ path: '/assets/icon/phone-01.svg', alt: `imagen de la escuela ${campusData?.displayName}` }}
+                icon={{ path: '/assets/icon/phone-01.svg', alt: `imagen de la escuela ` }}
                 label="Espera nuestra llamada"
               />
 
@@ -282,7 +306,7 @@ const SchoolDetailsPage: React.FC = () => {
             <h3 className="text-gray-900  text-[1.95rem] text-center font-semibold">Datos del colegio</h3>
             <Image
               src={'/assets/img/recurso-2-1.png'}
-              alt={`datos de la escuela ${campusData?.displayName}`}
+              alt={`datos de la escuela `}
               className="w-auto h-[21.5rem]"
               width={1322}
               height={344}

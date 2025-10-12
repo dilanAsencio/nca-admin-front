@@ -45,11 +45,13 @@ const AcademicDashboard: React.FC = () => {
 
   const [titleAcademic, setTitleAcademic] = useState<string>("Crear Colegio");
   const [isEditCampus, setIsEditCampus] = useState<boolean>(false);
+  const [isDetailCampus, setIsDetailCampus] = useState<boolean>(false);
 
   const imgSchool = { path: "/assets/img/icon-school.png", alt: "crear colegio", w: 59.8, h: 55.36 };
   const iconAdd = iconsActions.add;
   const iconEdit = iconsActions.edit;
   const iconDelete = iconsActions.delete;
+  const iconDetail = iconsActions.view;
   const showToast = alerts.showToast;
   const showConfirm = alerts.showConfirm;
 
@@ -127,6 +129,7 @@ const AcademicDashboard: React.FC = () => {
     setViewFormSchool(prev => !prev);
     handleDownChecks();
     setIsEditCampus(false);
+    setIsDetailCampus(false);
   };
   
   const handleAddBranche = (campus: any) => {
@@ -185,12 +188,16 @@ const AcademicDashboard: React.FC = () => {
     }
   }
 
-  const handleEditSchool = (infoCampus: any) => {    
-    setIsEditCampus(true);
+  const handleEditSchool = (infoCampus: any, isDetail: boolean = false) => {
     updateBasicData(infoCampus);
     addBranches(infoCampus.branches);
     handlerSteps(1);
     activeNavSteps(2);
+    if(isDetail) {
+      setIsDetailCampus(true);
+    } else {
+      setIsEditCampus(true);
+    }
     setViewFormSchool(true);
   }
 
@@ -224,6 +231,14 @@ const AcademicDashboard: React.FC = () => {
 
   const optionsCampus = (item: any): { label: string; onClick: () => void, icon: {path: string; alt: string} }[] =>{
     return [
+      {
+        label: "Detalle colegio",
+        onClick: () => {
+          handleEditSchool(item, true);
+          setTitleAcademic("Detalle Colegio");
+        },
+        icon: iconDetail,
+      },
       {
         label: "Editar colegio",
         onClick: () => {
@@ -262,7 +277,7 @@ const AcademicDashboard: React.FC = () => {
   return (
     <>
       {viewFormSchool ? (
-        <AcademicManagementFormsComponent title={titleAcademic} onBack={toggleCreateSchool} isEditCampus={isEditCampus} />
+        <AcademicManagementFormsComponent title={titleAcademic} onBack={toggleCreateSchool} isEditCampus={isEditCampus} isDetailCampus={isDetailCampus} />
       ) : (
         <div
           className={clsx(
@@ -287,24 +302,25 @@ const AcademicDashboard: React.FC = () => {
               img={imgSchool}
             />
           </div>
-          <div className="flex flex-col flex-1 overflow-auto gap-[1rem]">
+          <div className="flex flex-col gap-[0.5rem]">
             {campus && campus.length && (
               <div className="card-schools">
                 <div className="content-school-table">
-                    <div className="body-school-table gap-[1rem]">
+                    <div className="body-school-table h-[60vh] overflow-y-auto gap-[0.5rem]">
                       {campus?.map((item: any, index: number) => (
-                        <div className="flex flex-col gap-[1rem]" key={index}>
-                          <div className="flex justify-between">
-                            <div className="flex gap-[0.5rem] max-[450px]:w-1/2">
+                        <div className="flex flex-col gap-[0.25rem]" key={index}>
+                          <div className="campus-header flex justify-between sticky top-0 bg-white z-20 py-2 px-3">
+                            <div className="flex gap-[0.5rem] self-center max-[450px]:w-1/2">
                               <Image
                                 src={`/assets/landing/icon/cards/school-icon-01.svg`}
                                 alt="icon-school"
-                                width={24}
-                                height={24}
+                                className="w-[28px] h-[28px]"
+                                width={28}
+                                height={28}
                                 loading="lazy"
                               />
                               <span className={clsx(
-                                "m-0 font-medium text-[1rem] leading-[1.25rem] self-center",
+                                "m-0 font-bold text-[1.15rem] leading-[1.25rem] self-center",
                                 "inline-block w-min overflow-hidden text-ellipsis whitespace-nowrap",
                               )}>
                                 {item?.name}
@@ -313,7 +329,7 @@ const AcademicDashboard: React.FC = () => {
                             <div className="flex gap-[0.75rem]">
                               <ButtonPopUpComponent
                                 size="small"
-                                className="tertiary-outline"
+                                className="tertiary-outline z-30"
                                 label="Acciones colegio"
                                 options={optionsCampus(item)}
                               />

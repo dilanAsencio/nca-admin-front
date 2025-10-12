@@ -1,6 +1,6 @@
 import { apiProxy } from "@/helpers/api-proxy";
-import { InstitutionsPaginatedResponse, PaginateIMPL } from "@/app/core/interfaces/api-interfaces";
-import { CampusDetailBackend } from "@/app/core/interfaces/public/campus-interfaces";
+import { PaginateIMPL, ResponseApiPublic } from "@/app/core/interfaces/api-interfaces";
+import { BranchResponse, CampusDetailBackend } from "@/app/core/interfaces/public/campus-interfaces";
 
 export const CampusPublicService = {  
   
@@ -12,9 +12,8 @@ export const CampusPublicService = {
    */
   getCampus: async (
     paginate?: PaginateIMPL,
-    q?: string
-  ): Promise<InstitutionsPaginatedResponse> => 
-    apiProxy("GET", `/public/tenants?q=${q}`, paginate),
+  ): Promise<ResponseApiPublic<any>> => 
+    apiProxy("GET", `/public/tenants-with-campuses`, paginate),
 
     
   /**
@@ -24,7 +23,14 @@ export const CampusPublicService = {
    * @throws { success: false, error: string } - If the retrieval fails.
    */
   getCampusById: async (
-    campusId: string,
+    tenantId: string,
   ): Promise<CampusDetailBackend> => 
-    apiProxy("GET", `/public/tenants/${campusId}`, undefined),
+    apiProxy("GET", `/public/tenants/${tenantId}`, undefined),
+
+  
+  getBranchesCampus: async (
+    tenantId: string,
+    campusId: string,
+  ): Promise<BranchResponse[]> => 
+    apiProxy("GET", `/public/tenants/${tenantId}/campus/${campusId}/branches`, undefined),
 };

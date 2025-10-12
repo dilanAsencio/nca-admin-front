@@ -45,6 +45,7 @@ export interface InputComponentProps {
     className?: string;
     onKeyUp?: (e: any) => void;
     required?: boolean;
+    readOnly?: boolean;
     error?: string;
 }
 
@@ -62,6 +63,7 @@ export interface DropdownComponentProps {
     className?: string;
     options: options[];
     onChange?: (value: string | string[]) => void;
+    readOnly?: boolean;
     required?: boolean;
     error?: string;
 }

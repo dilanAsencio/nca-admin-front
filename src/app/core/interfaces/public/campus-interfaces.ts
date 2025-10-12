@@ -22,6 +22,7 @@ export interface Institution {
   updated_time_ago: string;
   public_url: string;
   admission_url: string;
+  tenantId?: string;
 }
 
 export interface CampusDetailBackend {
@@ -51,4 +52,45 @@ export interface CampusDetail {
   status: string;
   lastUpdated: string;
   profileCompleteness: number;
+}
+export interface CampusInfo {
+  id: string;
+  code: string;
+  name: string;
+  logoUrl: string | null;
+}
+
+export interface BranchResponse {
+  id: string;
+  name: string;
+  code: string;
+  phone: string | null;
+  email: string | null;
+  address: string;
+  city: string;
+  department: string;
+  latitude: number | null;
+  longitude: number | null;
+  main: boolean;
+  isActive: boolean;
+  campusId: string;
+  streetType: string;
+  streetName: string;
+  numberPrimary: string;
+  complementPrimary: string;
+  numberSecondary: string;
+  complementSecondary: string;
+  neighborhood: string;
+  photos: string[];
+  hasGreenZones: boolean;
+  hasLaboratory: boolean;
+  hasSportsZones: boolean;
+  fullAddress: string;
+  photoCount: number;
+  features: string[];
+  hasAcademicLevels: boolean;
+  hasAcademicGrades: boolean;
+  academicLevelCount: number;
+  academicGradeCount: number;
+  campusInfo: CampusInfo;
 }

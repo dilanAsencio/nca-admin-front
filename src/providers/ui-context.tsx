@@ -20,10 +20,10 @@ interface UiContextType {
   toggleCardMessage: () => void;
   isOpenModalColegio: boolean;
   toggleModalColegio: () => void;
-  isOpenModalNivel: { isOpen: boolean; op: 0 | 1, data?: AcademicLevelResponse | null };
-  toggleModalNivel: (isOpen: boolean, op: 0 | 1, data?: AcademicLevelResponse | null) => void;
-  isOpenModalGrado: { isOpen: boolean; op: 0 | 1, data?: AcademicGradeResponse | null };
-  toggleModalGrado: (isOpen: boolean, op: 0 | 1, data?: AcademicGradeResponse | null) => void;
+  isOpenModalNivel: { isOpen: boolean; op: "add" | "edit" | "view", data?: AcademicLevelResponse | null };
+  toggleModalNivel: (isOpen: boolean, op: "add" | "edit" | "view", data?: AcademicLevelResponse | null) => void;
+  isOpenModalGrado: { isOpen: boolean; op: "add" | "edit" | "view", data?: AcademicGradeResponse | null };
+  toggleModalGrado: (isOpen: boolean, op: "add" | "edit" | "view", data?: AcademicGradeResponse | null) => void;
   optionsLevels: {label: string; value: string}[];
   handleOptionLevel: (levels: {label: string; value: string}[]) => void;
   logoNexus: string;
@@ -31,7 +31,6 @@ interface UiContextType {
   isLoading: boolean;
   toggleLoading: (loading: boolean) => void;
   iconsActions: { [key: string]: { path: string; alt: string } },
-  iconsActionsTable: { [key: string]: { path: string; alt: string } },
   hoverSidebar: boolean;
   setHoverSidebar: (value: boolean) => void;
   
@@ -52,8 +51,8 @@ const UiContext = createContext<UiContextType | undefined>(undefined);
 export const UIProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isOpenSidebar, setIsOpenSidebar] = useState<boolean>(true);
   const [isOpenModalColegio, setIsOppenModalColegio] = useState<boolean>(false);
-  const [isOpenModalNivel, setIsOpenModalNivel] = useState<{ isOpen: boolean; op: 0 | 1, data?: AcademicLevelResponse | null}>({ isOpen: false, op: 0 });
-  const [isOpenModalGrado, setIsOpenModalGrado] = useState<{ isOpen: boolean; op: 0 | 1, data?: AcademicGradeResponse | null}>({ isOpen: false, op: 0 });
+  const [isOpenModalNivel, setIsOpenModalNivel] = useState<{ isOpen: boolean; op: "add" | "edit" | "view", data?: AcademicLevelResponse | null}>({ isOpen: false, op: "add" });
+  const [isOpenModalGrado, setIsOpenModalGrado] = useState<{ isOpen: boolean; op: "add" | "edit" | "view", data?: AcademicGradeResponse | null}>({ isOpen: false, op: "add" });
   const [isVisualCardMessage, setIsVisualCardMessage] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectedModule, setSelectedModule] = useState<string | null>("dashboard");
@@ -66,19 +65,13 @@ export const UIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
     edit: { path: "/assets/icon/edit-contained-purple.svg", alt: "Editar" },
     delete: { path: "/assets/icon/trash-02-red.svg", alt: "Eliminar" },
     add: { path: "/assets/icon/plus-03.svg", alt: "Agregar" },
+    view: { path: "/assets/icon/paperclip.svg", alt: "Detalle" },
     // puedes agregar más acciones aquí
   };
 
   const handleOptionLevel = (levels: {label: string; value: string}[]) => {
     setOptionsLevels(levels || []);
   }
-  
-  const iconsActionsTable: { [key: string]: { path: string; alt: string } } = {
-    edit: { path: "/assets/icon/edit-contained-purple.svg", alt: "Editar" },
-    delete: { path: "/assets/icon/trash-02-red.svg", alt: "Eliminar" },
-    add: { path: "/assets/icon/plus-03.svg", alt: "Agregar" },
-    // puedes agregar más acciones aquí
-  };
   
   const [stepsCreateSchool, setStepsCreateSchool] = useState<any[]>([
     { label: "Datos básicos", value: 1, formChecked: false, navCheck: false },
@@ -170,10 +163,10 @@ export const UIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
   const toggleModalColegio = () => {
     setIsOppenModalColegio(prev => !prev);
   };
-  const toggleModalNivel = (isOpen: boolean, op: 0 | 1, data?: AcademicLevelResponse | null) => {
+  const toggleModalNivel = (isOpen: boolean, op: "add" | "edit" | "view", data?: AcademicLevelResponse | null) => {
     setIsOpenModalNivel({isOpen, op, data});
   };
-  const toggleModalGrado = (isOpen: boolean, op: 0 | 1, data?: AcademicGradeResponse | null) => {
+  const toggleModalGrado = (isOpen: boolean, op: "add" | "edit" | "view", data?: AcademicGradeResponse | null) => {
     setIsOpenModalGrado({isOpen, op, data});
   };
 
@@ -201,7 +194,6 @@ export const UIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
     toggleLoading,
     iconsActions,
     handleCheckSteps,
-    iconsActionsTable,
     handleDownChecks,
     activeNavSteps,
     currentCampus, updateBasicData, addBranches, updateCertifications, resetForm, stepsCreateSchool, handlerSteps

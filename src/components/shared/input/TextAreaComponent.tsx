@@ -16,6 +16,7 @@ interface TextAreaComponentProps {
   label?: string;
   required?: boolean
   error?: string
+  readOnly?: boolean // para react-hook-form readOnly
 }
 
 const TextAreaComponent: React.FC<TextAreaComponentProps> = ({
@@ -29,6 +30,7 @@ const TextAreaComponent: React.FC<TextAreaComponentProps> = ({
   register,
   label,
   required = false,
+  readOnly = false,
   error
 }) => {
   return (<>
@@ -39,6 +41,7 @@ const TextAreaComponent: React.FC<TextAreaComponentProps> = ({
         <textarea
         name={name}
         value={value}
+        readOnly={readOnly}
         onChange={onChange}
         placeholder={placeholder}
         rows={rows}

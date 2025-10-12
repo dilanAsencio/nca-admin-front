@@ -7,7 +7,7 @@ import { useUI } from "@/providers/ui-context";
 import BranchesFormComponent from "./BranchesFormComponent";
 import BranchesViewer from "./BranchesViewerComponent";
 
-const BranchesComponent: React.FC<{onNext: () => void, onBack: () => void}> = ({onNext, onBack}) => {
+const BranchesComponent: React.FC<{onNext: () => void, onBack: () => void, isDetail: boolean}> = ({onNext, onBack, isDetail}) => {
   const { currentCampus, activeNavSteps, handlerSteps } = useUI();
   const [showForm, setShowForm] = useState<boolean>(false);
   const [branches, setBranches] = useState<BranchesForm[] | null>(null);
@@ -62,7 +62,7 @@ const BranchesComponent: React.FC<{onNext: () => void, onBack: () => void}> = ({
         </div></>
       ) : (
         <BranchesFormComponent
-          resetForm={true}
+          isDetail={isDetail}
           isSubmited={() => setShowForm(false)}
           hideForm={() => setShowForm(false)} />
       )}

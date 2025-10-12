@@ -29,7 +29,7 @@ const Search: React.FC<{search: (search: string) => void}> = ({search}) => {
 
 
   return(
-  <header className="custom-header w-full flex justify-center items-start rounded-[4.375rem] p-[1rem] gap-[0.75rem]">
+  <header className="custom-header w-full flex justify-start items-start rounded-[4.375rem] p-[1rem] gap-[0.75rem]">
     <div className="lg:w-[21.3rem]">
       <InputComponent
         isInputSearch={true}
