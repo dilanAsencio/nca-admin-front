@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
-import BackgroundBlurRight from "@/components/layout/vectors/BackgroundBlurRight";
-import BackgroundBlurLeft from "@/components/layout/vectors/BackgroundBlurLeft";
+import BackgroundBlurRight from "@/app/core/layout/vectors/BackgroundBlurRight";
+import BackgroundBlurLeft from "@/app/core/layout/vectors/BackgroundBlurLeft";
 import style from "@/app/font.module.css";
 
 interface PublicAuthLayoutProps {

@@ -8,7 +8,7 @@ import {
 } from "@/providers/store/public-auth-store";
 import Link from "next/link";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
-import CardMessage from "@/components/auth/CardMessage";
+import CardMessage from "@/app/core/auth/CardMessage";
 
 interface FormErrors {
   [key: string]: string;
@@ -100,10 +100,13 @@ export default function PublicRegisterForm() {
 
     const payload = {
       username: form.username,
-      first_name: form.firstName,
-      last_name: form.lastName,
+      firstName: form.firstName,
+      lastName: form.lastName,
       email: form.email,
       phone: form.phone,
+      password: "aa123456!!qawfsaaa",
+      passwordConfirmation: "aa123456!!qawfsaaa",
+      campusId: "fba7ccf6-fcb1-4e60-8852-5c7fbdaa4a32"
     };
 
     dispatch(publicRegisterThunk(payload) as any)

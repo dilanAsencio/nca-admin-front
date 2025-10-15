@@ -8,11 +8,11 @@ import {
   ChangeFormData,
   errorMessage,
   passwordRequeriments,
-} from "@/types/auth";
-import { changePasswordSchema } from "@/types/auth-schemas";
+} from "@/app/core/interfaces/auth-interfaces";
+import { changePasswordSchema } from "@/app/core/schemas/auth-schemas";
 import ButtonComponent from "@/components/shared/button/ButtonComponent";
 import ErrorAlert from "@/components/ui/ErrorAlert";
-import CardMessage from "@/components/auth/CardMessage";
+import CardMessage from "@/app/core/auth/CardMessage";
 import PasswordInput from "@/components/shared/input/PasswordInput";
 import PasswordStrengthIndicator from "@/components/shared/input/PasswordStrengthIndicator";
 
