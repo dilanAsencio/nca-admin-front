@@ -42,7 +42,6 @@ export const publicLoginThunk = createAsyncThunk<
 >("auth/login", async (payload, { rejectWithValue }) => {
   try {
     const response = await authService.publicLogin(payload);
-    if (!response.success) return rejectWithValue(response);
     return response;
   } catch (error: any) {
     return rejectWithValue({ success: false, message: error.message });

@@ -15,7 +15,7 @@ const MainContent: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   const pathname = usePathname();
   
-  const whiteList = ["/login", "/reset-password", "/forgot-password", "/change-password", "/landing"];
+  const whiteList = ["/login", "/reset-password", "/forgot-password", "/change-password", "/landing", "/auth/register"];
   const isLandingRoute = pathname.startsWith("/landing");
   const lastWidthRef = useRef(window.innerWidth);
   

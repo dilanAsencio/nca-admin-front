@@ -1,5 +1,6 @@
-import axios from "@/libs/axios";
+import { apiProxy } from "@/helpers/api-proxy";
 import { ResponseAuth } from "@/app/core/interfaces/auth-interfaces";
+import axios from "axios";
 
 export interface LoginPayload {
   username: string;
@@ -62,7 +63,7 @@ export const authService = {
   async publicLogin(payload: LoginPayload): Promise<ResponseAuth> {
     localStorage.setItem("username", payload.username);
     try {
-      const response = await axios.post("/public/auth/login", payload);
+      const response = await apiProxy("POST", "/public/auth/login", undefined, payload);
 
       if (
         response.status === 202 &&
@@ -89,6 +90,8 @@ export const authService = {
       document.cookie = `auth_token=${access_token}; path=/;`;
       document.cookie = `first_login=${isFirstLogin ? "true" : "false"}; path=/;`;
 
+      console.log("success: ", success);
+      
       return {
         success,
         data,
@@ -106,7 +109,7 @@ export const authService = {
 
   async publicRegister(payload: RegisterPayload): Promise<ResponseAuth> {
     try {
-      const response = await axios.post("/public/auth/register", payload);
+      const response = await apiProxy("POST", "/public/auth/register", undefined, payload);
       const { success, data, message, timestamp } = response.data;
 
       return {
@@ -126,7 +129,7 @@ export const authService = {
 
   async publicForgotPassword(payload: ForgotPasswordPayload): Promise<ResponseAuth> {
     try {
-      const response = await axios.post("/public/auth/forgot-password", payload);
+      const response = await apiProxy("POST", "/public/auth/forgot-password", undefined, payload);
       const { success, message, timestamp } = response.data;
 
       return {
@@ -145,7 +148,7 @@ export const authService = {
 
   async publicResetPassword(payload: ResetPasswordPayload): Promise<ResponseAuth> {
     try {
-      const response = await axios.post("/public/auth/reset-password", payload);
+      const response = await apiProxy("POST", "/public/auth/reset-password", undefined, payload);
       const { success, data, message, timestamp } = response.data;
 
       return {
@@ -165,7 +168,7 @@ export const authService = {
 
   async publicChangePassword(payload: ChangePasswordPayload): Promise<ResponseAuth> {
     try {
-      const response = await axios.post("/public/auth/change-password", payload);
+      const response = await apiProxy("POST", "/public/auth/change-password", undefined, payload);
       const { success, data, message, timestamp } = response.data;
 
       return {
@@ -185,7 +188,7 @@ export const authService = {
 
   async publicRefreshToken(payload: RefreshTokenPayload): Promise<ResponseAuth> {
     try {
-      const response = await axios.post("/public/auth/refresh-token", payload);
+      const response = await apiProxy("POST", "/public/auth/refresh-token", undefined, payload);
       const { success, data, message, timestamp } = response.data;
 
       if (data?.accessToken) {
@@ -213,7 +216,7 @@ export const authService = {
 
   async publicVerifyEmail(payload: VerifyEmailPayload): Promise<ResponseAuth> {
     try {
-      const response = await axios.post("/public/auth/verify-email", payload);
+      const response = await apiProxy("POST", "/public/auth/verify-email", undefined, payload);
       return response.data;
     } catch (error: any) {
       let message = "Email verification failed";
@@ -226,7 +229,7 @@ export const authService = {
 
   async publicResendVerification(payload: ResendVerificationPayload): Promise<ResponseAuth> {
     try {
-      const response = await axios.post("/public/auth/resend-verification", payload);
+      const response = await apiProxy("POST", "/public/auth/resend-verification", undefined, payload);
       return response.data;
     } catch (error: any) {
       let message = "Resend verification failed";
