@@ -46,6 +46,7 @@ const AcademicDashboard: React.FC = () => {
   const [titleAcademic, setTitleAcademic] = useState<string>("Crear Colegio");
   const [isEditCampus, setIsEditCampus] = useState<boolean>(false);
   const [isDetailCampus, setIsDetailCampus] = useState<boolean>(false);
+  const [campusSelected, setCampusSelected] = useState<number>(0);
 
   const imgSchool = { path: "/assets/img/icon-school.png", alt: "crear colegio", w: 59.8, h: 55.36 };
   const iconAdd = iconsActions.add;
@@ -309,7 +310,10 @@ const AcademicDashboard: React.FC = () => {
                     <div className="body-school-table h-[60vh] overflow-y-auto gap-[0.5rem]">
                       {campus?.map((item: any, index: number) => (
                         <div className="flex flex-col gap-[0.25rem]" key={index}>
-                          <div className="campus-header flex justify-between sticky top-0 bg-white z-20 py-2 px-3">
+                          <div className={clsx(
+                            "campus-header flex justify-between sticky top-0 bg-white py-2 px-3",
+                            campusSelected === index ? "z-2" : "z-1",
+                            )}>
                             <div className="flex gap-[0.5rem] self-center max-[450px]:w-1/2">
                               <Image
                                 src={`/assets/landing/icon/cards/school-icon-01.svg`}
@@ -329,7 +333,8 @@ const AcademicDashboard: React.FC = () => {
                             <div className="flex gap-[0.75rem]">
                               <ButtonPopUpComponent
                                 size="small"
-                                className="tertiary-outline z-30"
+                                onClick={() => {setCampusSelected(index)}}
+                                className="tertiary-outline"
                                 label="Acciones colegio"
                                 options={optionsCampus(item)}
                               />

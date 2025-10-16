@@ -20,6 +20,11 @@ const ButtonPopUpComponent: React.FC<ButtonPopUpProps> = ({
     const iconChevronUp = { path: "/assets/icon/chevron-up.svg", alt: "chevron-up" };
     const iconChevronDown = { path: "/assets/icon/chevron-down.svg", alt: "chevron-down" };
 
+    const toggleOpen = () => {
+        onclick && open === false && onclick();
+        setOpen(!open);
+    }
+
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
         if (ref.current && !ref.current.contains(event.target as Node)) {
@@ -37,7 +42,7 @@ const ButtonPopUpComponent: React.FC<ButtonPopUpProps> = ({
                 blockAccess={blockAccess}
                 type={type}
                 label={label}
-                onClick={() => setOpen(!open)}
+                onClick={() => toggleOpen()}
                 className={className}
                 size={size}
             />

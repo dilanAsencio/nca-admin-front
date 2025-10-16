@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-.custom-input {
+.custom-input, .custom-input-date .p-inputtext {
     @apply 
         w-full
         py-[0.75rem]

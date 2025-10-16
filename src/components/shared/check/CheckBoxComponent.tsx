@@ -5,26 +5,28 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import clsx from "clsx";
 
-const CheckBoxComponent: React.FC<CheckComponentProps> = ({ label, checked, setChecked, name, typeCheck = "checkbox" }) => {
+const CheckBoxComponent: React.FC<CheckComponentProps> = ({ label, checked, setChecked, name, typeCheck = "checkbox", onChange }) => {
     
-
-    return(<>
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (onChange) onChange(e);
+    };
+    return(<div>
     {
-        typeCheck ==="checkbox" ? (<>
+        typeCheck ==="checkbox" ? (<div className="form-check">
         <input
             type="checkbox"
             name={name}
             className="form-check-input cursor-pointer"
             id={name}
-            checked={checked}
-            onChange={() => setChecked()}
+            checked={!!checked}
+            onChange={handleChange}
         />
         {label && <label
             className="form-check-label cursor-pointer"
             htmlFor={name}
         >
             { label }
-        </label>}</>) : 
+        </label>}</div>) : 
         <div className={clsx(
             "content-checkbadge relative",
             checked ? "bg-[#A5FFD2] border-[#00D369]" : "border-[#939393]"
@@ -46,7 +48,7 @@ const CheckBoxComponent: React.FC<CheckComponentProps> = ({ label, checked, setC
             </label>
         </div>
     }
-    </>)
+    </div>)
 }
 
 export default CheckBoxComponent;

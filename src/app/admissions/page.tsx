@@ -2,36 +2,76 @@
 
 import clsx from "clsx";
 import BreadcumbComponent from "@/components/shared/breadcumb/BreadcumbComponent"
-import SearchCampusComponent from "@/components/admissions/SearchCampus";
-import TabsComponent from "@/components/shared/tabs/TabsComponent";
 
 import style from "@/app/font.module.css";
-import { BranchesService } from "@/services/managementAcademic/branches-service";
-import { useState } from "react";
-import { BranchesResponse } from "../core/interfaces/academicManagement/branches-interfaces";
-import { Response } from "../core/interfaces/api-interfaces";
+import { useEffect, useState } from "react";
+import CardActionComponent from "@/components/shared/cardAction/CardActionComponent";
+import { AdmissionsServices } from "@/services/admissions/admissions-service";
+import ModalAdmissionsForm from "./components/ModalAdmissionProcess";
+import TableComponent from "@/components/shared/table/TableComponent";
+import { ProgressSpinner } from "primereact/progressspinner";
+import { useUI } from "@/providers/ui-context";
+import { ButtonActions } from "../core/interfaces/tables-interfaces";
 
 const AdmissionsPage: React.FC = () => {
-  const iconSchool = {path: "/assets/landing/icon/cards/school-icon-01.svg", alt: "icon-school"};
+  const {
+    toggleLoading,
+    iconsActions
+  } = useUI();
+  const [openModal, setOpenModal] = useState<{open: boolean, data: any, op: "view" | "edit" | "add"}>({open: false, data: null, op: "add"});
+  const [admissionsProcess, setAdmissionsProcess] = useState<any[]>([]);
+  const [admissionsProcessSelected, setAdmissionsProcessSelected] = useState<any>(null);
+  
+  const iconEdit = iconsActions.edit;
+  const iconDetail = iconsActions.view;
 
-  const [branches, setBranches] = useState<BranchesResponse[] | null>(null);
-
-  const handleSearchChange = (value: { campus: string | null, grade: string | null, status: string | null }) => {
-    value.campus !== null ? getbranchesByCampus(value.campus) : setBranches(null);
+  const columns = [
+    {key: "name", nameField: "Nombre"},
+    {key: "academicYear", nameField: "Año Academico"},
+    {key: "startDate", nameField: "Fecha Inicio"},
+    {key: "endDate", nameField: "Fecha Cierre"},
+    {key: "status", nameField: "Estado", render: (row: any) => (
+      <span className={`m-0 font-semibold py-[0.25rem] px-[0.75rem] rounded-[0.5rem] ${
+        row.status === "Activo" ?
+        "text-green-600 bg-[#00ff0042] border-2 border-solid border-[#00ff00]" : 
+        "text-amber-600 bg-[#ffff0042] border-2 border-solid border-[#ffcd00]"}`}>{row.status}</span>
+    )},
+  ]
+  const btnActions = (item: any): ButtonActions[] =>{
+    return [
+      {
+        tooltip: "Detalle Proceso de Admision",
+        action: () => {setOpenModal({open: true, data: item, op: "view"})},
+        icon: iconDetail,
+      },
+      {
+        tooltip: "Editar Proceso de Admision",
+        action: () => {setOpenModal({open: true, data: item, op: "edit"})},
+        icon: iconEdit,
+      },
+    ]
   }
-
-  const getbranchesByCampus = async (campusId: string) => {
-    const branchesResp = await BranchesService.getBranchesByCampus(campusId, { page: 0, size: 10 }) as Response<any>;
-    if (branchesResp?.success && branchesResp.data?.content) {
-      const bran = branchesResp.data.content.map((branch: BranchesResponse) => ({
-        ...branch,
-        display: false
-      }));
-      setBranches(bran);
+  const getAdmissionsProcess = async () => {
+    toggleLoading(true);
+    const resp = await AdmissionsServices.getAdmissionsProcess();
+    if (resp?.success && resp.data?.content) {
+      console.log("resp admissions process", resp);
+      setAdmissionsProcess(resp.data.content);
+      toggleLoading(false);
     }
+    toggleLoading(false);
   }
 
-  return (
+  const toggleModalAdmissionForm = () => {
+    setOpenModal({open: !openModal.open, data: null, op: "add"});
+    getAdmissionsProcess();
+  }
+
+  useEffect(() => {
+    getAdmissionsProcess();
+  }, []);
+
+  return (<>
       <div
         className={clsx(
           `${style["font-outfit"]}`,
@@ -48,7 +88,23 @@ const AdmissionsPage: React.FC = () => {
           </span>
           <BreadcumbComponent items={[{label: "Admisiones"}]} />
         </div>
-        <div className="flex flex-col gap-[1.5rem]">
+        <div className="flex flex-row justify-center gap-[1.5rem]">
+          <CardActionComponent
+            checked={admissionsProcess.length > 0}
+            labelButton="Crear Proceso de Admisión"
+            handleClick={() => {setOpenModal({open: true, data: null, op: "add"})}}
+            img={{ path: "/assets/img/logo-curriculum.png", alt: "icon-school", w: 64, h: 56 }}
+          />
+        </div>
+        <div>
+          <TableComponent
+            title="Procesos de Admisiones"
+            columns={columns}
+            btnActions={btnActions}
+            data={admissionsProcess}
+          />
+        </div>
+        {/* <div className="flex flex-col gap-[1.5rem]">
           <SearchCampusComponent changeValue={(value) => handleSearchChange(value)} />
           <div className="flex flex-col">
             <div className="flex">
@@ -64,9 +120,15 @@ const AdmissionsPage: React.FC = () => {
               }
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
-  )
+
+      { openModal.open &&
+        <ModalAdmissionsForm
+          toggleModal={toggleModalAdmissionForm}
+        />
+      }
+  </>)
 }
 
 export default AdmissionsPage

@@ -19,6 +19,7 @@ interface Props extends DropdownComponentProps {
   onChange?: (value: string | string[]) => void;
   required?: boolean;
   error?: string;
+  optVal?: boolean;
 }
 
 const DropdownComponent: React.FC<Props> = ({
@@ -33,6 +34,7 @@ const DropdownComponent: React.FC<Props> = ({
   isMulti = false,
   required = false,
   readOnly = false,
+  optVal = false,
   error,
 }) => {
   const handleChange = (e: any) => {
@@ -54,7 +56,7 @@ const DropdownComponent: React.FC<Props> = ({
           value={Array.isArray(value) ? value : []}
           options={options}
           optionLabel="label"
-          optionValue="value"
+          optionValue={optVal ? undefined : "value"}
           readOnly={readOnly}
           placeholder={placeholder}
           disabled={disabled}

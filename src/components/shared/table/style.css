@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+.custom-droptable {
+    @apply
+        bg-white shadow-[0_4px_12px_0_rgba(17,62,47,0.07)] rounded-lg;
+}
+
+.custom-border-b {
+    @apply
+        text-gray-900
+        border-b
+        border-solid
+        border-[#DFDFDF];
+}

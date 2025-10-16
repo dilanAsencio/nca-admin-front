@@ -10,12 +10,10 @@ import TextAreaComponent from "@/components/shared/input/TextAreaComponent";
 import { CampusService } from "@/services/managementAcademic/campus-services";
 import { useUI } from "@/providers/ui-context";
 import * as alerts from "@/utils/alerts";
-import ErrorAlert from "@/components/ui/ErrorAlert";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { campusSchema } from "@/app/core/schemas/forms-academic-schemas";
 import clsx from "clsx";
 import { Response } from "@/app/core/interfaces/api-interfaces";
-import { CampusForm } from "@/app/core/interfaces/academicManagement/campus-interfaces";
 
 const BasicDataForm: React.FC<{onBack: () => void, onNext: () => void, isEdit: boolean, isDetail: boolean}> = ({onBack, onNext, isEdit, isDetail}) => {
     const showToast = alerts.showToast;
