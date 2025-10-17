@@ -5,7 +5,11 @@ import { AdmissionProcessFormData } from "./ModalAdmissionProcess";
 import CheckBoxComponent from "@/components/shared/check/CheckBoxComponent";
 import { useEffect } from "react";
 
-export default function CheckboxGroup() {
+interface CheckboxGroupProps {
+  isReadOnly: boolean;
+}
+
+export default function CheckboxGroup({ isReadOnly }: CheckboxGroupProps) {
   const { register, setValue, getValues, control } = useFormContext<AdmissionProcessFormData>();
 
   useEffect(() => {
@@ -33,6 +37,7 @@ export default function CheckboxGroup() {
           render={({ field }) => (
             <CheckBoxComponent
                 {...field}
+                disabled={isReadOnly}
                 checked={getValues("requiresInterview")}
                 setChecked={() => {
                     setValue("requiresInterview", !getValues("requiresInterview"));
@@ -50,6 +55,7 @@ export default function CheckboxGroup() {
             <CheckBoxComponent
                 {...field}
                 checked={getValues("requiresEvaluation")}
+                disabled={isReadOnly}
                 setChecked={() => {
                     setValue("requiresEvaluation", !getValues("requiresEvaluation"));
                 }}
@@ -66,6 +72,7 @@ export default function CheckboxGroup() {
             <CheckBoxComponent
                 {...field}
                 checked={getValues("notifyOnNewApplication")}
+                disabled={isReadOnly}
                 setChecked={() => {
                     setValue("notifyOnNewApplication", !getValues("notifyOnNewApplication"));
                 }}
@@ -82,6 +89,7 @@ export default function CheckboxGroup() {
             <CheckBoxComponent
                 {...field}
                 checked={getValues("notifyOnDocumentUpload")}
+                disabled={isReadOnly}
                 setChecked={() => {
                     setValue("notifyOnDocumentUpload", !getValues("notifyOnDocumentUpload"));
                 }}
@@ -98,6 +106,7 @@ export default function CheckboxGroup() {
             <CheckBoxComponent
                 {...field}
                 checked={getValues("notifyOnStatusChange")}
+                disabled={isReadOnly}
                 setChecked={() => {
                     setValue("notifyOnStatusChange", !getValues("notifyOnStatusChange"));
                 }}

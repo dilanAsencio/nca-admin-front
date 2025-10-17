@@ -28,8 +28,9 @@ export interface ButtonPopUpProps extends ButtonComponentProps {
 
 export interface CheckComponentProps {
     checked: boolean;
-    onChange: (e: any) => void;
-    setChecked: () => void;
+    disabled?: boolean;
+    onChange?: (e: any) => void;
+    setChecked?: () => void;
     label?: string;
     name: string;
     typeCheck?: "checkbox" | "checkbadge";

@@ -64,33 +64,25 @@ export const authService = {
     localStorage.setItem("username", payload.username);
     try {
       const response = await apiProxy("POST", "/public/auth/login", undefined, payload);
-
       if (
         response.status === 202 &&
         response.data.message?.includes("temporary password")
       ) {
         return {
-          success: response.data.success,
-          message: response.data.message,
-          timestamp: response.data.timestamp,
-          status: response.status,
+          success: response.success,
+          message: response.message,
+          timestamp: response.timestamp
         };
       }
 
-      console.log(response.data);
-      
 
-      const { success, data, message, timestamp } = response.data;
-      const { access_token, refresh_token, isFirstLogin } = data;
+      const { success, data, message, timestamp } = response;
+      const { access_token, refresh_token } = data;
 
       localStorage.setItem("auth_token", access_token);
       localStorage.setItem("refresh_token", refresh_token);
-      localStorage.setItem("first_login", isFirstLogin ? "true" : "false");
 
       document.cookie = `auth_token=${access_token}; path=/;`;
-      document.cookie = `first_login=${isFirstLogin ? "true" : "false"}; path=/;`;
-
-      console.log("success: ", success);
       
       return {
         success,

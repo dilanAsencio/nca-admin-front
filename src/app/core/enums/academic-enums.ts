@@ -15,3 +15,22 @@ export enum CalendarType {
     B = 'B',
     FLEXIBLE = 'Flexible'
 }
+
+export enum Statuses {
+    ACTIVE = "Activo",
+    APPROVED = "Aprobado",
+    BLOCKED = "Bloqueado",
+    CANCELLED = "Cancelada",
+    CLOSED = "Closed",
+    DISABLED = "Deshabilitado",
+    IN_PROGRESS = "En progreso",
+    SUBMITTED = "Enviada",
+    INACTIVE = "Inactivo",
+    PAUSED = "Paused",
+    PENDING = "Pendiente",
+    PENDING_DOCUMENTS = "Pendiente de Documentos",
+    PENDING_REVIEW = "Pendiente de Revisión",
+    REJECTED = "Rechazado",
+    UNDER_REVIEW = "Under review",
+    DRAFT = "draft",
+}

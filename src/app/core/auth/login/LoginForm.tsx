@@ -126,7 +126,7 @@ const LoginForm = () => {
       setValue("username", "");
       localStorage.removeItem("username");
     }
-  }, [getValues("username"), rememberMe]);
+  }, [getValues("username")]);
 
   return (
     <>
@@ -181,8 +181,8 @@ const LoginForm = () => {
           <div className="form-check self-center">
             <CheckBoxComponent
               name="rememberMe"
+              onChange={() => setRememberMe(prev => !prev)}
               checked={rememberMe}
-              setChecked={() => setRememberMe(!rememberMe)}
               label="Recordar usuario"
             />
           </div>

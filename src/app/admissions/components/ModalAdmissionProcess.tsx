@@ -17,8 +17,15 @@ export type AdmissionProcessFormData = z.infer<typeof AdmissionProcessSchema>;
 
 const ModalAdmissionsForm: React.FC<{
   toggleModal: () => void;
-}> = ({ toggleModal }) => {
+  writeData: {
+    open: boolean;
+    data: any;
+    op: "view" | "edit" | "add";
+};
+}> = ({ toggleModal, writeData }) => {
   const { toggleLoading } = useUI();
+  const [isReadOnly, setIsReadOnly] = useState<boolean>(false);
+  const [isEdit, setIsEdit] = useState<boolean>(false);
 
   const methods = useForm<AdmissionProcessFormData>({
     resolver: zodResolver(AdmissionProcessSchema),
@@ -37,6 +44,20 @@ const ModalAdmissionsForm: React.FC<{
       notifyOnStatusChange: false,
     },
   });
+  
+  const getAdmissionsProcess = async (admissionProcessId: string) => {
+    if (admissionProcessId === "" || admissionProcessId === undefined) return;
+    const resp = await AdmissionsServices.getAdmissionsProcessById(admissionProcessId);    
+    if (resp?.success) {
+      console.log("resp admissions process by id", resp);
+      methods.reset(resp.data);
+      writeData.op === "view" ? setIsReadOnly(true) : setIsReadOnly(false);
+      writeData.op === "edit" ? setIsEdit(true) : setIsEdit(false);
+    } else {
+      showToast("Error al obtener la información del procesos de admision", "error");
+    }
+  }
+  
 
   const onSubmited = (data: any) => {
     
@@ -59,16 +80,20 @@ const ModalAdmissionsForm: React.FC<{
     delete data.notifyOnNewApplication;
     delete data.notifyOnDocumentUpload;
     delete data.notifyOnStatusChange;
-    console.log("✅ Formulario válido #12:", data);
     toggleLoading(true);
     try {
-        const resp = await AdmissionsServices.createAdmissionProcess(data) as any;        
+        let resp: any;
+        if (data?.admissionProcessId) {
+          resp = await AdmissionsServices.updateAdmissionProcess(data.admissionProcessId, data) as any;
+        } else {
+          resp = await AdmissionsServices.createAdmissionProcess(data) as any;        
+        }
         if (resp.success) {
-            showToast("Proceso creado con exito", "success");
+            showToast(`Proceso ${writeData.op === "add" ? "creado" : "actualizado"} con exito`, "success");
             toggleModal();
             toggleLoading(false);
         } else {
-            showToast("Error al crear el proceso", "error");
+            showToast(`Error al ${writeData.op === "add" ? "crear" : "actualizar"} el proceso`, "error");
         }
         toggleLoading(false);
     } catch (error) {
@@ -83,8 +108,20 @@ const ModalAdmissionsForm: React.FC<{
   };
 
   const handleTitleModal = () => {
+    if (writeData.op === "edit") {
+      return "Editar proceso de admisión";
+    }
+    if (writeData.op === "view") {
+      return "Detalle proceso de admisión";
+    }
     return "Crear proceso de admisión";
   };
+
+  useEffect(() => {
+    if(writeData.open && writeData.data) {
+      getAdmissionsProcess(writeData.data.admissionProcessId);
+    }
+  }, [writeData.open]);
 
   return (
     <ModalComponent
@@ -96,7 +133,9 @@ const ModalAdmissionsForm: React.FC<{
       }}
     >
       <FormProvider {...methods}>
-        <AdmissionForm 
+        <AdmissionForm
+            isReadOnly={isReadOnly}
+            isEdit={isEdit}
             onSubmitForm={(data) => onSubmitedForm(data)}
             onSubmit={methods.handleSubmit(onSubmited)} />
       </FormProvider>
