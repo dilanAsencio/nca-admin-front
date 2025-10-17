@@ -63,6 +63,7 @@ const BranchesComponent: React.FC<{onNext: () => void, onBack: () => void, isDet
       ) : (
         <BranchesFormComponent
           isDetail={isDetail}
+          resetForm
           isSubmited={() => setShowForm(false)}
           hideForm={() => setShowForm(false)} />
       )}

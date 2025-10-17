@@ -18,6 +18,18 @@ const SidebarMenu: React.FC = () => {
       name: "admissions",
       path: "/admissions",
       icon: "/assets/icon/sidebar/users-profiles-up.svg",
+      children: [
+        {
+          label: "Procesos de Admision",
+          name: "admissions-process",
+          path: "/processes",
+        },
+        {
+          label: "Pre-registros",
+          name: "admissions-preregistration",
+          path: "/preregistration",
+        },
+      ]
     },
     // {
     //   label: "Formularios",

@@ -513,8 +513,8 @@ const BranchesFormComponent: React.FC<BranchesFormProps> = ({
     <div className="form-check">
       <CheckBoxComponent
         checked={checkGreenAreas}
+        onChange={() => setCheckGreenAreas(prev => !prev)}
         name="checkGreenAreas"
-        setChecked={() => setCheckGreenAreas(prev => !prev)}
         label="¿La sede cuenta con zonas verdes? (Opcional)"
       />
     </div>
@@ -529,7 +529,7 @@ const BranchesFormComponent: React.FC<BranchesFormProps> = ({
       <CheckBoxComponent
         checked={checkLabs}
         name="checkLabs"
-        setChecked={() => setCheckLabs(prev => !prev)}
+        onChange={() => setCheckLabs(prev => !prev)}
         label="¿La sede cuenta con laboratorios? (Opcional)"
       />
     </div>
@@ -544,7 +544,7 @@ const BranchesFormComponent: React.FC<BranchesFormProps> = ({
       <CheckBoxComponent
         checked={checkSportsAreas}
         name="checkSportsAreas"
-        setChecked={() => setCheckSportsAreas(prev => !prev)}
+        onChange={() => setCheckSportsAreas(prev => !prev)}
         label="¿La sede cuenta con zonas deportivas? (Opcional)"
       />
     </div>

@@ -194,7 +194,7 @@ const BranchesViewer: React.FC<{
                 }
                 <ButtonPopUpComponent
                     size="small"
-                    className="tertiary-outline"
+                    className="primary-outline"
                     label={labelPopUp}
                     options={optionsBranches(branche)}
                 />

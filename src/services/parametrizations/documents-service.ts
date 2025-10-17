@@ -1,23 +1,9 @@
 import { apiProxy } from "@/helpers/api-proxy";
 import { PaginateIMPL, Response } from "@/app/core/interfaces/api-interfaces";
-import { AcademicGradeForm, AcademicGradeResponse } from "@/app/core/interfaces/academicManagement/academic-grade-interfaces";
 
 const API_V = process.env.NEXT_PUBLIC_API_V || "v1";
 
 export const AdmissionsServices = {
-
-  /**
-   * Creates a new academic grade.
-   * @param data - The data of the grade to be created.
-   * @returns A Promise with a Response object containing the response data.
-   * @throws { success: false, error: string } - If the creation fails.
-   */
-  createAdmissionProcess: async (
-    data: any
-  ): Promise<any> => 
-    apiProxy("POST", `admin/admission-processes`, undefined, data),
-    
-  
 
   /**
    * Updates an existing admission process.

@@ -1,11 +1,12 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import clsx from "clsx";
 import { Tooltip } from "primereact/tooltip";
 import style from "@/app/font.module.css";
 import "./style.css";
+import Pagination from "../paginate/pagination";
 
 export interface SimpleTableColumn<T> {
   key: keyof T;
@@ -26,6 +27,12 @@ export interface SimpleTableProps<T> {
   title?: string;
   columns: SimpleTableColumn<T>[];
   data: T[];
+  paginate?: {
+    totalItems: number;
+    itemsPerPage: number;
+    currentPage: number;
+    onPageChange: (newPage: number) => void;
+  };
   btnActions?: (row: T) => SimpleTableAction<T>[];
 }
 
@@ -34,6 +41,7 @@ function TableComponent<T>({
   columns,
   data,
   btnActions,
+  paginate,
 }: SimpleTableProps<T>) {
   const renderActions = (row: T) => {
     const actions = btnActions ? btnActions(row) : [];
@@ -76,7 +84,7 @@ function TableComponent<T>({
                   {col.nameField}
                 </th>
               ))}
-              {btnActions && <th className="p-2 text-center">Acciones</th>}
+              {btnActions && <th className="py-[0.5rem] px-[0.75rem] text-[1rem] leading-[1.25rem] font-bold text-gray-900 text-center">Acciones</th>}
             </tr>
           </thead>
           <tbody className="custom-border-b">
@@ -93,7 +101,7 @@ function TableComponent<T>({
               data.map((row, idx) => (
                 <tr
                   key={idx}
-                  className="border-b hover:bg-gray-50 transition-colors"
+                  className="custom-border-b hover:bg-gray-50 transition-colors"
                 >
                   {columns.map((col) => (
                     <React.Fragment key={String(col.key)}>
@@ -104,7 +112,7 @@ function TableComponent<T>({
                       ) : (
                         <td
                           key={String(col.key)}
-                          className="p-2 text-gray-700 text-sm"
+                          className="p-[0.75rem] text-gray-700 text-[1rem] font-normal leading-[1.25rem]"
                         >
                           {(row as any)[col.key]}
                         </td>
@@ -119,6 +127,15 @@ function TableComponent<T>({
             )}
           </tbody>
         </table>
+        {
+          paginate && 
+            <Pagination
+              totalItems={paginate.totalItems}
+              itemsPerPage={paginate.itemsPerPage}
+              currentPage={paginate.currentPage}
+              onPageChange={paginate.onPageChange}
+            />
+        }
       </div>
     </div>
   );

@@ -7,20 +7,21 @@ import style from "@/app/font.module.css";
 import { useEffect, useState } from "react";
 import CardActionComponent from "@/components/shared/cardAction/CardActionComponent";
 import { AdmissionsServices } from "@/services/admissions/admissions-service";
-import ModalAdmissionsForm from "./components/ModalAdmissionProcess";
+import ModalAdmissionsForm from "../components/ModalAdmissionProcess";
 import TableComponent from "@/components/shared/table/TableComponent";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { useUI } from "@/providers/ui-context";
-import { ButtonActions } from "../core/interfaces/tables-interfaces";
+import { ButtonActions } from "../../core/interfaces/tables-interfaces";
+import { showToast } from "@/utils/alerts";
 
-const AdmissionsPage: React.FC = () => {
+const AdmissionsProcessesPage: React.FC = () => {
   const {
     toggleLoading,
     iconsActions
   } = useUI();
   const [openModal, setOpenModal] = useState<{open: boolean, data: any, op: "view" | "edit" | "add"}>({open: false, data: null, op: "add"});
   const [admissionsProcess, setAdmissionsProcess] = useState<any[]>([]);
-  const [admissionsProcessSelected, setAdmissionsProcessSelected] = useState<any>(null);
+  const [currentPage, setCurrentPage] = useState(1);
   
   const iconEdit = iconsActions.edit;
   const iconDetail = iconsActions.view;
@@ -41,12 +42,16 @@ const AdmissionsPage: React.FC = () => {
     return [
       {
         tooltip: "Detalle Proceso de Admision",
-        action: () => {setOpenModal({open: true, data: item, op: "view"})},
+        action: () => {
+          setOpenModal({open: true, data: item, op: "view"});
+        },
         icon: iconDetail,
       },
       {
         tooltip: "Editar Proceso de Admision",
-        action: () => {setOpenModal({open: true, data: item, op: "edit"})},
+        action: () => {
+          setOpenModal({open: true, data: item, op: "edit"});
+        },
         icon: iconEdit,
       },
     ]
@@ -55,9 +60,10 @@ const AdmissionsPage: React.FC = () => {
     toggleLoading(true);
     const resp = await AdmissionsServices.getAdmissionsProcess();
     if (resp?.success && resp.data?.content) {
-      console.log("resp admissions process", resp);
       setAdmissionsProcess(resp.data.content);
       toggleLoading(false);
+    } else {
+      showToast("Error al obtener los procesos de admision", "error");
     }
     toggleLoading(false);
   }
@@ -84,9 +90,9 @@ const AdmissionsPage: React.FC = () => {
           )}
         >
           <span className="font-semibold text-[1.25rem] text-gray-900">
-            Admisiones
+            Procesos de Admisiones
           </span>
-          <BreadcumbComponent items={[{label: "Admisiones"}]} />
+          <BreadcumbComponent items={[{label: "Procesos de Admisiones"}]} />
         </div>
         <div className="flex flex-row justify-center gap-[1.5rem]">
           <CardActionComponent
@@ -96,12 +102,18 @@ const AdmissionsPage: React.FC = () => {
             img={{ path: "/assets/img/logo-curriculum.png", alt: "icon-school", w: 64, h: 56 }}
           />
         </div>
-        <div>
+        <div className="p-2 bg-white rounded-[1rem]">
           <TableComponent
             title="Procesos de Admisiones"
             columns={columns}
             btnActions={btnActions}
             data={admissionsProcess}
+            paginate={{
+              totalItems: admissionsProcess.length,
+              itemsPerPage: 10,
+              currentPage: currentPage,
+              onPageChange: (newPage: number) => {setCurrentPage(newPage)}
+            }}
           />
         </div>
         {/* <div className="flex flex-col gap-[1.5rem]">
@@ -126,9 +138,10 @@ const AdmissionsPage: React.FC = () => {
       { openModal.open &&
         <ModalAdmissionsForm
           toggleModal={toggleModalAdmissionForm}
+          writeData={openModal}
         />
       }
   </>)
 }
 
-export default AdmissionsPage
+export default AdmissionsProcessesPage
