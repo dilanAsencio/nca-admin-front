@@ -1,6 +1,7 @@
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIconProps, FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Icons } from "next/dist/lib/metadata/types/metadata-types";
+import { Nullable } from "primereact/ts-helpers";
 
 export interface ButtonComponentProps {
     blockAccess?: boolean;
@@ -27,6 +28,7 @@ export interface ButtonPopUpProps extends ButtonComponentProps {
 
 export interface CheckComponentProps {
     checked: boolean;
+    onChange: (e: any) => void;
     setChecked: () => void;
     label?: string;
     name: string;
@@ -47,6 +49,12 @@ export interface InputComponentProps {
     required?: boolean;
     readOnly?: boolean;
     error?: string;
+}
+
+export interface InputDateComponentProps extends InputComponentProps {
+  viweType?: "date" | "month" | "year";
+  showIcon?: boolean;
+  control?: any;
 }
 
 interface options {

@@ -53,7 +53,7 @@ const SchoolPage: React.FC = () => {
   };
 
   const viewCampus = (item: Institution) => {
-    router.push(`/landing/school/${item.id}/${item.tenantId}`, );
+    router.push(`/landing/school/${item.id}?tenantId=${item.tenantId}`, );
   }
 
   useEffect(() => {

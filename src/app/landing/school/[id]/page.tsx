@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { CampusPublicService } from "@/services/public/campus-public-service";
 import Image from "next/image";
 import style from "@/app/font.module.css";
@@ -10,17 +10,22 @@ import BreadcumbComponent from "@/components/shared/breadcumb/BreadcumbComponent
 import { BranchResponse, CampusDetail, CampusDetailBackend } from "@/app/core/interfaces/public/campus-interfaces";
 import { mapCampusDetail } from "@/utils/mappers/campus.mapper";
 import TabsComponent from "@/components/shared/tabs/TabsComponent";
-import "../style.css";
+import * as alerts from "@/utils/alerts";
+import "./style.css";
 import ButtonComponent from "@/components/shared/button/ButtonComponent";
-import CardProcessComponent from "../../components/CardProcess";
+import CardProcessComponent from "../components/CardProcess";
 
 const SchoolDetailsPage: React.FC = () => {
-  const { id, tenantId } = useParams<{id: string, tenantId: string}>();
+  const { id } = useParams<{id: string, tenantId: string}>();
+  const searchParams = useSearchParams();
+  const tenantId = searchParams.get('tenantId') || '';
   const [campusData, setCampusData] = useState<CampusDetail | null>(null);
   const [ branches, setBranches ] = useState<BranchResponse[]>([]);
   const [ breadcrumbs, setBreadcrumbs ] = useState<{ label: string; href?: string }[]>([]);
   const [ selectedTab, setSelectedTab ] = useState<number>(0);
   const [ infoTab, setInfoTab ] = useState<BranchResponse | null>(null);
+  const router = useRouter();
+  const showToast = alerts.showToast;
 
   const getCampusDetails = async (campusId: string) => {
     try {
@@ -46,13 +51,18 @@ const SchoolDetailsPage: React.FC = () => {
     }
   }
 
+  const handleAdmission = () => {
+    if (!id || !tenantId) return showToast("Error al obtener los datos del colegio", "error");
+    router.push(`/landing/admissions/${id}?tenantId=${tenantId}`);
+  }
+
   const handleSedeClick = (idx: number, data: any) => {
-    console.log("Sede clicked", data);
     setSelectedTab(idx);
     setInfoTab(data);
   }
 
   const initialData = () => {
+    if (!id || !tenantId) return showToast("Error al obtener los datos del colegio", "error");
     getBranchesByCampus(id, tenantId);
     getCampusDetails(tenantId);
   }
@@ -215,6 +225,7 @@ const SchoolDetailsPage: React.FC = () => {
                 <ButtonComponent
                   icon={{ path: "/assets/icon/user-profile-up.svg", alt: "icon-image" }}
                   label="Iniciar Admisión"
+                  onClick={() => handleAdmission()}
                   size="small"
                   className="tertiary-outline"
                 />

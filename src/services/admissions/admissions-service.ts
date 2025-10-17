@@ -4,7 +4,7 @@ import { AcademicGradeForm, AcademicGradeResponse } from "@/app/core/interfaces/
 
 const API_V = process.env.NEXT_PUBLIC_API_V || "v1";
 
-export const GradeService = {
+export const AdmissionsServices = {
 
   /**
    * Creates a new academic grade.
@@ -12,10 +12,10 @@ export const GradeService = {
    * @returns A Promise with a Response object containing the response data.
    * @throws { success: false, error: string } - If the creation fails.
    */
-  createGrade: async (
-    data: AcademicGradeForm
-  ): Promise<AcademicGradeResponse> => 
-    apiProxy("POST", `${API_V}/academic-grades`, undefined, data),
+  createAdmissionProcess: async (
+    data: any
+  ): Promise<any> => 
+    apiProxy("POST", `admin/admission-processes`, undefined, data),
     
   
 
@@ -33,11 +33,10 @@ export const GradeService = {
    * @returns A Promise with a Response object containing the response data.
    * @throws { success: false, error: string } - If the retrieval fails.
    */
-  getGradesByLevel: async (
-    levelId: string,
+  getAdmissionsProcess: async (
     paginate?: PaginateIMPL,
-  ): Promise<Response<AcademicGradeResponse>> => 
-    apiProxy("GET", `${API_V}/academic-grades/level/${levelId}`, paginate),
+  ): Promise<any> => 
+    apiProxy("GET", `admin/admission-processes`, paginate),
 
     
   /**
