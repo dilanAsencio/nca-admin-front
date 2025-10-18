@@ -49,15 +49,17 @@ const SearchCampusComponent: React.FC<{
     const getGradesByCampus = async (id: string) => {
         toggleLoading(true);
         try {
-            const gradeResp = await GradeService.getGradesByCampus(id);            
-            if (gradeResp?.success) {
+            const gradeResp = await GradeService.getGradesByCampus(id);
+            if (gradeResp?.campusId) {
                 let grade: any[] = [];
                 grade.push({ value: "all", label: "Todos" });
-                for (const item of gradeResp.data.content) {
-                    grade.push({
-                        value: item.id,
-                        label: item.name
-                    })
+                for (const item of gradeResp.levels) {
+                    item.grades.length > 0 && item.grades.forEach((gradeItem: any) => {
+                        grade.push({
+                            value: gradeItem.gradeId,
+                            label: gradeItem.gradeName
+                        })
+                    });
                 }
                 setGradeDrop(grade);
             } else {

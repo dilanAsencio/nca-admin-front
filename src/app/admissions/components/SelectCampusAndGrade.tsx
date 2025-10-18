@@ -9,7 +9,11 @@ import { useEffect, useState } from "react";
 import { GradeService } from "@/services/managementAcademic/grade-service";
 import DropdownComponent from "@/components/shared/dropdown/DropdownComponent";
 
-export default function SelectCampusAndGrades() {
+interface selectCampusprops {
+  isReadOnly: boolean;
+}
+
+export default function SelectCampusAndGrades({isReadOnly}: selectCampusprops) {
   const {
     register,
     control,
@@ -100,6 +104,7 @@ export default function SelectCampusAndGrades() {
               isMulti
               className="primary"
               placeholder="Escoger colegios"
+              disabled={isReadOnly}
               options={campusDrop}
               onChange={(value) => {field.onChange(value); handleCampus(value)}}
               value={field.value}
@@ -122,6 +127,7 @@ export default function SelectCampusAndGrades() {
               isMulti
               className="primary"
               placeholder="Escoger grados"
+              disabled={isReadOnly}
               options={gradeDrop}
               onChange={(value) => field.onChange(value)}
               value={field.value}

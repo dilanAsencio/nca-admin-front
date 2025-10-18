@@ -238,7 +238,7 @@ const ResetPasswordForm = () => {
             <CheckBoxComponent
               name="rememberMe"
               checked={rememberMe}
-              setChecked={() =>  setRememberMe(!rememberMe)}
+              onChange={() =>  setRememberMe(prev => !prev)}
               label="Recordar usuario"
             />
           </div>

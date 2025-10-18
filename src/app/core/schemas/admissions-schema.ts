@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export const AdmissionProcessSchema = z.object({
+  admissionProcessId: z.string().optional(),
   name: z
     .string()
     .nonempty("Este campo es requerido!"),

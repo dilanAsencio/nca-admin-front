@@ -15,9 +15,11 @@ import ButtonComponent from "@/components/shared/button/ButtonComponent";
 interface Props {
   onSubmit: (data: any) => void;
   onSubmitForm: (data: AdmissionProcessFormData) => void;
+  isReadOnly: boolean;
+  isEdit: boolean;
 }
 
-export default function AdmissionForm({ onSubmit, onSubmitForm }: Props) {
+export default function AdmissionForm({ onSubmit, onSubmitForm, isReadOnly, isEdit }: Props) {
   const {
     register,
     setValue,
@@ -45,6 +47,7 @@ export default function AdmissionForm({ onSubmit, onSubmitForm }: Props) {
           name="name"
           className="capitalize"
           typeInput="text"
+          disabled={isReadOnly}
           register={register("name")}
           required
           error={errors.name && errors.name.message}
@@ -56,6 +59,7 @@ export default function AdmissionForm({ onSubmit, onSubmitForm }: Props) {
           placeholder="El año académico debe ser mayor o igual al año actual"
           className="text-right"
           name="academicYear"
+          disabled={isReadOnly}
           register={register("academicYear", {
             valueAsNumber: true,
             onChange: (e) => {
@@ -83,6 +87,7 @@ export default function AdmissionForm({ onSubmit, onSubmitForm }: Props) {
           placeholder="El numero de postulaciones debe ser mayor a 0"
           className="text-right"
           name="maxApplications"
+          disabled={isReadOnly}
           register={register("maxApplications", {
             valueAsNumber: true,
             onChange: (e) => {
@@ -108,6 +113,7 @@ export default function AdmissionForm({ onSubmit, onSubmitForm }: Props) {
         <TextAreaComponent
           name="description"
           rows={3}
+          disabled={isReadOnly}
           placeholder="Descripción"
           label="Descripción"
           register={register("description")}
@@ -122,6 +128,7 @@ export default function AdmissionForm({ onSubmit, onSubmitForm }: Props) {
           label="Fecha de inicio"
           viweType="date"
           required
+          disabled={isReadOnly}
           name="startDate"
           control={control}
           error={errors.startDate && errors.startDate.message}
@@ -131,6 +138,7 @@ export default function AdmissionForm({ onSubmit, onSubmitForm }: Props) {
           label="Fecha de cierre"
           viweType="date"
           control={control}
+          disabled={isReadOnly}
           required
           name="endDate"
           error={errors.endDate && errors.endDate.message}
@@ -138,22 +146,25 @@ export default function AdmissionForm({ onSubmit, onSubmitForm }: Props) {
       </div>
 
       {/* Selección de campus y grados */}
-      <SelectCampusAndGrades />
+      <SelectCampusAndGrades
+        isReadOnly={isReadOnly}
+      />
       <hr className="m-0" />
       {/* Documentos requeridos */}
-      <RequiredDocumentsField fields={fields} append={append} remove={remove} />
+      <RequiredDocumentsField isReadonly={isReadOnly} fields={fields} append={append} remove={remove} />
 
       <hr className="mb-[0.5rem]" />
       {/* Checkboxes */}
-      <CheckboxGroup />
+      <CheckboxGroup isReadOnly={isReadOnly} />
 
       {/* Envío */}
       <div className="flex justify-end">
         <ButtonComponent
             className="primary"
             type="submit"
+            blockAccess={isReadOnly}
             onClick={() => {onSubmitForm(getValues())}}
-            label={"Guardar Proceso"}
+            label={isEdit ? "Actualizar proceso" : "Crear proceso"}
         />
       </div>
     </form>

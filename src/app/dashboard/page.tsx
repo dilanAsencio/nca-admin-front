@@ -334,7 +334,7 @@ const AcademicDashboard: React.FC = () => {
                               <ButtonPopUpComponent
                                 size="small"
                                 onClick={() => {setCampusSelected(index)}}
-                                className="tertiary-outline"
+                                className="primary-outline"
                                 label="Acciones colegio"
                                 options={optionsCampus(item)}
                               />

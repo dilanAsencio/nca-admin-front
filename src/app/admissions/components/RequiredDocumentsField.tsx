@@ -22,12 +22,14 @@ interface Props {
   >[];
   append: UseFieldArrayAppend<AdmissionProcessFormData, "requiredDocuments">;
   remove: UseFieldArrayRemove;
+  isReadonly: boolean;
 }
 
 export default function RequiredDocumentsField({
   fields,
   append,
   remove,
+  isReadonly,
 }: Props) {
   const {
     register,
@@ -85,6 +87,7 @@ export default function RequiredDocumentsField({
         <h4 className="m-0 font-medium text-gray-900">Documentos Requeridos</h4>
         <ButtonComponent
           size="small"
+          blockAccess={isReadonly}
           onClick={() => {
             append({
               name: "",
@@ -109,6 +112,7 @@ export default function RequiredDocumentsField({
               <div className="flex justify-end">
                 <button
                   type="button"
+                  disabled={isReadonly}
                   onClick={() => remove(index)}
                   className="text-red-600 text-sm"
                 >
@@ -122,6 +126,7 @@ export default function RequiredDocumentsField({
                     name="name"
                     className="capitalize"
                     typeInput="text"
+                    disabled={isReadonly}
                     register={register(`requiredDocuments.${index}.name`)}
                     required
                     error={
@@ -138,6 +143,7 @@ export default function RequiredDocumentsField({
                         label="Tipo de documento"
                         className="primary"
                         placeholder="Escoger tipo de documento"
+                        disabled={isReadonly}
                         options={optDocTypes}
                         onChange={(value) => field.onChange(value)}
                         value={field.value}
@@ -154,6 +160,7 @@ export default function RequiredDocumentsField({
                     label="Tamaño máximo (MB)"
                     placeholder="Tamaño en MB"
                     className="text-right"
+                    disabled={isReadonly}
                     name="maxSizeMB"
                     register={register(`requiredDocuments.${index}.maxSizeMB`, {
                         valueAsNumber: true,
@@ -189,6 +196,7 @@ export default function RequiredDocumentsField({
                         className="primary"
                         placeholder="Escoger tipo de formato"
                         isMulti
+                        disabled={isReadonly}
                         options={typeFormats}
                         onChange={(value) => field.onChange(value)}
                         value={field.value}
@@ -207,6 +215,7 @@ export default function RequiredDocumentsField({
                     render={({ field }) => (
                         <CheckBoxComponent
                             {...field}
+                            disabled={isReadonly}
                             checked={getValues(`requiredDocuments.${index}.required`)}
                             setChecked={() => {
                                 setValue(`requiredDocuments.${index}.required`, !getValues(`requiredDocuments.${index}.required`));
@@ -221,6 +230,7 @@ export default function RequiredDocumentsField({
                 rows={3}
                 placeholder="Descripción"
                 label="Descripción"
+                disabled={isReadonly}
                 register={register(`requiredDocuments.${index}.description`)}
                 required
                 error={
