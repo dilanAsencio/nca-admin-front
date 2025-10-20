@@ -28,6 +28,10 @@ const SidebarMenu: React.FC = () => {
           label: "Pre-registros",
           name: "admissions-preregistration",
           path: "/preregistration",
+        },        {
+          label: "Solicitudes",
+          name: "admissions-application",
+          path: "/applications",
         },
       ]
     },

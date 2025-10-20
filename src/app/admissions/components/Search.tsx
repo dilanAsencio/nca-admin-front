@@ -2,15 +2,16 @@
 
 import { useEffect, useState } from "react";
 import clsx from "clsx"
-import DropdownComponent from "../shared/dropdown/DropdownComponent";
+import DropdownComponent from "../../../components/shared/dropdown/DropdownComponent";
 import { useUI } from "@/providers/ui-context";
 import { CampusService } from "@/services/managementAcademic/campus-services";
 import { Response } from "@/app/core/interfaces/api-interfaces";
 import { GradeService } from "@/services/managementAcademic/grade-service";
 import { showToast } from "@/utils/alerts";
+import ButtonComponent from "@/components/shared/button/ButtonComponent";
 
-const SearchCampusComponent: React.FC<{
-    changeValue?: (values: { campus: string | null, grade: string | null, status: string | null }) => void
+const SearchComponent: React.FC<{
+    changeValue?: (values: { campus?: string, grade?: string, status?: string }) => void
 }> = ({
     changeValue
 }) => {
@@ -19,9 +20,23 @@ const SearchCampusComponent: React.FC<{
     } = useUI();
     const [campusDrop, setCampusDrop] = useState<any[]>([]);
     const [gradeDrop, setGradeDrop] = useState<any[]>([]);
-    const [campusSelected, setCampusSelected] = useState<string | null>(null);
-    const [gradeSelected, setGradeSelected] = useState<string | null>(null);
-    const [statusSelected, setStatusSelected] = useState<string | null>(null);
+    const [campusSelected, setCampusSelected] = useState<string>();
+    const [gradeSelected, setGradeSelected] = useState<string>();
+    const [statusSelected, setStatusSelected] = useState<string>();
+    const statuses = [
+        { value: "APPROVED", label: "Aprobado" },
+        { value: "UNDER_REVIEW", label: "En revisión" },
+        { value: "REJECTED", label: "Rechazado" },
+        { value: "PENDING", label: "Pendiente" },
+        { value: "DRAFT", label: "draft" },
+    ];
+
+    const resetInputs = () => {
+        setCampusSelected(undefined);
+        setGradeSelected(undefined);
+        setStatusSelected(undefined);
+        changeValue && changeValue({});
+    }
     
     const getCampus = async () => {
         toggleLoading(true);
@@ -29,7 +44,6 @@ const SearchCampusComponent: React.FC<{
             const campusResp = await CampusService.getCampus() as Response;
             if (campusResp?.success) {
                 let campus: any[] = [];
-                campus.push({ value: "all", label: "Todos" });
                 for (const item of campusResp.data.content) {
                     campus.push({
                         value: item.id,
@@ -98,7 +112,7 @@ const SearchCampusComponent: React.FC<{
 
     return (
         <div className={clsx(
-            "flex gap-[1rem] px-[1.25rem] py-[1rem] w-full",
+            "flex items-center gap-[1rem] px-[1.25rem] py-[1rem] w-full",
             "bg-white rounded-[2.5rem]",
         )}>
             <div className="basis-2/5">
@@ -126,12 +140,18 @@ const SearchCampusComponent: React.FC<{
                     name='status'
                     className='primary'
                     placeholder="Estado"
-                    options={[{ value: "activo", label: "Activo" }, { value: "inactivo", label: "Inactivo" }]}
+                    options={statuses}
                     onChange={(value) => handleSelect(value, "status")}
                     value={statusSelected || ""}
                 />
             </div>
+            <div className="flex justify-center items-center">
+            <ButtonComponent
+                className="primary"
+                onClick={() => {resetInputs()}}
+                label={"Limpiar"}
+            /></div>
         </div>
 )};
 
-export default SearchCampusComponent
+export default SearchComponent
