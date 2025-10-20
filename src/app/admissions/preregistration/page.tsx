@@ -7,10 +7,7 @@ import style from "@/app/font.module.css";
 import { useEffect, useState } from "react";
 import TableComponent from "@/components/shared/table/TableComponent";
 import { useUI } from "@/providers/ui-context";
-import { BranchesService } from "@/services/managementAcademic/branches-service";
-import { BranchesResponse } from "@/app/core/interfaces/academicManagement/branches-interfaces";
 import { Response } from "@/app/core/interfaces/api-interfaces";
-import { ButtonActions } from "@/app/core/interfaces/tables-interfaces";
 import { AdmissionsServices } from "@/services/admissions/admissions-service";
 import { showConfirm, showToast } from "@/utils/alerts";
 import { Statuses } from "@/app/core/enums/academic-enums";
@@ -21,6 +18,7 @@ import { Controller, useForm } from "react-hook-form";
 import DropdownComponent from "@/components/shared/dropdown/DropdownComponent";
 import { CampusService } from "@/services/managementAcademic/campus-services";
 import InputDateComponent from "@/components/shared/input/InputDateComponent";
+import { PreregistrationService } from "@/services/admissions/preRegister-service";
 
 const PreregistrationPage: React.FC = () => {
   const { toggleLoading, iconsActions } = useUI();
@@ -45,14 +43,8 @@ const PreregistrationPage: React.FC = () => {
   const [totalItems, setTotalItems] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const iconDetail = iconsActions.view;
-  const iconReject = {
-    path: "/assets/icon/alert-triangle-01.svg",
-    alt: "icon-reject",
-  };
-  const iconApprove = {
-    path: "/assets/icon/alert-circle.svg",
-    alt: "icon-approve",
-  };
+  const iconReject = iconsActions.reject;
+  const iconApprove = iconsActions.approve;
   const [campusDrop, setCampusDrop] = useState<any[]>([]);
 
   const getCampus = async () => {
@@ -82,7 +74,7 @@ const PreregistrationPage: React.FC = () => {
 
   type StatusesIndex = keyof typeof Statuses;
   const columns = [
-    { key: "parentName", nameField: "Nombre del padre" },
+    { key: "parentName", nameField: "Nombre del padre", isFilterable: true },
     { key: "parentEmail", nameField: "Email" },
     { key: "parentPhone", nameField: "Telefono" },
     { key: "campusName", nameField: "Colegio" },
@@ -122,12 +114,13 @@ const PreregistrationPage: React.FC = () => {
                 <Image
                   src={iconDetail.path}
                   alt={iconDetail.alt}
-                  width={20}
-                  height={20}
+                  width={24}
+                  height={24}
                 />
               </div>
             </>
-          ) : Statuses[row.statusCode as StatusesIndex] === "Rechazado" ? (null) :
+          ) : Statuses[row.statusCode as StatusesIndex] === "Rechazado" ||
+            Statuses[row.statusCode as StatusesIndex] === "Aprobado" ? (null) :
           (
             <>
               <Tooltip target=".tooltip-target2" />
@@ -140,8 +133,8 @@ const PreregistrationPage: React.FC = () => {
                 <Image
                   src={iconApprove.path}
                   alt={iconApprove.alt}
-                  width={20}
-                  height={20}
+                  width={24}
+                  height={24}
                 />
               </div>
 
@@ -155,8 +148,8 @@ const PreregistrationPage: React.FC = () => {
                 <Image
                   src={iconReject.path}
                   alt={iconReject.alt}
-                  width={20}
-                  height={20}
+                  width={24}
+                  height={24}
                 />
               </div>
             </>
@@ -168,7 +161,7 @@ const PreregistrationPage: React.FC = () => {
 
   const handleReview = async (row: any) => {
     toggleLoading(true);
-    const resp = await AdmissionsServices.admissionProcessReview(row.id, {
+    const resp = await PreregistrationService.admissionProcessReview(row.id, {
       status: "UNDER_REVIEW",
     });
     if (resp?.id) {
@@ -187,7 +180,7 @@ const PreregistrationPage: React.FC = () => {
     );
     if (consfirm) {
       toggleLoading(true);
-      const resp = await AdmissionsServices.admissionProcessReject(row.id, {
+      const resp = await PreregistrationService.admissionProcessReject(row.id, {
         reason: "Rechazado",
       });
       if (resp?.id) {
@@ -206,7 +199,7 @@ const PreregistrationPage: React.FC = () => {
       "warning"
     );
     if (consfirm) {
-      const resp = await AdmissionsServices.admissionProcessApprove(row.id, {comments: ""});
+      const resp = await PreregistrationService.admissionProcessApprove(row.id, {comments: ""});
       if (resp?.id) {
         showToast("Proceso de admision aprobado", "success");
         getPreregisters(currentPage);
@@ -224,7 +217,7 @@ const PreregistrationPage: React.FC = () => {
     dateTo: string = ""
   ) => {
     toggleLoading(true);
-    const resp = await AdmissionsServices.getAdmissionsPreRegister(
+    const resp = await PreregistrationService.getAdmissionsPreRegister(
       { page: page ? page - 1 : 0, size: 10},
       campusId,
       status,
@@ -263,7 +256,7 @@ const PreregistrationPage: React.FC = () => {
       <div
         className={clsx(
           `${style["font-outfit"]}`,
-          "flex flex-col gap-[1.5rem]"
+          "flex flex-col gap-[1rem] min-h-[88vh]"
         )}
       >
         <div className={clsx(`flex justify-between items-center h-[3.125rem]`)}>
@@ -277,23 +270,6 @@ const PreregistrationPage: React.FC = () => {
             "bg-white rounded-[1rem]"
           )}
         >
-          <Controller
-            name="status"
-            control={control}
-            render={({ field }) => (
-              <DropdownComponent
-                name="status"
-                label="Estado"
-                className="primary"
-                placeholder="Escoger estado"
-                options={statuses}
-                onChange={(value) => {
-                  field.onChange(value);
-                }}
-                value={field.value}
-              />
-            )}
-          />
 
           <Controller
             name="campus"
@@ -305,6 +281,24 @@ const PreregistrationPage: React.FC = () => {
                 className="primary"
                 placeholder="Escoger colegio"
                 options={campusDrop}
+                onChange={(value) => {
+                  field.onChange(value);
+                }}
+                value={field.value}
+              />
+            )}
+          />
+          
+          <Controller
+            name="status"
+            control={control}
+            render={({ field }) => (
+              <DropdownComponent
+                name="status"
+                label="Estado"
+                className="primary"
+                placeholder="Escoger estado"
+                options={statuses}
                 onChange={(value) => {
                   field.onChange(value);
                 }}
@@ -333,7 +327,7 @@ const PreregistrationPage: React.FC = () => {
               label={"Limpiar"}
           /></div>
         </div>
-        <div className="p-2 bg-white rounded-[1rem]">
+        <div className="p-2 bg-white rounded-[1rem] flex-1">
           <TableComponent
             title="Procesos de Admisiones"
             columns={columns}

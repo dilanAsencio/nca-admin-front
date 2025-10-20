@@ -5,7 +5,7 @@ import Search from "@/app/landing/school/components/search/Search";
 import Filter from "@/app/landing/school/components/filter/Filter";
 import "./style.css";
 import CardSchool from "@/components/public/home/school/CardSchool";
-import Pagination from "@/components/shared/paginate/pagination";
+import Pagination from "@/components/shared/paginate/PaginationComponent";
 import { CampusPublicService } from "@/services/public/campus-public-service";
 import { Institution } from "@/app/core/interfaces/public/campus-interfaces";
 import { useRouter } from "next/navigation";

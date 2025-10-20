@@ -55,7 +55,13 @@ const ModalComponent: React.FC<{
               <span className="sr-only">Close modal</span>
             </button>
           </div>
-          <div className="mt-[60px] pt-[1.5rem] p-[1rem] h-[60vh] overflow-auto">
+          <div className={clsx(
+              "mt-[60px] pt-[1.5rem] p-[1rem] overflow-auto",
+              sizeModal === 'small' && "max-h-[20rem]",
+              sizeModal === 'medium' && "max-h-[25rem]",
+              sizeModal === 'large' && "max-h-[30rem]",
+              !sizeModal && "max-h-[25rem]",
+            )}>
             {children}
           </div>
           <div className="flex justify-end gap-[0.75rem] px-[1rem] py-[1rem]">
@@ -67,6 +73,7 @@ const ModalComponent: React.FC<{
             { buttonAcceptVisible &&
               <ButtonComponent
                 className="primary"
+                type="submit"
                 label={labelBtnAccept || "Agregar"}
                 onClick={handleSubmit}
               />

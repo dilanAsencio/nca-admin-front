@@ -9,7 +9,6 @@ import CardActionComponent from "@/components/shared/cardAction/CardActionCompon
 import { AdmissionsServices } from "@/services/admissions/admissions-service";
 import ModalAdmissionsForm from "../components/ModalAdmissionProcess";
 import TableComponent from "@/components/shared/table/TableComponent";
-import { ProgressSpinner } from "primereact/progressspinner";
 import { useUI } from "@/providers/ui-context";
 import { ButtonActions } from "../../core/interfaces/tables-interfaces";
 import { showToast } from "@/utils/alerts";
@@ -22,6 +21,8 @@ const AdmissionsProcessesPage: React.FC = () => {
   const [openModal, setOpenModal] = useState<{open: boolean, data: any, op: "view" | "edit" | "add"}>({open: false, data: null, op: "add"});
   const [admissionsProcess, setAdmissionsProcess] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
   
   const iconEdit = iconsActions.edit;
   const iconDetail = iconsActions.view;
@@ -32,10 +33,10 @@ const AdmissionsProcessesPage: React.FC = () => {
     {key: "startDate", nameField: "Fecha Inicio"},
     {key: "endDate", nameField: "Fecha Cierre"},
     {key: "status", nameField: "Estado", render: (row: any) => (
-      <span className={`m-0 font-semibold py-[0.25rem] px-[0.75rem] rounded-[0.5rem] ${
+      <div className={`m-0 font-semibold text-center max-w-[80%] py-[0.25rem] px-[0.75rem] rounded-[0.5rem] ${
         row.status === "Activo" ?
         "text-green-600 bg-[#00ff0042] border-2 border-solid border-[#00ff00]" : 
-        "text-amber-600 bg-[#ffff0042] border-2 border-solid border-[#ffcd00]"}`}>{row.status}</span>
+        "text-amber-600 bg-[#ffff0042] border-2 border-solid border-[#ffcd00]"}`}>{row.status}</div>
     )},
   ]
   const btnActions = (item: any): ButtonActions[] =>{
@@ -58,9 +59,10 @@ const AdmissionsProcessesPage: React.FC = () => {
   }
   const getAdmissionsProcess = async () => {
     toggleLoading(true);
-    const resp = await AdmissionsServices.getAdmissionsProcess();
+    const resp = await AdmissionsServices.getAdmissionsProcess({ page: currentPage - 1, size: itemsPerPage });
     if (resp?.success && resp.data?.content) {
       setAdmissionsProcess(resp.data.content);
+      setTotalItems(resp.data.totalElements);
       toggleLoading(false);
     } else {
       showToast("Error al obtener los procesos de admision", "error");
@@ -76,6 +78,10 @@ const AdmissionsProcessesPage: React.FC = () => {
   useEffect(() => {
     getAdmissionsProcess();
   }, []);
+
+  useEffect(() => {
+    getAdmissionsProcess();
+  }, [currentPage, itemsPerPage]);
 
   return (<>
       <div
@@ -109,30 +115,16 @@ const AdmissionsProcessesPage: React.FC = () => {
             btnActions={btnActions}
             data={admissionsProcess}
             paginate={{
-              totalItems: admissionsProcess.length,
-              itemsPerPage: 10,
+              totalItems: totalItems,
+              itemsPerPage: itemsPerPage,
               currentPage: currentPage,
-              onPageChange: (newPage: number) => {setCurrentPage(newPage)}
+              onPageChange: setCurrentPage,
+              onItemsPerPageChange: (size) => {
+                setItemsPerPage(size);
+              }
             }}
           />
         </div>
-        {/* <div className="flex flex-col gap-[1.5rem]">
-          <SearchCampusComponent changeValue={(value) => handleSearchChange(value)} />
-          <div className="flex flex-col">
-            <div className="flex">
-              { branches && branches.length > 0 &&
-                branches.map((branch) => (
-                  <TabsComponent
-                    key={branch.id}
-                    label={branch.name}
-                    icon={iconSchool}
-                    isActive={branch.display ? true : false}
-                  />
-                ))
-              }
-            </div>
-          </div>
-        </div> */}
       </div>
 
       { openModal.open &&

@@ -64,8 +64,12 @@ export const UIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
   const iconsActions: { [key: string]: { path: string; alt: string } } = {
     edit: { path: "/assets/icon/edit-contained-purple.svg", alt: "Editar" },
     delete: { path: "/assets/icon/trash-02-red.svg", alt: "Eliminar" },
+    reject: { path: "/assets/icon/minus-circle-contained-red.svg", alt: "Rechazar" },
+    approve: { path: "/assets/icon/state-yes.svg", alt: "Aprobar" },
     add: { path: "/assets/icon/plus-03.svg", alt: "Agregar" },
-    view: { path: "/assets/icon/paperclip.svg", alt: "Detalle" },
+    view: { path: "/assets/icon/eye-open-purple.svg", alt: "Detalle" },
+    comment: { path: "/assets/icon/edit-contained-purple.svg", alt: "Comentar" },
+    filter: { path: "/assets/icon/filter.svg", alt: "Filtrar" },
     // puedes agregar más acciones aquí
   };
 
