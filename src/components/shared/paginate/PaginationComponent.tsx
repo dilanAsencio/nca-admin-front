@@ -8,6 +8,7 @@ interface PaginationProps {
   itemsPerPage: number;
   currentPage: number;
   onPageChange: (newPage: number) => void;
+  perPageOptions?: number[];
   onItemsPerPageChange?: (size: number) => void; 
 }
 
@@ -17,6 +18,7 @@ const PaginationComponent: React.FC<PaginationProps> = ({
   currentPage,
   onPageChange,
   onItemsPerPageChange,
+  perPageOptions,
 }) => {
   const totalPages = Math.ceil(totalItems / itemsPerPage);
   // if (totalPages <= 1) return null;
@@ -29,6 +31,8 @@ const PaginationComponent: React.FC<PaginationProps> = ({
   const next = () => {
     if (currentPage < totalPages) onPageChange(currentPage + 1);
   };
+
+  const perPage = perPageOptions || [5, 10, 25, 50, 100];
 
   return (
     <div className="flex items-center gap-[0.5rem]">
@@ -76,7 +80,7 @@ const PaginationComponent: React.FC<PaginationProps> = ({
             value={itemsPerPage}
             onChange={(e) => onItemsPerPageChange?.(parseInt(e.target.value))}
           >
-            {[5, 10, 20, 30, 50].map((num) => (
+            {perPage.map((num) => (
               <option key={num} value={num} className="text-gray-900 text-[1rem] font-normal hover:bg-red-50">
                 {num}/page
               </option>

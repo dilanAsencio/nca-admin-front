@@ -28,7 +28,7 @@ const SearchComponent: React.FC<{
         { value: "UNDER_REVIEW", label: "En revisión" },
         { value: "REJECTED", label: "Rechazado" },
         { value: "PENDING", label: "Pendiente" },
-        { value: "DRAFT", label: "draft" },
+        { value: "DRAFT", label: "Borrador" },
     ];
 
     const resetInputs = () => {

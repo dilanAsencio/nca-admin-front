@@ -1,9 +1,8 @@
 import React from "react";
 
-import MainAdmissions from "../components/MainAdmissions";
+import MainAdmissions from "./components/MainAdmissions";
 
 const AdmissionCampusPage: React.FC = () => {
-  
   return (
   <MainAdmissions />
 )};

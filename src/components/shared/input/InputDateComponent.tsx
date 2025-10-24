@@ -37,33 +37,14 @@ const InputDateComponent: React.FC<InputDateComponentProps> = (
         const offsetHours = pad(Math.floor(Math.abs(timezoneOffset) / 60));
         const offsetMinutes = pad(Math.abs(timezoneOffset) % 60);
 
-        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${milliseconds} ${sign}${offsetHours}${offsetMinutes}`;
+        return `${year}-${month}-${day}`;
     };
 
     /** 🔹 Convierte string "yyyy-MM-dd HH:mm:ss.SSS Z" → Date (para mostrar en input) */
     const parseCustomDate = (dateString?: string): Date | null => {
         if (!dateString) return null;
-
-        const match = dateString.match(
-        /^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})\.(\d{3}) ([+-]\d{4})$/
-        );
-        if (!match) return null;
-
-        const [_, y, m, d, hh, mm, ss, ms, tz] = match;
-        const offsetHours = parseInt(tz.slice(0, 3));
-        const offsetMinutes = parseInt(tz.slice(0, 1) + tz.slice(3));
-        const date = new Date(
-        Date.UTC(
-            Number(y),
-            Number(m) - 1,
-            Number(d),
-            Number(hh) - offsetHours,
-            Number(mm) - offsetMinutes,
-            Number(ss),
-            Number(ms)
-        )
-        );
-        return date;
+        const parsed = new Date(dateString);
+        return isNaN(parsed.getTime()) ? null : parsed;
     };
     return(
         <div className="w-full flex flex-col">
@@ -71,28 +52,38 @@ const InputDateComponent: React.FC<InputDateComponentProps> = (
             <Controller
                 name={name}
                 control={control}
-                render={({ field }) => (
-                    <Calendar
-                        id={name}
-                        name={name}
-                        value={field.value ?? null}
-                        onChange={(e) => {
+                render={({ field }) => {
+                    // Convierte el string almacenado en el form a un objeto Date para mostrarlo correctamente
+                    const dateValue = field.value ? parseCustomDate(field.value) : null;
+                    return (
+                        <Calendar
+                            id={name}
+                            name={name}
+                            value={dateValue} // ✅ ahora Calendar recibe un Date válido
+                            onChange={(e) => {
                             if (e.value instanceof Date) {
                                 const formatted = formatDateToCustom(e.value);
-                                field.onChange(formatted);
+                                field.onChange(formatted); // guardamos en formato custom
                             } else {
                                 field.onChange("");
                             }
-                        }}
-                        dateFormat={viweType === "month" ? "mm/yy" : viweType === "year" ? "yy" : "YY/mm/dd"}
-                        view={viweType}
-                        disabled={disabled}
-                        hourFormat="24"
-                        readOnlyInput={readOnly}
-                        className={`custom-input-date ${className}`}
-                        showIcon={showIcon}
-                    />
-                )}
+                            }}
+                            dateFormat={
+                            viweType === "month"
+                                ? "mm/yy"
+                                : viweType === "year"
+                                ? "yy"
+                                : "yy/mm/dd"
+                            }
+                            view={viweType}
+                            disabled={disabled}
+                            hourFormat="24"
+                            readOnlyInput={readOnly}
+                            className={`custom-input-date ${className}`}
+                            showIcon={showIcon}
+                        />
+                    );
+                }}
             />
             {error && 
                 <ErrorAlert>{error as string}</ErrorAlert>

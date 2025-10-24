@@ -22,7 +22,7 @@ const ModalComponent: React.FC<{
       >
         <div className={clsx(
           "relative bg-white rounded-[0.5rem] w-full",
-          sizeModal === 'small' && "max-w-[30rem] max-h-[20rem]",
+          sizeModal === 'small' && "max-w-[30rem] max-h-[auto]",
           sizeModal === 'medium' && "max-w-[55rem] max-h-[25rem]",
           sizeModal === 'large' && "max-w-[70rem] max-h-[65rem]",
           !sizeModal && "max-w-[50rem]",
@@ -56,10 +56,10 @@ const ModalComponent: React.FC<{
             </button>
           </div>
           <div className={clsx(
-              "mt-[60px] pt-[1.5rem] p-[1rem] overflow-auto",
+              "mt-[60px] pt-[1.5rem] p-[1rem]",
               sizeModal === 'small' && "max-h-[20rem]",
-              sizeModal === 'medium' && "max-h-[25rem]",
-              sizeModal === 'large' && "max-h-[30rem]",
+              sizeModal === 'medium' && "max-h-[25rem] overflow-auto",
+              sizeModal === 'large' && "max-h-[30rem] overflow-auto",
               !sizeModal && "max-h-[25rem]",
             )}>
             {children}

@@ -42,8 +42,14 @@ export const AdmissionsServices = {
    */
   getAdmissionsProcess: async (
     paginate?: PaginateIMPL,
-  ): Promise<any> => 
-    apiProxy("GET", `admin/admission-processes`, paginate),
+  ): Promise<any> => {
+    try {
+        const resp = await apiProxy("GET", `admin/admission-processes`, paginate)
+        return resp;
+    } catch (error) {
+        throw { success: false, error: error || "Error al obtener la solicitud" };
+    }    
+  },
     
   /**
    * Retrieves an admission process given its ID.

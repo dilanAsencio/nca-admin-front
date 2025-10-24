@@ -45,7 +45,6 @@ const BasicDataForm: React.FC<{onBack: () => void, onNext: () => void, isEdit: b
             } else {
                 response = await CampusService.createCampus(data) as Response;
             }
-            console.log("Response create/update campus:", response);
             
             if(response.success){
                 showToast(`Colegio ${response.data.name}, fue ${isEdit ? "actualizado" : "creado"} con exito!`, "success");

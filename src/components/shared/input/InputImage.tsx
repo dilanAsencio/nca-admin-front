@@ -5,9 +5,10 @@ interface InputImageComponentProps {
   onImageChange?: (preview: string | null) => void;
   register?: any;
   name?: string;
+  formats?: string[];
 }
 
-export const InputImageComponent = ({ onImageChange, register, name = "logo_url" }: InputImageComponentProps) => {
+export const InputImageComponent = ({ onImageChange, register, name = "logo_url" , formats}: InputImageComponentProps) => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,8 +45,8 @@ export const InputImageComponent = ({ onImageChange, register, name = "logo_url"
         ) : (
           <div className="flex flex-col items-center justify-center gap-[0.9375rem]">
             <Image src="/assets/img/up-logo.png" alt="Upload" width={75} height={75} />
-            <span className='m-0 font-normal text-[0.875rem]'>Cargar logo</span>
-            <span className='m-0 font-normal text-[0.875rem]'>Formato: jpg,png</span>
+            <span className='m-0 font-normal text-[0.875rem]'>Cargar {name}</span>
+            <span className='m-0 font-normal text-[0.875rem]'>Formato: {formats?.join(', ')}</span>
           </div>
         )}
         <input

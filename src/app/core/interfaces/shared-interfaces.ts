@@ -9,10 +9,11 @@ export interface ButtonComponentProps {
     size?: "small" | "normal";
     label?: string;
     icon?: {path: string; alt: string};
-    // iconFont?: IconDefinition;
+    iconPosition?: "left" | "right";
     loading?: boolean;
     className?: string;
     onClick?: () => void;
+
 }
 
 interface PopUpOption {

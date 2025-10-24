@@ -9,15 +9,15 @@ import Pagination from "@/components/shared/paginate/PaginationComponent";
 import { CampusPublicService } from "@/services/public/campus-public-service";
 import { Institution } from "@/app/core/interfaces/public/campus-interfaces";
 import { useRouter } from "next/navigation";
+import { useLanding } from "@/providers/landing-context";
 
 const SchoolPage: React.FC = () => {
+
+  const { handleMenu } = useLanding();
   const [campus, setCampus] = useState<any[] | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [currentSearch, setCurrentSearch] = useState<string>("");
   const [totalItems, setTotalItems] = useState<number>(0);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const itemsPerPage = 9;
   const router = useRouter();
 
@@ -55,6 +55,10 @@ const SchoolPage: React.FC = () => {
   const viewCampus = (item: Institution) => {
     router.push(`/landing/school/${item.id}?tenantId=${item.tenantId}`, );
   }
+
+  useEffect(() => {
+    handleMenu("colegios")
+  }, []);
 
   useEffect(() => {
     fetchCampus(currentPage, searchTerm);

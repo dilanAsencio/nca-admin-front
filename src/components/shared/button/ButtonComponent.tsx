@@ -12,17 +12,19 @@ const ButtonComponent: React.FC<ButtonComponentProps> = ({
     onClick,
     className = "primary",
     size = "normal",
+    iconPosition = "left",
 }) => {
 
     return(
     <button
         type={type}
         disabled={blockAccess}
-        className={`btn-custom ${size} ${className} ${style["font-outfit"]} ${icon ? "flex justify-center items-center gap-[0.12rem]" : ""}`}
+        className={`btn-custom ${size} ${className} ${style["font-outfit"]} ${icon ? "flex justify-center items-center gap-[0.4rem]" : ""}`}
         onClick={onClick}
     >
-        { icon && <Image className="icon-btn" src={icon?.path} alt={icon?.alt} width={20} height={20} loading="lazy" />}
+        { iconPosition === "left" && icon && <Image className="icon-btn" src={icon?.path} alt={icon?.alt} width={20} height={20} loading="lazy" />}
         {label && label}
+        { iconPosition === "right" && icon && <Image className="icon-btn" src={icon?.path} alt={icon?.alt} width={20} height={20} loading="lazy" />}
     </button>
     );
 }

@@ -11,7 +11,7 @@ export class DateUtils {
    * @param isoFormat Si es true, retorna formato ISO completo.
    * @returns Fecha formateada como string.
    */
-  static formatDate(date: Date | string | number, isoFormat = false): string {
+  static formatDate(date: Date | string | number, isoFormat: boolean = false, onlyDate: boolean = false): string {
     const dateObj = new Date(date);
     if (isNaN(dateObj.getTime())) {
       return ''; // Retornar cadena vacía si la fecha no es válida
@@ -30,6 +30,7 @@ export class DateUtils {
       const hours = String(dateObj.getHours()).padStart(2, '0');
       const minutes = String(dateObj.getMinutes()).padStart(2, '0');
       const seconds = String(dateObj.getSeconds()).padStart(2, '0');
+      if (onlyDate) return formattedDate;
       return `${formattedDate}, ${hours}:${minutes}:${seconds}`;
     }
 

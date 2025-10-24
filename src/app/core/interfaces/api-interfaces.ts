@@ -7,7 +7,7 @@ export interface Paginate {
     isActive?: boolean,
 }
 export class PaginateIMPL implements Paginate {
-    page?: number = 0;
+    page: number = 0;
     size?: number = 10;
     sort?: string[] = [];
     search?: string = "";
