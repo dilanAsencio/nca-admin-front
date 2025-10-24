@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser as faUserRegular, faEye, faEyeSlash } from "@fortawesome/free-regular-svg-icons";
 import { publicLoginThunk, AppDispatch } from "@/providers/store/public-auth-store";
 import * as alerts from "@/utils/alerts";
+import { useLanding } from "@/providers/landing-context";
 
 interface LoginFormData {
   username: string;
@@ -26,6 +27,7 @@ const errorMessage = {
 
 export default function PublicLoginForm({ onClose }: PublicLoginFormProps) {
   const router = useRouter();
+  const { handleMenu } = useLanding();
   const dispatch = useDispatch<AppDispatch>();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -54,7 +56,8 @@ export default function PublicLoginForm({ onClose }: PublicLoginFormProps) {
         showToast(resp?.message, "info");
         reset()
         onClose();
-        // router.push("/");
+        router.push("/landing");
+        handleMenu("home");
       })
       .catch(() => {
         setError("username", {

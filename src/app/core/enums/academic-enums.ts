@@ -31,6 +31,6 @@ export enum Statuses {
     PENDING_DOCUMENTS = "Pendiente de Documentos",
     PENDING_REVIEW = "Pendiente de Revisión",
     REJECTED = "Rechazado",
-    UNDER_REVIEW = "Under review",
-    DRAFT = "draft",
+    UNDER_REVIEW = "En Revisión",
+    DRAFT = "Borrador",
 }

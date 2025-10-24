@@ -40,7 +40,6 @@ const SchoolDetailsPage: React.FC = () => {
   const getBranchesByCampus = async (campusId: string, tenantId: string) => {
     try {
       const response = await CampusPublicService.getBranchesCampus(tenantId, campusId);
-      console.log("sedes del campus:", response);
       if (response.length > 0) {
         setBranches(response);
         setSelectedTab(0);

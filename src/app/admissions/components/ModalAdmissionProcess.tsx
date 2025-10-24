@@ -49,7 +49,6 @@ const ModalAdmissionsForm: React.FC<{
     if (admissionProcessId === "" || admissionProcessId === undefined) return;
     const resp = await AdmissionsServices.getAdmissionsProcessById(admissionProcessId);    
     if (resp?.success) {
-      console.log("resp admissions process by id", resp);
       methods.reset(resp.data);
       writeData.op === "view" ? setIsReadOnly(true) : setIsReadOnly(false);
       writeData.op === "edit" ? setIsEdit(true) : setIsEdit(false);

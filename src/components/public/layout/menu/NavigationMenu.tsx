@@ -15,7 +15,7 @@ const menuItems = [
   { label: 'Admisiones', name: 'admisiones', href: '/landing/admissions', width: "auto" },
   { label: 'Certificaciones', name: 'certificaciones', href: '/landing', width: "auto" },
   { label: 'Noticias', name: 'noticias', href: '/landing', width: "auto" },
-  { label: '¿Quienes Somos?', name: 'quienes-somos', href: '/landing', width: "8rem" },
+  { label: '¿Quienes Somos?', name: 'quienes-somos', href: '/landing', width: "9rem" },
 ];
 
 const NavigationMenu: React.FC<{openMenu: boolean}> = ({openMenu}) => {
@@ -33,17 +33,18 @@ const NavigationMenu: React.FC<{openMenu: boolean}> = ({openMenu}) => {
           ${openMenu ? 'absolute bg-white z-30 top-[5.313rem] right-[1.875rem]' : ''}
         `}> 
           {menuItems.map(item => (
-            <li className='' key={item.name}>
-              <Link href={item.href}
+            // <li className='' key={item.name}>
+              <Link href={item.href} key={item.name}
                 onClick={() => {handleMenu(item.name)}}
                 className={clsx("px-2 py-1 rounded-[0.5rem] custom-link flex flex-col items-center font-normal text-[1rem] gap-[0.75rem]",
-                  openMenu ? 'flex-row' : 'flex-col', item.name,`${style["font-outfit"]}`, `w-[${item.width}]`,
+                  `w-[${item.width}]`,
+                  openMenu ? 'flex-row' : 'flex-col', item.name,`${style["font-outfit"]}`,
                   menuSelected === item.name ? 'active' : menuSelected === null && item.name === 'home' ? 'active' : '',
                 )}>
                 <RenderIcon name={item.name} />
                 {item.label}
               </Link>
-            </li>
+            // </li>
           ))}
         </ul>
       </div>

@@ -1,0 +1,93 @@
+"use client";
+
+import React from "react";
+import { Controller, useFormContext } from "react-hook-form";
+import TextAreaComponent from "@/components/shared/input/TextAreaComponent";
+import CheckBoxComponent from "@/components/shared/check/CheckBoxComponent";
+import { AdmissionApplicationFormData } from "./AdmissionApplicationsForm";
+
+export default function AdditionalInfoSection() {
+  const { control, register, getValues, setValue, formState: { errors } } = useFormContext<AdmissionApplicationFormData>();
+
+  return (
+    <div className="flex flex-col gap-4">
+      <TextAreaComponent
+        label="Condiciones especiales"
+        placeholder="Ej: Alergias, TDAH, dislexia..."
+        name="specialConditions"
+        rows={3}
+        register={register("specialConditions")}
+        error={errors.specialConditions?.message}
+      />
+
+      <TextAreaComponent
+        label="¿Cómo supo de nosotros?"
+        placeholder="Ej: Recomendación, redes sociales..."
+        name="howDidYouKnow"
+        rows={2}
+        register={register("howDidYouKnow")}
+        error={errors.howDidYouKnow?.message}
+      />
+
+      <TextAreaComponent
+        label="Observaciones adicionales"
+        placeholder="Comentarios relevantes..."
+        name="observations"
+        rows={3}
+        register={register("observations")}
+        error={errors.observations?.message}
+      />
+
+      {/* Checkboxes */}
+      <div className="flex flex-col gap-2 mt-4">
+        <Controller
+          name="saveAsDraft"
+          control={control}
+          defaultValue={false}
+          render={({ field }) => (
+            <CheckBoxComponent
+                {...field}
+                checked={getValues("saveAsDraft")}
+                setChecked={() => {
+                    setValue("saveAsDraft", !getValues("saveAsDraft"));
+                }}
+                label="Guardar como borrador"
+            />
+          )}
+        />
+
+        <Controller
+          name="acceptTerms"
+          control={control}
+          defaultValue={false}
+          render={({ field }) => (
+            <CheckBoxComponent
+                {...field}
+                checked={getValues("acceptTerms")}
+                setChecked={() => {
+                    setValue("acceptTerms", !getValues("acceptTerms"));
+                }}
+                label="Acepto los términos y condiciones"
+            />
+          )}
+        />
+
+        <Controller
+          name="acceptDataProcessing"
+          control={control}
+          defaultValue={false}
+          render={({ field }) => (
+            <CheckBoxComponent
+                {...field}
+                checked={getValues("acceptDataProcessing")}
+                setChecked={() => {
+                    setValue("acceptDataProcessing", !getValues("acceptDataProcessing"));
+                }}
+                label="Autorizo el tratamiento de datos personales"
+            />
+          )}
+        />
+      </div>
+    </div>
+  );
+}

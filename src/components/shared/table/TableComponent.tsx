@@ -38,6 +38,7 @@ export interface SimpleTableProps<T> {
     currentPage: number;
     onPageChange: (newPage: number) => void;
     onItemsPerPageChange?: (size: number) => void;
+    perPageOptions?: number[];
   };
   btnActions?: (row: T) => SimpleTableAction<T>[];
 }
@@ -218,8 +219,9 @@ function TableComponent<T>({
                       ) : (
                         <td
                           key={String(col.key)}
-                          style={col.width ? { width: col.width } : undefined}
+                          // style={(col.width ? { width: col.width } : undefined)}
                           className={clsx(
+                            col.width && `${col.width}`,
                             `p-[0.75rem] text-gray-700 text-[1rem] font-normal leading-[1.25rem]`
                           )}
                         >
@@ -243,6 +245,7 @@ function TableComponent<T>({
               itemsPerPage={paginate.itemsPerPage}
               currentPage={paginate.currentPage}
               onPageChange={paginate.onPageChange}
+              perPageOptions={paginate.perPageOptions}
               onItemsPerPageChange={paginate.onItemsPerPageChange}
             />
           )}

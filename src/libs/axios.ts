@@ -6,9 +6,11 @@ const instance = axios.create({});
 // Interceptor de solicitud
 instance.interceptors.request.use((config) => {
   // se agrega el token de auth
-  const token = typeof window !== "undefined" ? localStorage.getItem("auth_token") : null;  
-  if (token) {
-    config.headers['Authorization'] = `Bearer ${token}`;
+  const token = typeof window !== "undefined" ? localStorage.getItem("auth_token") : null;
+  const tokenP = typeof window !== "undefined" ? localStorage.getItem("auth_tokenP") : null;
+  const authToken = token || tokenP || null;
+  if (authToken) {
+    config.headers['Authorization'] = `Bearer ${authToken}`;
   }
   return config;
 }, (error) => {
@@ -21,7 +23,6 @@ instance.interceptors.response.use(
   async (error) => {
     if (error.response?.status === 401) {
       const refreshToken = localStorage.getItem("refresh_token");
-      console.log("Intentando refrescar token...", refreshToken);
       if (refreshToken) {
         try {
           // intentar refrescar token

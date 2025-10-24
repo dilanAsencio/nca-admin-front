@@ -79,10 +79,10 @@ export const authService = {
       const { success, data, message, timestamp } = response;
       const { access_token, refresh_token } = data;
 
-      localStorage.setItem("auth_token", access_token);
-      localStorage.setItem("refresh_token", refresh_token);
+      localStorage.setItem("auth_tokenP", access_token);
+      localStorage.setItem("refresh_tokenP", refresh_token);
 
-      document.cookie = `auth_token=${access_token}; path=/;`;
+      document.cookie = `auth_tokenP=${access_token}; path=/;`;
       
       return {
         success,
@@ -184,11 +184,11 @@ export const authService = {
       const { success, data, message, timestamp } = response.data;
 
       if (data?.accessToken) {
-        localStorage.setItem("auth_token", data.accessToken);
-        document.cookie = `auth_token=${data.accessToken}; path=/;`;
+        localStorage.setItem("auth_tokenP", data.accessToken);
+        document.cookie = `auth_tokenP=${data.accessToken}; path=/;`;
       }
       if (data?.refreshToken) {
-        localStorage.setItem("refresh_token", data.refreshToken);
+        localStorage.setItem("refresh_tokenP", data.refreshToken);
       }
 
       return {
@@ -260,15 +260,15 @@ export const authService = {
 
   async publicLogout(): Promise<void> {
     try {
-      await axios.post("/public/auth/logout");
+      await apiProxy("POST", "/public/auth/logout", undefined);
 
-      localStorage.removeItem("auth_token");
-      localStorage.removeItem("refresh_token");
+      localStorage.removeItem("auth_tokenP");
+      localStorage.removeItem("refresh_tokenP");
       localStorage.removeItem("first_login");
       localStorage.removeItem("persist:root");
 
       document.cookie =
-        "auth_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        "auth_tokenP=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
       document.cookie =
         "first_login=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     } catch (error: any) {

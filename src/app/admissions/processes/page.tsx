@@ -20,9 +20,9 @@ const AdmissionsProcessesPage: React.FC = () => {
   } = useUI();
   const [openModal, setOpenModal] = useState<{open: boolean, data: any, op: "view" | "edit" | "add"}>({open: false, data: null, op: "add"});
   const [admissionsProcess, setAdmissionsProcess] = useState<any[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalItems, setTotalItems] = useState(0);
-  const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalItems, setTotalItems] = useState<number>(0);
+  const [itemsPerPage, setItemsPerPage] = useState<number>(5);
   
   const iconEdit = iconsActions.edit;
   const iconDetail = iconsActions.view;
@@ -57,9 +57,9 @@ const AdmissionsProcessesPage: React.FC = () => {
       },
     ]
   }
-  const getAdmissionsProcess = async () => {
+  const getAdmissionsProcess = async (page: number = 0, size: number = 5) => {
     toggleLoading(true);
-    const resp = await AdmissionsServices.getAdmissionsProcess({ page: currentPage - 1, size: itemsPerPage });
+    const resp = await AdmissionsServices.getAdmissionsProcess({ page: page - 1, size: size });
     if (resp?.success && resp.data?.content) {
       setAdmissionsProcess(resp.data.content);
       setTotalItems(resp.data.totalElements);
@@ -80,7 +80,7 @@ const AdmissionsProcessesPage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    getAdmissionsProcess();
+    getAdmissionsProcess(currentPage, itemsPerPage);
   }, [currentPage, itemsPerPage]);
 
   return (<>

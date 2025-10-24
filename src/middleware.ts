@@ -6,15 +6,9 @@ export function middleware(request: NextRequest) {
   const isFirstLogin = request.cookies.get("first_login")?.value === "true";
   const pathname = request.nextUrl.pathname;
   
-  
   // Rutas públicas
   const publicRoutes = ["/login", "/forgot-password", "/auth/register", "/auth/change-password"];
   const resetRoutes = ["/reset-password", "/change-password"];
-
-  // Permitir acceso libre a /landing y subrutas
-  if (pathname.startsWith('/landing')) {
-    return NextResponse.next();
-  }
 
   // Permitir acceso libre a /landing y subrutas
   if (pathname.startsWith('/landing')) {

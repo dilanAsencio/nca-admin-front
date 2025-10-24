@@ -68,7 +68,6 @@ export default function SelectCampusAndGrades({isReadOnly}: selectCampusprops) {
                 });
                 setGradeDrop(prev => [...prev, ...grades]);
             }
-            console.log("resp", resp);
         }
     } catch (error: any) {
       console.error(error);

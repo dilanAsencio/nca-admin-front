@@ -49,7 +49,7 @@ const AdmissionsProcessesPage: React.FC = () => {
     {key: "applicationNumber", nameField: "No. Solicitud"},
     {key: "campusName", nameField: "Colegio"},
     {key: "gradeName", nameField: "Grado"},
-    {key: "dateCr", nameField: "Fecha Creación", width: "10rem"},
+    {key: "dateCr", nameField: "Fecha Creación", width: "w-[10rem]"},
     {key: "status", nameField: "Estado", render: (row: any) => (
       <span className={`m-0 font-semibold text-center max-w-[80%] py-[0.25rem] px-[0.75rem] rounded-[0.5rem] ${
         row.status === "Activo" ?
