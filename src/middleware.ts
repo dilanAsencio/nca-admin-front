@@ -3,6 +3,7 @@ import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
   const token = Boolean(request.cookies.get("auth_token")?.value);
+  const tokenP = Boolean(request.cookies.get("auth_tokenP")?.value);
   const isFirstLogin = request.cookies.get("first_login")?.value === "true";
   const pathname = request.nextUrl.pathname;
   
@@ -11,7 +12,7 @@ export function middleware(request: NextRequest) {
   const resetRoutes = ["/reset-password", "/change-password"];
 
   // Permitir acceso libre a /landing y subrutas
-  if (pathname.startsWith('/landing')) {
+  if (pathname.startsWith('/landing') || !tokenP) {
     return NextResponse.next();
   }
 

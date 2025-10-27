@@ -52,6 +52,7 @@ export default function AdditionalInfoSection() {
                     setValue("saveAsDraft", !getValues("saveAsDraft"));
                 }}
                 label="Guardar como borrador"
+                error={errors.saveAsDraft?.message}
             />
           )}
         />
@@ -68,6 +69,7 @@ export default function AdditionalInfoSection() {
                     setValue("acceptTerms", !getValues("acceptTerms"));
                 }}
                 label="Acepto los términos y condiciones"
+                error={errors.acceptTerms?.message}
             />
           )}
         />
@@ -84,6 +86,7 @@ export default function AdditionalInfoSection() {
                     setValue("acceptDataProcessing", !getValues("acceptDataProcessing"));
                 }}
                 label="Autorizo el tratamiento de datos personales"
+                error={errors.acceptDataProcessing?.message}
             />
           )}
         />

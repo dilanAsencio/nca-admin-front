@@ -28,6 +28,7 @@ export interface ButtonPopUpProps extends ButtonComponentProps {
 }
 
 export interface CheckComponentProps {
+    error?: string
     checked: boolean;
     disabled?: boolean;
     onChange?: (e: any) => void;

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { FormProvider } from "react-hook-form";
+import { FieldPath, FormProvider } from "react-hook-form";
 import { useAdmissionApplicationForm } from "../hook/useAdmissionApplicationsForm";
 import AspirantInfoSection from "./AspirantInfoSection";
 import ParentInfoSection from "./ParentInfoSection";
@@ -14,31 +14,68 @@ import { AdmissionApplicationSchema } from "@/app/core/schemas/admissions-landin
 import { AdmissionsLandingService } from "@/services/landing/admissions/admissions-service";
 import TabsComponent from "@/components/shared/tabs/TabsComponent";
 import AdmissionUpDocuments from "./AdmissionUpDocuments";
+import CardProgressInfo from "./CardProgressInfo";
+import { useUI } from "@/providers/ui-context";
 
-export type AdmissionApplicationFormData = z.infer<typeof AdmissionApplicationSchema>;
+export type AdmissionApplicationFormData = z.infer<
+  typeof AdmissionApplicationSchema
+>;
 
 interface formApplicationProps {
-    applicatino: any;
+  applicatino: any;
 }
 
-export default function AdmissionApplicationForm({applicatino}: formApplicationProps) {
+export default function AdmissionApplicationForm({
+  applicatino,
+}: formApplicationProps) {
   const methods = useAdmissionApplicationForm();
   const [activeTabForm, setActiveTabForm] = useState<number>(0);
   const [currentApplication, setCurrentApplication] = useState<any>(null);
   const [activeTab, setActiveTab] = useState<number>(0);
+  const { toggleLoading } = useUI();
 
-  const onSubmit = (data: any) => {
-    console.log("📦 FORM SUBMIT:", data);
-    showToast("Formulario enviado correctamente", "success");
+  const onSubmit = async (data: any) => {
+    toggleLoading(true);
+    try {
+      const resp = await AdmissionsLandingService.updateApplication(
+        currentApplication.applicationId,
+        data
+      );
+      if (resp.applicationId) {
+        getApplicationsById(resp);
+        showToast("La solicitud se actualizo con exito", "success");
+      } else {
+        showToast("Error al actualizar la solicitud", "error");
+      }
+      toggleLoading(false);
+    } catch (error) {
+      console.error(error);
+    }
   };
   
+  const submittedApplication = async () => {
+    toggleLoading(true);
+    try {
+      const resp = await AdmissionsLandingService.submittedApplication(currentApplication.applicationId);
+      if (resp.applicationId) {
+        showToast("La solicitud se envió correccamente a revisión", "success");
+      } else {
+        showToast("Error al enviar la solicitud", "error");
+      }
+      toggleLoading(false);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   const getApplicationsById = async (item: any) => {
     const applicationId = item.applicationId;
     try {
-      const response = await AdmissionsLandingService.getApplicationsById(applicationId);
-      console.log("APPLICATION BY ID", response);
-      
+      const response =
+        await AdmissionsLandingService.getApplicationsById(applicationId);
+
       if (response.applicationId) {
+        methods.reset(response);
         setCurrentApplication(response);        
       }
     } catch (error: any) {
@@ -52,65 +89,121 @@ export default function AdmissionApplicationForm({applicatino}: formApplicationP
     { label: "Emergencia", component: <EmergencyContactSection /> },
     { label: "Adicional", component: <AdditionalInfoSection /> },
   ];
-  
-  const tabs = [
-    { label: "Formulario" },
-    { label: "Documentación"},
-  ];
+
+  const tabs = [{ label: "Formulario" }, { label: "Documentación" }];
+
+  const handleContinue = async () => {
+    
+    const {formState: { isValid }} = methods;
+    // Si pasa la validación, avanza
+    if (!isValid) {
+      showToast(
+        `Por favor, completa los campos requeridos antes de continuar`,
+        "warning"
+      );
+    }
+  };
 
   useEffect(() => {
-    getApplicationsById(applicatino);
+    if (applicatino) {
+      getApplicationsById(applicatino);
+    }
   }, [applicatino]);
+
   return (
     <FormProvider {...methods}>
-      <div>
-        {/* Tabs Sections */}
-        <div className="flex shadow-[0_7px_21px_0_#451A1A0A]">
-          { tabs.map((tab, index) => (
-            <TabsComponent
-              key={index}
-              handleClick={() => setActiveTab(index)}
-              label={tab.label}
-              isActive={activeTab === index}
-              icon={{ path: `/assets/icon/${activeTab === index ? "file-check-02-red" : "file-check-02"}.svg`, alt: "icon-file-check" }}
-            />
-          ))}
-        </div>
-        <div className="p-[1rem] bg-white rounded-tr-[0.5rem] rounded-b-[0.5rem]">
-          <form
-            onSubmit={methods.handleSubmit(onSubmit)}
-            className="flex flex-col gap-[1rem]"
-          >
-            { activeTab === 0 ?(<>
-              {/* TabsForms Header */}
-              <div className="flex gap-[0.5rem]">
-                {tabsForms.map((tab, index) => (
-                  <button
-                    key={index}
-                    type="button"
-                    onClick={() => setActiveTabForm(index)}
-                    className={`px-3 py-2 rounded-t-md ${
-                      activeTabForm === index
-                        ? "bg-[#F4F4F4] text-gray-900"
-                        : "bg-[#FFFFFF] text-gray-900 hover:bg-gray-100"
-                    }`}
-                  >
-                    {tab.label}
-                  </button>
-                ))}
-              </div>
+      <div className="flex flex-col gap-[1.25rem]">
+        <CardProgressInfo
+          swIsNeeded={() => {}}
+          aspirantName={`${currentApplication && currentApplication.aspirant.firstName} ${currentApplication && currentApplication.aspirant.lastName}`}
+          campusLogo={{
+            path: "/assets/landing/img/df-checker.png",
+            alt: "logo",
+          }}
+          campusName={currentApplication?.campus?.name ?? ""}
+          progress={currentApplication?.completionPercentage ?? 0}
+        />
+        <div className="max-w-[100%]">
+          {/* Tabs Sections */}
+          <div className="flex flex-1 shadow-[0_7px_21px_0_#451A1A0A]">
+            {tabs.map((tab, index) => (
+              <TabsComponent
+                key={index}
+                handleClick={() => setActiveTab(index)}
+                label={tab.label}
+                isActive={activeTab === index}
+                icon={{
+                  path: `/assets/icon/${activeTab === index ? "file-check-02-red" : "file-check-02"}.svg`,
+                  alt: "icon-file-check",
+                }}
+              />
+            ))}
+          </div>
+          <div className="p-[1rem] bg-white rounded-tr-[0.5rem] rounded-b-[0.5rem]">
+            <form
+              onSubmit={methods.handleSubmit(onSubmit)}
+              className="flex flex-col gap-[1rem] overflow-hidden"
+            >
+              {activeTab === 0 ? (
+                <>
+                  {/* TabsForms Header */}
+                  <div className="flex gap-[0.5rem] overflow-x-auto">
+                    {tabsForms.map((tab, index) => (
+                      <button
+                        key={index}
+                        type="button"
+                        onClick={() => setActiveTabForm(index)}
+                        className={`px-3 py-2 rounded-t-md ${
+                          activeTabForm === index
+                            ? "bg-[#F4F4F4] text-gray-900"
+                            : "bg-[#FFFFFF] text-gray-900 hover:bg-gray-100"
+                        }`}
+                      >
+                        {tab.label}
+                      </button>
+                    ))}
+                  </div>
 
-              {/* Tab Content */}
-              <div className="min-h-[200px]">{tabsForms[activeTabForm].component}</div>
-              
-              {/* Footer */}
-              <div className="flex justify-end">
-                <ButtonComponent type="submit" className="primary" label="Guardar" />
-              </div></>)
-              :
-              <AdmissionUpDocuments infoApplication={currentApplication} />
-            }
-          </form>
+                  {/* Tab Content */}
+                  <div className="min-h-[200px]">
+                    {tabsForms[activeTabForm].component}
+                  </div>
+
+                  {/* Footer */}
+                  <div className="flex justify-end">
+                    <ButtonComponent
+                      type="submit"
+                      className="primary"
+                      label="Continuar"
+                      onClick={() => handleContinue()}
+                    />
+                  </div>
+                </>
+              ) : (
+                <AdmissionUpDocuments
+                  deleteDocument={() => {
+                    getApplicationsById(currentApplication);
+                  }}
+                  saveDocument={() => {
+                    getApplicationsById(currentApplication);
+                  }}
+                  infoApplication={currentApplication}
+                />
+              )}
+            </form>
+          </div>
+          <div className="w-full flex justify-center">
+            <ButtonComponent
+              type="button"
+              className="primary"
+              label="Enviar a revisión"
+              icon={{
+                path: "/assets/icon/arrow-right.svg", alt: "arrow right"
+              }}
+              blockAccess={currentApplication?.completionPercentage < 90}
+              onClick={() => {submittedApplication();}}
+            />
+          </div>
         </div>
       </div>
     </FormProvider>

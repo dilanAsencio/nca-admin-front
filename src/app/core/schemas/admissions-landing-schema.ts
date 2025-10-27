@@ -71,9 +71,7 @@ export const AdmissionApplicationSchema = z.object({
     dateOfBirth: z
       .string()
       .nonempty("La fecha de nacimiento es requerida"),
-    gender: z.enum(["MALE", "FEMALE", "OTHER"], {
-      required_error: "El género es requerido",
-    }),
+    gender: z.string().nonempty("El campo genero es requerido"),
   }),
 
   parent: z.object({

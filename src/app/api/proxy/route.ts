@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import axios from "axios";
 
 const api = axios.create({
@@ -8,35 +8,54 @@ const api = axios.create({
 /**
  * Proxy genérico para todas las peticiones.
  */
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   return handleProxy(request, "POST");
 }
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   return handleProxy(request, "GET");
 }
 
-export async function PUT(request: Request) {
+export async function PUT(request: NextRequest) {
   return handleProxy(request, "PUT");
 }
 
-export async function DELETE(request: Request) {
+export async function DELETE(request: NextRequest) {
   return handleProxy(request, "DELETE");
 }
 
-export async function PATCH(request: Request) {
+export async function PATCH(request: NextRequest) {
   return handleProxy(request, "PATCH");
 }
 
-async function handleProxy(request: Request, method: string) {
+async function handleProxy(request: NextRequest, method: string) {
   try {
     const { searchParams } = new URL(request.url);
     const endpoint = searchParams.get("endpoint");
+    if (!endpoint)
+      return NextResponse.json({ error: "Endpoint required" }, { status: 400 });
+
     const contentType = searchParams.get("contentType");
     const token = request.headers.get("authorization");
 
-    if (!endpoint)
-      return NextResponse.json({ error: "Endpoint required" }, { status: 400 });
+    // Extrae todos los parámetros de paginación
+    const page = searchParams.get("page");
+    const size = searchParams.get("size");
+    const search = searchParams.get("search");
+    const isActive = searchParams.get("isActive");
+    const status = searchParams.get("status");
+    const sortParams = searchParams.getAll("sort");
+
+    const queryParams = new URLSearchParams();
+    if (page) queryParams.append("page", page);
+    if (size) queryParams.append("size", size);
+    if (search) queryParams.append("search", search);
+    if (isActive) queryParams.append("isActive", isActive);
+    if (status) queryParams.append("status", status);
+    sortParams.forEach((s) => queryParams.append("sort", s));
+    let fullEndpoint = endpoint;
+
+    queryParams.toString() && (fullEndpoint = `${endpoint.includes("?") ? `${endpoint}&${queryParams.toString()}` : `${endpoint}?${queryParams.toString()}`}`);
 
     let body: any = undefined;
 
@@ -51,9 +70,9 @@ async function handleProxy(request: Request, method: string) {
         body = undefined;
       }
     }
-
+    
     const response = await api.request({
-      url: endpoint,
+      url: fullEndpoint,
       method,
       data: body,
       headers: {
@@ -65,6 +84,18 @@ async function handleProxy(request: Request, method: string) {
 
     return NextResponse.json(response.data);
   } catch (error: any) {
+
+    if (error.response.status === 401) {
+      console.warn("Guard 401 - Token expirado o inválido, redirigiendo...");
+
+      // Elimina cookies inválidas
+      request.cookies.delete("auth_token");
+      request.cookies.delete("auth_tokenP");
+      return NextResponse.json(
+        { error: error.message, details: error.response?.data },
+        { status: error.response?.status || 401 }
+      );
+    }
     console.error("Proxy error:", error);
     return NextResponse.json(
       { error: error.message, details: error.response?.data },

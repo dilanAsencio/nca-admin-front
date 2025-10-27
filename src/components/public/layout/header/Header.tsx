@@ -9,10 +9,12 @@ import PublicLoginForm from "../../login/PublicLoginForm";
 import UserMenu from "../../userMenu/UserMenu";
 
 import "./style.css";
-import { useSelector } from "react-redux";
-import { RootState } from "@/providers/store/public-auth-store";
+import { useDispatch, useSelector } from "react-redux";
+import { clearCredentials, publicLogoutThunk, RootState } from "@/providers/store/public-auth-store";
+import { AppDispatch } from "@/providers/store";
 
 const Header: React.FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
   const { logoNexus } = useUI();
   const [user, setUser] = useState(
     "/assets/landing/icon/header/user-profile-01.svg"
@@ -36,6 +38,11 @@ const Header: React.FC = () => {
   };
 
   useEffect(() => {
+    const token = localStorage.getItem("auth_tokenP");
+    if (!token) {
+      dispatch(publicLogoutThunk())
+      dispatch(clearCredentials())
+    }
     function handleClickOutside(event: MouseEvent) {
       const target = event.target as Node;
       if (

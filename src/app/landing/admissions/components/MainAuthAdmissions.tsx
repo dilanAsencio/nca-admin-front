@@ -32,7 +32,7 @@ const MainAuthAdmissions: React.FC = () => {
       nameField: "Estado",
       render: (row: any) => (
         <div
-          className={`m-0 font-semibold text-center max-w-[80%] py-[0.25rem] px-[0.75rem] rounded-[0.5rem] ${
+          className={`m-0 font-semibold text-center max-w-[80%] py-[0.25rem] px-[0.75rem] w-max rounded-[0.5rem] ${
             row.status === "ACTIVE" || row.status === "APPROVED"
               ? "text-green-600 bg-[#00ff0042] border-2 border-solid border-[#2dd42d]"
               : row.status === "UNDER_REVIEW"
@@ -124,7 +124,7 @@ const MainAuthAdmissions: React.FC = () => {
           </h5>
         </div>
 
-        <BreadcumbComponent items={breadcrumbs} />
+        <BreadcumbComponent className="max-md:hidden" items={breadcrumbs} />
       </header>
       {
         applicationsSelected ?
