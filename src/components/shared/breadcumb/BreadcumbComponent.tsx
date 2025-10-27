@@ -10,12 +10,13 @@ interface BreadcrumbItem {
 }
 interface BreadcumbComponentProps {
   items?: BreadcrumbItem[];
+  className?: string
 }
 
 const capitalize = (str: string) =>
   str.charAt(0).toUpperCase() + str.slice(1).replace(/-/g, " ");
 
-export default function BreadcumbComponent({items}: BreadcumbComponentProps) {
+export default function BreadcumbComponent({items, className}: BreadcumbComponentProps) {
   const pathname = usePathname();
   const segments = pathname.split("/").filter(Boolean);
 
@@ -31,7 +32,7 @@ export default function BreadcumbComponent({items}: BreadcumbComponentProps) {
   
   return (
     <nav aria-label="Breadcrumb">
-      <ol className="flex items-center space-x-2 text-sm m-0 text-gray-700">
+      <ol className={`flex items-center space-x-2 text-sm m-0 text-gray-700 ${className && className}`}>
         {/* <li>
           <Link href="/" className="font-medium text-[0.75rem]" onClick={() => toggleModule("dashboard")} style={{ textDecoration: "none", color: "#515151" }}>
             Dashboard

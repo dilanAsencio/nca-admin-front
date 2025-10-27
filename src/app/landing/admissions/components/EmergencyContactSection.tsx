@@ -1,33 +1,53 @@
 "use client";
 
-import React from "react";
-import { useFormContext } from "react-hook-form";
+import React, { useState } from "react";
+import { Controller, useFormContext } from "react-hook-form";
 import InputComponent from "@/components/shared/input/InputComponent";
 import { AdmissionApplicationFormData } from "./AdmissionApplicationsForm";
+import DropdownComponent from "@/components/shared/dropdown/DropdownComponent";
 
 export default function EmergencyContactSection() {
-  const { register, formState: { errors } } = useFormContext<AdmissionApplicationFormData>();
+  const { register, control, formState: { errors } } = useFormContext<AdmissionApplicationFormData>();
+    const [relationshipOptions, setRelationshipOptions] = useState<
+      { label: string; value: string }[]
+    >([
+      { label: "Padre", value: "Padre" },
+      { label: "Madre", value: "Madre" },
+      { label: "Tio", value: "Tio" },
+      { label: "Tia", value: "Tia" },
+      { label: "Abuelo", value: "Abuelo" },
+      { label: "Abuela", value: "Abuela" },
+    ]);
 
   return (
-    <div className="grid grid-cols-2 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <InputComponent
         label="Nombre completo"
         placeholder="Nombre del contacto"
         name="emergencyContact.fullName"
+        className="capitalize"
         typeInput="text"
         register={register("emergencyContact.fullName")}
         required
         error={errors.emergencyContact?.fullName?.message}
       />
 
-      <InputComponent
-        label="Parentesco"
-        placeholder="Ej: Tío, Hermano..."
+      <Controller
         name="emergencyContact.relationship"
-        typeInput="text"
-        register={register("emergencyContact.relationship")}
-        required
-        error={errors.emergencyContact?.relationship?.message}
+        control={control}
+        render={({ field }) => (
+          <DropdownComponent
+            name="emergencyContact.relationship"
+            label="Parentesco"
+            className="primary"
+            placeholder="Escoger Parentesco"
+            options={relationshipOptions}
+            onChange={(value) => {field.onChange(value)}}
+            value={field.value}
+            required
+            error={errors.emergencyContact?.relationship?.message}
+          />
+        )}
       />
 
       <InputComponent

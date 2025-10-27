@@ -57,7 +57,7 @@ const AdmissionsProcessesPage: React.FC = () => {
       },
     ]
   }
-  const getAdmissionsProcess = async (page: number = 0, size: number = 5) => {
+  const getAdmissionsProcess = async (page: number = 1, size: number = 5) => {
     toggleLoading(true);
     const resp = await AdmissionsServices.getAdmissionsProcess({ page: page - 1, size: size });
     if (resp?.success && resp.data?.content) {
@@ -92,7 +92,7 @@ const AdmissionsProcessesPage: React.FC = () => {
       >
         <div
           className={clsx(
-              `flex justify-between items-center h-[3.125rem]`,
+              `flex md:justify-between items-center h-[3.125rem]`,
           )}
         >
           <span className="font-semibold text-[1.25rem] text-gray-900">
@@ -115,6 +115,7 @@ const AdmissionsProcessesPage: React.FC = () => {
             btnActions={btnActions}
             data={admissionsProcess}
             paginate={{
+              perPageOptions: [5],
               totalItems: totalItems,
               itemsPerPage: itemsPerPage,
               currentPage: currentPage,

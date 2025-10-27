@@ -38,7 +38,12 @@ export async function apiProxy<T = any, R = any>(
     const response = await axios(config);
     return response.data as R;
   } catch (error: any) {
-    console.error("API Proxy Error:", error);
+    if (error.status === 401) {
+      localStorage.removeItem("auth_token");
+      localStorage.removeItem("auth_tokenP");
+    }
+    console.error("API HELPER Proxy Error:", error);
+    
     throw error.response?.data || error;
   }
 }

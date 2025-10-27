@@ -207,6 +207,7 @@ const AdmissionsProcessesPage: React.FC = () => {
                 columns={columns}
                 data={applications}
                 paginate={{
+                  perPageOptions: [5],
                   totalItems: totalItems,
                   itemsPerPage: itemsPerPage,
                   currentPage: currentPage,

@@ -41,6 +41,7 @@ const PreregistrationPage: React.FC = () => {
   ];
   const [preRegistrations, setPreRegistrations] = useState<any[]>([]);
   const [totalItems, setTotalItems] = useState<number>(0);
+  const [itemsPerPage, setItemsPerPage] = useState<number>(5);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const iconDetail = iconsActions.view;
   const iconReject = iconsActions.reject;
@@ -210,7 +211,8 @@ const PreregistrationPage: React.FC = () => {
   };
 
   const getPreregisters = async (
-    page?: number,
+    page: number = 1,
+    size: number = 5,
     campusId: string = "",
     status: string = "",
     dateFrom: string = "",
@@ -218,7 +220,7 @@ const PreregistrationPage: React.FC = () => {
   ) => {
     toggleLoading(true);
     const resp = await PreregistrationService.getAdmissionsPreRegister(
-      { page: page ? page - 1 : 0, size: 10},
+      { page: page - 1, size: size},
       campusId,
       status,
       dateFrom,
@@ -244,12 +246,12 @@ const PreregistrationPage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    getPreregisters(currentPage, getValues("campus"), getValues("status"), getValues("dateFrom"), getValues("dateTo"));
+    getPreregisters(currentPage, itemsPerPage, getValues("campus"), getValues("status"), getValues("dateFrom"), getValues("dateTo"));
   }, [watch("campus"), watch("status"), watch("dateFrom"), watch("dateTo")]);
 
   useEffect(() => {
-    getPreregisters(currentPage);
-  }, [currentPage]);
+    getPreregisters(currentPage, itemsPerPage);
+  }, [currentPage, itemsPerPage]);
 
   return (
     <>
@@ -333,12 +335,14 @@ const PreregistrationPage: React.FC = () => {
             columns={columns}
             data={preRegistrations}
             paginate={{
+              perPageOptions: [5],
               totalItems: totalItems,
-              itemsPerPage: 10,
+              itemsPerPage: itemsPerPage,
               currentPage: currentPage,
-              onPageChange: (newPage: number) => {
-                setCurrentPage(newPage);
-              },
+              onPageChange: setCurrentPage,
+              onItemsPerPageChange: (size) => {
+                setItemsPerPage(size);
+              }
             }}
           />
         </div>

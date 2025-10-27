@@ -110,6 +110,42 @@ export const AdmissionsLandingService = {
   },
 
   
+/**
+ * Updates an admission application.
+ * @param {string} applicationId - The ID of the admission application to update.
+ * @param {AdmissionApplication} data - The data of the admission application to update.
+ * @returns A Promise with a Response object containing the response data.
+ * @throws { success: false, error: string } - If the update fails.
+ */
+  updateApplication: async (
+    applicationId: string,
+    data: AdmissionApplication,
+  ): Promise<any> => {
+    try {
+        const response = await apiProxy("PUT", `parent/admission-applications/${applicationId}`, undefined, data);
+        return response;
+    } catch (error) {
+        throw { success: false, error: error || "Error al crear la solicitud" };
+    }
+  },
+
+/**
+ * Submits an admission application.
+ * @param {string} applicationId - The ID of the admission application to submit.
+ * @returns A Promise with a Response object containing the response data.
+ * @throws { success: false, error: string } - If the submission fails.
+ */
+  submittedApplication: async (
+    applicationId: string,
+  ): Promise<any> => {
+    try {
+        const response = await apiProxy("POST", `parent/admission-applications/${applicationId}/submit`);        
+        return response;
+    } catch (error) {
+        throw { success: false, error: error || "Error al crear la solicitud" };
+    }
+  },
+  
   /**
    * Uploads a document for an admission application.
    * @param {string} applicationId - The ID of the admission application to upload the document for.
@@ -131,6 +167,27 @@ export const AdmissionsLandingService = {
     try {
         const response = await apiProxy("POST",
           `parent/admission-applications/${applicationId}/documents?documentTypeId=${documentTypeId}`, undefined, formData, "multipart/form-data");
+        return response;
+    } catch (error) {
+        throw { success: false, error: error || "Error al crear la solicitud" };
+    }
+  },
+
+  
+/**
+ * Deletes a document for an admission application.
+ * @param {string} applicationId - The ID of the admission application to delete the document for.
+ * @param {string} documentId - The ID of the document to delete.
+ * @returns A Promise with a Response object containing the response data.
+ * @throws { success: false, error: string } - If the deletion fails.
+ */
+  deleteDocument: async (
+    applicationId: string,
+    documentId: string,
+  ): Promise<any> => {
+    try {
+        const response = await apiProxy("DELETE",
+          `parent/admission-applications/${applicationId}/documents/${documentId}`, undefined);
         return response;
     } catch (error) {
         throw { success: false, error: error || "Error al crear la solicitud" };

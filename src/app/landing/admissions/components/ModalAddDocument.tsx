@@ -6,14 +6,14 @@ import clsx from "clsx";
 import style from "@/app/font.module.css";
 import { showConfirm, showToast } from "@/utils/alerts";
 import { useUI } from "@/providers/ui-context";
-import { InputImageComponent } from "@/components/shared/input/InputImage";
 import { InputFileComponent } from "@/components/shared/input/InputFileComponent";
 import { AdmissionsLandingService } from "@/services/landing/admissions/admissions-service";
 
 const ModalAddDocument: React.FC<{
   toggleModal: () => void;
   infoDocument: any;
-}> = ({ toggleModal, infoDocument }) => {
+  onSaveDocument: () => void;
+}> = ({ toggleModal, infoDocument, onSaveDocument }) => {
   const { toggleLoading } = useUI();
   const [documentUpload, setDocumentUpload] = useState<File[]>([]);
 
@@ -35,9 +35,9 @@ const ModalAddDocument: React.FC<{
         }
         const response =
           await AdmissionsLandingService.uploadDocument(applicationId, documentTypeId, documentUpload);
-        console.log("SAVED DOCUMENT", response);
         if(response?.success) {
             handleCloseModal();
+            onSaveDocument();
             showToast(`Documento agregado con exito`, "success");
         } else {
           showToast(`No se pudo guardar el documento: ${response.message}`, "error");

@@ -16,6 +16,7 @@ export interface SimpleTableColumn<T> {
   nameField: string;
   width?: string;
   isFilterable?: boolean;
+  className?: string;
   render?: (row: T) => React.ReactNode;
 }
 
@@ -111,13 +112,13 @@ function TableComponent<T>({
         <div className="p-2 font-medium text-lg text-gray-900">{title}</div>
       )}
 
-      <div className="p-2 flex flex-col gap-[1rem]">
+      <div className="p-2 flex flex-col max-w-[100%] overflow-x-auto gap-[1rem]">
         <table className="w-full">
           <thead className="custom-border-b">
             <tr className="text-left text-sm font-semibold text-gray-800">
               {columns.map((col) => (
-                <th key={String(col.key)} className="p-2">
-                  <div className="flex justify-between items-center">
+                <th key={String(col.key)} className={`p-2`}>
+                  <div className={`flex items-center ${col.className || ""}`}>
                     {col.nameField}
                     {col.isFilterable && (
                       <div

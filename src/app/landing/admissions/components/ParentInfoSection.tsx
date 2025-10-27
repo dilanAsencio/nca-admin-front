@@ -1,15 +1,31 @@
 "use client";
 
-import React from "react";
-import { useFormContext } from "react-hook-form";
+import React, { useState } from "react";
+import { Controller, useFormContext } from "react-hook-form";
 import InputComponent from "@/components/shared/input/InputComponent";
 import { AdmissionApplicationFormData } from "./AdmissionApplicationsForm";
+import DropdownComponent from "@/components/shared/dropdown/DropdownComponent";
+import { optDocTypes, optDocTypes2 } from "@/app/core/constants/default-const";
 
 export default function ParentInfoSection() {
-  const { register, formState: { errors } } = useFormContext<AdmissionApplicationFormData>();
+  const {
+    register,
+    control,
+    formState: { errors },
+  } = useFormContext<AdmissionApplicationFormData>();
+  const [relationshipOptions, setRelationshipOptions] = useState<
+    { label: string; value: string }[]
+  >([
+    { label: "Padre", value: "Padre" },
+    { label: "Madre", value: "Madre" },
+    { label: "Tio", value: "Tio" },
+    { label: "Tia", value: "Tia" },
+    { label: "Abuelo", value: "Abuelo" },
+    { label: "Abuela", value: "Abuela" },
+  ]);
 
   return (
-    <div className="grid grid-cols-2 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <InputComponent
         label="Nombre del acudiente"
         placeholder="Nombre"
@@ -30,24 +46,44 @@ export default function ParentInfoSection() {
         error={errors.parent?.lastName?.message}
       />
 
-      <InputComponent
-        label="Parentesco"
-        placeholder="Ej: Madre, Padre, Tío..."
+      <Controller
         name="parent.relationship"
-        typeInput="text"
-        register={register("parent.relationship")}
-        required
-        error={errors.parent?.relationship?.message}
+        control={control}
+        render={({ field }) => (
+          <DropdownComponent
+            name="parent.relationship"
+            label="Parentesco"
+            className="primary"
+            placeholder="Escoger Parentesco"
+            options={relationshipOptions}
+            onChange={(value) => {
+              field.onChange(value);
+            }}
+            value={field.value}
+            required
+            error={errors.parent?.relationship?.message}
+          />
+        )}
       />
 
-      <InputComponent
-        label="Tipo de documento"
-        placeholder="CC, TI, etc."
+      <Controller
         name="parent.documentType"
-        typeInput="text"
-        register={register("parent.documentType")}
-        required
-        error={errors.parent?.documentType?.message}
+        control={control}
+        render={({ field }) => (
+          <DropdownComponent
+            name="parent.documentType"
+            label="Tipo de documento"
+            className="primary"
+            placeholder="Escoger documento"
+            options={optDocTypes}
+            onChange={(value) => {
+              field.onChange(value);
+            }}
+            value={field.value}
+            required
+            error={errors.parent?.documentType?.message}
+          />
+        )}
       />
 
       <InputComponent
@@ -86,6 +122,7 @@ export default function ParentInfoSection() {
         placeholder="Ej: Calle 123 #45-67"
         name="parent.address.street"
         typeInput="text"
+        className="capitalize"
         register={register("parent.address.street")}
         required
         error={errors.parent?.address?.street?.message}
@@ -96,6 +133,7 @@ export default function ParentInfoSection() {
         placeholder="Barrio"
         name="parent.address.neighborhood"
         typeInput="text"
+        className="capitalize"
         register={register("parent.address.neighborhood")}
         required
         error={errors.parent?.address?.neighborhood?.message}
@@ -106,6 +144,7 @@ export default function ParentInfoSection() {
         placeholder="Ciudad"
         name="parent.address.city"
         typeInput="text"
+        className="capitalize"
         register={register("parent.address.city")}
         required
         error={errors.parent?.address?.city?.message}
@@ -116,6 +155,7 @@ export default function ParentInfoSection() {
         placeholder="Departamento"
         name="parent.address.department"
         typeInput="text"
+        className="capitalize"
         register={register("parent.address.department")}
         required
         error={errors.parent?.address?.department?.message}
