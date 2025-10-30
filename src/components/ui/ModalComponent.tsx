@@ -9,21 +9,21 @@ const ModalComponent: React.FC<{
   children: React.ReactNode;
   handleModal: () => void;
   handleSubmit?: () => void;
+  typeButtonConfirm?: "submit" | "button";
   labelBtnAccept?: string;
   buttonAcceptVisible?: boolean;
   sizeModal?: 'small' | 'medium' | 'large';
-}> = ({ title, children, handleModal, handleSubmit, labelBtnAccept, sizeModal, buttonAcceptVisible = true }) => {
+}> = ({ title, children, handleModal, handleSubmit, labelBtnAccept, sizeModal, buttonAcceptVisible = true, typeButtonConfirm = "submit" }) => {
 
   return (
     <>
       <div
-        tabIndex={-1}
         className="fixed inset-0 z-20 flex justify-center items-center w-full h-full bg-[#6c757d7a]"
       >
         <div className={clsx(
           "relative bg-white rounded-[0.5rem] w-full",
           sizeModal === 'small' && "max-w-[30rem] max-h-[auto]",
-          sizeModal === 'medium' && "max-w-[55rem] max-h-[25rem]",
+          sizeModal === 'medium' && "max-w-[55rem] max-h-[auto]",
           sizeModal === 'large' && "max-w-[70rem] max-h-[65rem]",
           !sizeModal && "max-w-[50rem]",
           "flex flex-col",
@@ -73,7 +73,7 @@ const ModalComponent: React.FC<{
             { buttonAcceptVisible &&
               <ButtonComponent
                 className="primary"
-                type="submit"
+                type={typeButtonConfirm}
                 label={labelBtnAccept || "Agregar"}
                 onClick={handleSubmit}
               />

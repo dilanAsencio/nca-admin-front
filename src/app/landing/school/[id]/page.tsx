@@ -130,7 +130,7 @@ const SchoolDetailsPage: React.FC = () => {
                   height={24}
                   loading="lazy"
                 />
-                <span className="m-0">{infoTab && infoTab.fullAddress}</span>
+                <span className="m-0">{infoTab && infoTab?.addressInfo?.fullAddress}</span>
               </div>
 
               <div className="flex gap-[1rem]">
@@ -218,6 +218,9 @@ const SchoolDetailsPage: React.FC = () => {
                 <ButtonComponent
                   icon={{ path: "/assets/icon/phone.svg", alt: "icon-image" }}
                   label="Quiero ser contactado"
+                  onClick={() => {
+                    router.push("/auth/register");
+                  }}  
                   size="small"
                   className="primary"
                 />

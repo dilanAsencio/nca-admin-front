@@ -21,7 +21,7 @@ import InputDateComponent from "@/components/shared/input/InputDateComponent";
 import { PreregistrationService } from "@/services/admissions/preRegister-service";
 
 const PreregistrationPage: React.FC = () => {
-  const { toggleLoading, iconsActions } = useUI();
+  const { toggleLoading, iconsActions, toggleModule } = useUI();
 
   const {
     register,
@@ -242,6 +242,7 @@ const PreregistrationPage: React.FC = () => {
   };
 
   useEffect(() => {
+    toggleModule("admissions-preregistration");
     getCampus();
   }, []);
 

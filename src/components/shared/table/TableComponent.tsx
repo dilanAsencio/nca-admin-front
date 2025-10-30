@@ -17,7 +17,7 @@ export interface SimpleTableColumn<T> {
   width?: string;
   isFilterable?: boolean;
   className?: string;
-  render?: (row: T) => React.ReactNode;
+  render?: (row: T, idx: number) => React.ReactNode;
 }
 
 export interface SimpleTableAction<T> {
@@ -215,7 +215,7 @@ function TableComponent<T>({
                     <React.Fragment key={String(col.key)}>
                       {col.render ? (
                         <td className="text-gray-700 text-sm">
-                          {col.render(row)}
+                          {col.render(row, idx)}
                         </td>
                       ) : (
                         <td

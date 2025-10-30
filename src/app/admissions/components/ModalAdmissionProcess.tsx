@@ -25,6 +25,7 @@ const ModalAdmissionsForm: React.FC<{
 }> = ({ toggleModal, writeData }) => {
   const { toggleLoading } = useUI();
   const [isReadOnly, setIsReadOnly] = useState<boolean>(false);
+  const [currentPAdmission, setCurrentPAdmission] = useState<any>(null);
   const [isEdit, setIsEdit] = useState<boolean>(false);
 
   const methods = useForm<AdmissionProcessFormData>({
@@ -50,6 +51,11 @@ const ModalAdmissionsForm: React.FC<{
     const resp = await AdmissionsServices.getAdmissionsProcessById(admissionProcessId);    
     if (resp?.success) {
       methods.reset(resp.data);
+      const campusIds = resp.data.campuses?.map((c: any) => c.campusId) || [];
+      const gradeIds = resp.data.grades?.map((g: any) => g.gradeId) || [];
+      methods.setValue("campuses", campusIds);
+      methods.setValue("grades", gradeIds);
+      setCurrentPAdmission(resp.data);
       writeData.op === "view" ? setIsReadOnly(true) : setIsReadOnly(false);
       writeData.op === "edit" ? setIsEdit(true) : setIsEdit(false);
     } else {
@@ -58,24 +64,12 @@ const ModalAdmissionsForm: React.FC<{
   }
   
 
-  const onSubmited = (data: any) => {
-    
-    console.log("✅ Formulario válido #1:", data);
-  };
-
-  const onSubmitedForm = async (data: any) => {
-    data.grades = data.grades.map((grade: any) => grade.gradeId);
+  const onSubmited = async (data: any) => {
     data.notificationSettings = {
       notifyOnNewApplication: data.notifyOnNewApplication,
       notifyOnDocumentUpload: data.notifyOnDocumentUpload,
       notifyOnStatusChange: data.notifyOnStatusChange
     }
-    const monthStart = (new Date(data.startDate).getMonth()) >= 9 ? (new Date(data.startDate).getMonth() + 1) : "0"+(new Date(data.startDate).getMonth() + 1);
-    const dayStart = (new Date(data.startDate).getDate()) >= 10 ? (new Date(data.startDate).getDate()) : "0"+(new Date(data.startDate).getDate());
-    const monthEnd = (new Date(data.endDate).getMonth()) >= 9 ? (new Date(data.endDate).getMonth() + 1) : "0"+(new Date(data.endDate).getMonth() + 1);
-    const dayEnd = (new Date(data.endDate).getDate()) >= 10 ? (new Date(data.endDate).getDate()) : "0"+(new Date(data.endDate).getDate());
-    data.startDate = new Date(data.startDate).getFullYear()+'-'+monthStart+'-'+dayStart;
-    data.endDate = new Date(data.endDate).getFullYear()+'-'+monthEnd+'-'+dayEnd;
     delete data.notifyOnNewApplication;
     delete data.notifyOnDocumentUpload;
     delete data.notifyOnStatusChange;
@@ -89,13 +83,14 @@ const ModalAdmissionsForm: React.FC<{
         }
         if (resp.success) {
             showToast(`Proceso ${writeData.op === "add" ? "creado" : "actualizado"} con exito`, "success");
-            toggleModal();
+            handleCloseModal();
             toggleLoading(false);
         } else {
             showToast(`Error al ${writeData.op === "add" ? "crear" : "actualizar"} el proceso`, "error");
         }
         toggleLoading(false);
     } catch (error) {
+      toggleLoading(false);
       console.error(error);
     }
   };
@@ -104,6 +99,8 @@ const ModalAdmissionsForm: React.FC<{
 
   const handleCloseModal = () => {
     toggleModal();
+    setCurrentPAdmission(null);
+    methods.reset();
   };
 
   const handleTitleModal = () => {
@@ -134,8 +131,9 @@ const ModalAdmissionsForm: React.FC<{
       <FormProvider {...methods}>
         <AdmissionForm
             isReadOnly={isReadOnly}
+            currentData={writeData.op === "add" ? undefined : currentPAdmission}
             isEdit={isEdit}
-            onSubmitForm={(data) => onSubmitedForm(data)}
+            // onSubmitForm={(data) => onSubmitedForm(data)}
             onSubmit={methods.handleSubmit(onSubmited)} />
       </FormProvider>
     </ModalComponent>

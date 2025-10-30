@@ -32,6 +32,7 @@ import storage from "redux-persist/lib/storage";
 export interface AuthResponse<T = any> {
   success?: boolean;
   message?: string;
+  error?: any;
   data?: T;
 }
 
@@ -58,7 +59,7 @@ export const publicRegisterThunk = createAsyncThunk<
     if (!response.success) return rejectWithValue(response);
     return response;
   } catch (error: any) {
-    return rejectWithValue({ success: false, message: error.message });
+    return rejectWithValue({ success: false, error: error.error });
   }
 });
 

@@ -27,7 +27,8 @@ import ModalReject from "./components/ModalReject";
 const AdmissionsProcessesPage: React.FC = () => {
   const {
     toggleLoading,
-    iconsActions
+    iconsActions,
+    toggleModule
   } = useUI();
   const [branches, setBranches] = useState<any[] | null>([]);
   const [applications, setApplications] = useState<any[]>([]);
@@ -168,7 +169,10 @@ const AdmissionsProcessesPage: React.FC = () => {
   const toggleRejectModal = () => {
     setOpenReject({isOpen: false, applicationId: null});    
   }
-
+useEffect(() => {
+  
+    toggleModule("admissions-applications");
+}, [])
   return (<>
       <div
         className={clsx(

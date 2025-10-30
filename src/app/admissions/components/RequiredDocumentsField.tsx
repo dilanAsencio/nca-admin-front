@@ -6,6 +6,7 @@ import {
   FieldArrayWithId,
   useFormContext,
   Controller,
+  useForm,
 } from "react-hook-form";
 import { AdmissionProcessFormData } from "./ModalAdmissionProcess";
 import ButtonComponent from "@/components/shared/button/ButtonComponent";
@@ -13,6 +14,14 @@ import TextAreaComponent from "@/components/shared/input/TextAreaComponent";
 import InputComponent from "@/components/shared/input/InputComponent";
 import DropdownComponent from "@/components/shared/dropdown/DropdownComponent";
 import CheckBoxComponent from "@/components/shared/check/CheckBoxComponent";
+import TableComponent, {
+  SimpleTableColumn,
+} from "@/components/shared/table/TableComponent";
+import { useUI } from "@/providers/ui-context";
+import ModalComponent from "@/components/ui/ModalComponent";
+import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 
 interface Props {
   fields: FieldArrayWithId<
@@ -37,8 +46,30 @@ export default function RequiredDocumentsField({
     setError,
     setValue,
     getValues,
+    handleSubmit,
+    resetField,
     formState: { errors },
-  } = useFormContext<AdmissionProcessFormData>();
+  } = useForm({
+    resolver: zodResolver(
+      z.object({
+        name: z.string().nonempty("Este campo es requerido!"),
+        description: z.string().nonempty("Este campo es requerido!"),
+        documentType: z.string().nonempty("Este campo es requerido!"),
+        allowedFormats: z.array(z.string()).nonempty("Este campo es requerido!"),
+        maxSizeMB: z
+            .preprocess((val) => (
+                val === "" || isNaN(val as number) ? undefined : Number(val)
+            ), z
+                .number({ required_error: "Este campo es requerido!"})
+                .min(1, "El tamaño debe ser mayor a 0")
+        ),
+        required: z.boolean({ required_error: "Este campo es requerido!" }),
+      })
+    )
+  });
+  const { iconsActions } = useUI();
+  const iconDelete = iconsActions.delete;
+  const [openModal, setOpenModal] = useState<boolean>(false);
   const optDocTypes = [
     {
       value: "ab172940-4b5c-4af5-b8e9-699387ba2742",
@@ -77,171 +108,219 @@ export default function RequiredDocumentsField({
     },
   ];
   const typeFormats = [
-      {label: "PDF", value: "PDF"},
-      {label: "PNG", value: "PNG"},
-      {label: "JPG", value: "JPG"},
-  ]
+    { label: "PDF", value: "PDF" },
+    { label: "PNG", value: "PNG" },
+    { label: "JPG", value: "JPG" },
+  ];
+
+  const columnsDocRequired: SimpleTableColumn<any>[] = [
+    { key: "name", nameField: "Nombre" },
+    { key: "maxSizeMB", nameField: "Tamaño de archivo(MB)" },
+    {
+      key: "#",
+      nameField: "Acción",
+      render(row, idx) {
+        return (
+          <div className="flex gap-[0.5rem]">
+            <ButtonComponent
+              size="small"
+              blockAccess={isReadonly}
+              onClick={() => {
+                remove(idx);
+              }}
+              icon={iconDelete}
+              className="tertiary-outline"
+              label="Eliminar"
+            />
+          </div>
+        );
+      },
+    },
+  ];
+
+  const toggleModal = () => {
+    setOpenModal(!openModal);
+    resetField("name");
+    resetField("maxSizeMB");
+    resetField("documentType");
+    resetField("allowedFormats");
+    resetField("description");
+  };
+
+  const addDocument = () => {
+    setOpenModal(true);
+  };
+
+  const submitedDocument = (data: any) => {
+    append(data);
+    toggleModal();
+  };
+
   return (
-    <div className="mb-[0.5rem]">
-      <div className="flex justify-between items-center p-[0.5rem]">
-        <h4 className="m-0 font-medium text-gray-900">Documentos Requeridos</h4>
-        <ButtonComponent
-          size="small"
-          blockAccess={isReadonly}
-          onClick={() => {
-            append({
-              name: "",
-              description: "",
-              documentType: "",
-              allowedFormats: [""],
-              maxSizeMB: 1,
-              required: true,
-            });
-          }}
-          className="primary"
-          label="Agregar"
-        />
-      </div>
-      <div className="w-full overflow-x-auto">
-        <div className="flex w-max gap-[0.5rem]">
-          {fields.map((field, index) => (
-            <div
-              key={field.id}
-              className="border p-[0.5rem] rounded-md min-w-[40rem] flex-shrink-0 bg-white shadow-sm"
-            >
-              <div className="flex justify-end">
-                <button
-                  type="button"
-                  disabled={isReadonly}
-                  onClick={() => remove(index)}
-                  className="text-red-600 text-sm"
-                >
-                  Eliminar
-                </button>
-              </div>
-              <div className="grid grid-cols-2 gap-[0.5rem]">
-                <InputComponent
-                    label="Nombre"
-                    placeholder="Nombre del documento"
-                    name="name"
-                    className="capitalize"
-                    typeInput="text"
-                    disabled={isReadonly}
-                    register={register(`requiredDocuments.${index}.name`)}
-                    required
-                    error={
-                    errors.requiredDocuments?.[index]?.name &&
-                    errors.requiredDocuments[index].name.message
-                    }
-                />
-                <Controller
-                    name={`requiredDocuments.${index}.documentType`}
-                    control={control}
-                    render={({ field }) => (
-                    <DropdownComponent
-                        name="documentType"
-                        label="Tipo de documento"
-                        className="primary"
-                        placeholder="Escoger tipo de documento"
-                        disabled={isReadonly}
-                        options={optDocTypes}
-                        onChange={(value) => field.onChange(value)}
-                        value={field.value}
-                        required
-                        error={
-                        errors.requiredDocuments?.[index]?.documentType &&
-                        errors.requiredDocuments[index].documentType.message
-                        }
-                    />
-                    )}
-                />
-                <InputComponent
-                    typeInput="number"
-                    label="Tamaño máximo (MB)"
-                    placeholder="Tamaño en MB"
-                    className="text-right"
-                    disabled={isReadonly}
-                    name="maxSizeMB"
-                    register={register(`requiredDocuments.${index}.maxSizeMB`, {
-                        valueAsNumber: true,
-                        onChange(event) {
-                            const value = event.target.value;
-                            if (value < 1) {
-                                setError(`requiredDocuments.${index}.maxSizeMB`, {
-                                    type: "manual",
-                                    message: "El tamaño debe ser mayor a 0",
-                                });
-                            } else {
-                                setError(`requiredDocuments.${index}.maxSizeMB`, {
-                                    type: "manual",
-                                    message: "",
-                                });
-                                setValue(`requiredDocuments.${index}.maxSizeMB`, value);
-                            }
-                        },
-                    })}
-                    required
-                    error={
-                    errors.requiredDocuments?.[index]?.maxSizeMB &&
-                    errors.requiredDocuments[index].maxSizeMB.message
-                    }
-                />
-                <Controller
-                    name={`requiredDocuments.${index}.allowedFormats`}
-                    control={control}
-                    render={({ field }) => (
-                    <DropdownComponent
-                        name="allowedFormats"
-                        label="Tipo de formato"
-                        className="primary"
-                        placeholder="Escoger tipo de formato"
-                        isMulti
-                        disabled={isReadonly}
-                        options={typeFormats}
-                        onChange={(value) => field.onChange(value)}
-                        value={field.value}
-                        required
-                        error={
-                            errors.requiredDocuments?.[index]?.allowedFormats &&
-                            errors.requiredDocuments[index].allowedFormats.message
-                        }
-                    />
-                    )}
-                />
-                <Controller
-                    name={`requiredDocuments.${index}.required`}
-                    control={control}
-                    defaultValue={false}
-                    render={({ field }) => (
-                        <CheckBoxComponent
-                            {...field}
-                            disabled={isReadonly}
-                            checked={getValues(`requiredDocuments.${index}.required`)}
-                            setChecked={() => {
-                                setValue(`requiredDocuments.${index}.required`, !getValues(`requiredDocuments.${index}.required`));
-                            }}
-                            label="Este documento es obligatorio"
-                        />
-                    )}
-                />
-              </div>
-              <TextAreaComponent
-                name="description"
-                rows={3}
-                placeholder="Descripción"
-                label="Descripción"
-                disabled={isReadonly}
-                register={register(`requiredDocuments.${index}.description`)}
-                required
-                error={
-                  errors.requiredDocuments?.[index]?.description &&
-                  errors.requiredDocuments[index].description.message
-                }
-              />
-            </div>
-          ))}
+    <>
+      <div className="mb-[0.5rem]">
+        <div className="flex justify-between items-center p-[0.5rem]">
+          <h4 className="m-0 font-medium text-gray-900">
+            Documentos Requeridos
+          </h4>
+          <ButtonComponent
+            size="small"
+            blockAccess={isReadonly}
+            onClick={() => {
+              addDocument();
+            }}
+            className="primary"
+            label="Agregar"
+          />
+        </div>
+        <div className="w-full overflow-x-auto">
+          <TableComponent columns={columnsDocRequired} data={fields} />
         </div>
       </div>
-    </div>
+
+      {openModal && (
+        <ModalComponent
+          title={"Agregar documento"}
+          sizeModal="medium"
+          typeButtonConfirm="button"
+          handleSubmit={() => handleSubmit(submitedDocument)()}
+          handleModal={() => {
+            toggleModal();
+          }}
+        >
+          <div
+            className="border p-[0.5rem] rounded-md min-w-[40rem] flex-shrink-0 bg-white shadow-sm"
+          >
+            <div className="grid grid-cols-2 gap-[0.5rem]">
+              <InputComponent
+                label="Nombre"
+                placeholder="Nombre del documento"
+                name="name"
+                className="capitalize"
+                typeInput="text"
+                disabled={isReadonly}
+                register={register(`name`)}
+                required
+                error={
+                  errors?.name &&
+                  errors?.name.message?.toString()
+                }
+              />
+              <Controller
+                name={`documentType`}
+                control={control}
+                render={({ field }) => (
+                  <DropdownComponent
+                    name="documentType"
+                    label="Tipo de documento"
+                    className="primary"
+                    placeholder="Escoger tipo de documento"
+                    disabled={isReadonly}
+                    options={optDocTypes}
+                    onChange={(value) => field.onChange(value)}
+                    value={field.value}
+                    required
+                    error={
+                      errors?.documentType &&
+                      errors?.documentType?.message?.toString()
+                    }
+                  />
+                )}
+              />
+              <InputComponent
+                typeInput="number"
+                label="Tamaño máximo (MB)"
+                placeholder="Tamaño en MB"
+                className="text-right"
+                disabled={isReadonly}
+                name="maxSizeMB"
+                register={register(`maxSizeMB`, {
+                  valueAsNumber: true,
+                  onChange(event) {
+                    const value = event.target.value;
+                    if (value < 1) {
+                      setError(`maxSizeMB`, {
+                        type: "manual",
+                        message: "El tamaño debe ser mayor a 0",
+                      });
+                    } else {
+                      setError(`maxSizeMB`, {
+                        type: "manual",
+                        message: "",
+                      });
+                      setValue(
+                        `maxSizeMB`,
+                        value
+                      );
+                    }
+                  },
+                })}
+                required
+                error={
+                  errors?.maxSizeMB &&
+                  errors?.maxSizeMB.message?.toString()
+                }
+              />
+              <Controller
+                name={`allowedFormats`}
+                control={control}
+                render={({ field }) => (
+                  <DropdownComponent
+                    name="allowedFormats"
+                    label="Tipo de formato"
+                    className="primary"
+                    placeholder="Escoger tipo de formato"
+                    isMulti
+                    disabled={isReadonly}
+                    options={typeFormats}
+                    onChange={(value) => field.onChange(value)}
+                    value={field.value}
+                    required
+                    error={
+                      errors?.allowedFormats &&
+                      errors.allowedFormats.message?.toString()
+                    }
+                  />
+                )}
+              />
+              <Controller
+                name={`required`}
+                control={control}
+                defaultValue={false}
+                render={({ field }) => (
+                  <CheckBoxComponent
+                    {...field}
+                    disabled={isReadonly}
+                    checked={getValues(
+                      `required`
+                    )}
+                    setChecked={() => {
+                      setValue(
+                        `required`,
+                        !getValues(`required`)
+                      );
+                    }}
+                    label="Este documento es obligatorio"
+                  />
+                )}
+              />
+            </div>
+            <TextAreaComponent
+              name="description"
+              rows={3}
+              placeholder="Descripción"
+              label="Descripción"
+              disabled={isReadonly}
+              register={register(`description`)}
+              required
+              error={
+                errors?.description &&
+                errors.description.message?.toString()
+              }
+            />
+          </div>
+        </ModalComponent>
+      )}
+    </>
   );
 }

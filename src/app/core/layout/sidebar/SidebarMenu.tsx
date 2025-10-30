@@ -35,6 +35,19 @@ const SidebarMenu: React.FC = () => {
         },
       ]
     },
+    {
+      label: "Pagos",
+      name: "payments",
+      path: "/payments",
+      icon: "/assets/icon/currency-coin-dollar.svg",
+      children: [
+        {
+          label: "Matriculas",
+          name: "payments-registrations",
+          path: "/registrations",
+        },
+      ]
+    },
     // {
     //   label: "Formularios",
     //   name: "#",

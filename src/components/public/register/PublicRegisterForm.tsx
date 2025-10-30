@@ -9,6 +9,7 @@ import {
 import Link from "next/link";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import CardMessage from "@/app/core/auth/CardMessage";
+import { showToast } from "@/utils/alerts";
 
 interface FormErrors {
   [key: string]: string;
@@ -101,6 +102,8 @@ export default function PublicRegisterForm() {
     const payload = {
       username: form.username,
       firstName: form.firstName,
+      first_name: form.firstName,
+      last_name: form.lastName,
       lastName: form.lastName,
       email: form.email,
       phone: form.phone,
@@ -122,7 +125,8 @@ export default function PublicRegisterForm() {
           acceptedPolicy: false
         });
       })
-      .catch(() => {
+      .catch((error: any) => {        
+        showToast(`Error al registrar el usuario: ${error.error.message || ""}` , "error");
         setErrors({
           acceptedPolicy: "No se pudo registrar el usuario. Intente nuevamente.",
         });

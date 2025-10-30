@@ -86,6 +86,18 @@ export interface BranchResponse {
   hasLaboratory: boolean;
   hasSportsZones: boolean;
   fullAddress: string;
+  addressInfo: {
+    streetType: string;
+    streetName: string;
+    numberPrimary: string;
+    complementPrimary: string;
+    numberSecondary: string;
+    complementSecondary: string;
+    neighborhood: string;
+    city: string;
+    department: string;
+    fullAddress: string;
+}
   photoCount: number;
   features: string[];
   hasAcademicLevels: boolean;

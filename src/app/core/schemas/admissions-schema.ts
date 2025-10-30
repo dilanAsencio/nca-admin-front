@@ -16,9 +16,11 @@ export const AdmissionProcessSchema = z.object({
     .min(new Date().getFullYear() - 1, "El año academico debe ser mayor o igual al año actual")
     ),
   startDate: z
-    .date({ required_error: "Este campo es requerido!" }),
+    .string()
+    .nonempty("Este campo es requerido!"),
   endDate: z
-    .date({ required_error: "Este campo es requerido!" }),
+    .string()
+    .nonempty("Este campo es requerido!"),
   campuses: z
     .array(z.string())
     .nonempty("Este campo es requerido!"),

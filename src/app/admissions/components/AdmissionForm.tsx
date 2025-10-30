@@ -11,15 +11,17 @@ import InputDateComponent from "@/components/shared/input/InputDateComponent";
 import clsx from "clsx";
 import style from "@/app/font.module.css";
 import ButtonComponent from "@/components/shared/button/ButtonComponent";
+import FormDebug from "@/components/shared/form/FormDebug";
+import { useEffect } from "react";
 
 interface Props {
   onSubmit: (data: any) => void;
-  onSubmitForm: (data: AdmissionProcessFormData) => void;
+  currentData?: any;
   isReadOnly: boolean;
   isEdit: boolean;
 }
 
-export default function AdmissionForm({ onSubmit, onSubmitForm, isReadOnly, isEdit }: Props) {
+export default function AdmissionForm({ onSubmit, currentData, isReadOnly, isEdit }: Props) {
   const {
     register,
     setValue,
@@ -33,6 +35,12 @@ export default function AdmissionForm({ onSubmit, onSubmitForm, isReadOnly, isEd
     control,
     name: "requiredDocuments",
   });
+
+  const onSubmitForm = (data: any) => {
+    // e.preventDefault();
+    console.log("SEND DATATA", data);
+    
+  };
 
   return (
     <form
@@ -147,6 +155,7 @@ export default function AdmissionForm({ onSubmit, onSubmitForm, isReadOnly, isEd
 
       {/* Selección de campus y grados */}
       <SelectCampusAndGrades
+        currentData={currentData}
         isReadOnly={isReadOnly}
       />
       <hr className="m-0" />
@@ -154,6 +163,7 @@ export default function AdmissionForm({ onSubmit, onSubmitForm, isReadOnly, isEd
       <RequiredDocumentsField isReadonly={isReadOnly} fields={fields} append={append} remove={remove} />
 
       <hr className="mb-[0.5rem]" />
+      {/* <FormDebug errors={errors} /> */}
       {/* Checkboxes */}
       <CheckboxGroup isReadOnly={isReadOnly} />
 
