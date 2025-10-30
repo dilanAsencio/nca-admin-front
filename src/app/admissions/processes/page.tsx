@@ -16,7 +16,8 @@ import { showToast } from "@/utils/alerts";
 const AdmissionsProcessesPage: React.FC = () => {
   const {
     toggleLoading,
-    iconsActions
+    iconsActions,
+    toggleModule
   } = useUI();
   const [openModal, setOpenModal] = useState<{open: boolean, data: any, op: "view" | "edit" | "add"}>({open: false, data: null, op: "add"});
   const [admissionsProcess, setAdmissionsProcess] = useState<any[]>([]);
@@ -76,6 +77,7 @@ const AdmissionsProcessesPage: React.FC = () => {
   }
 
   useEffect(() => {
+    toggleModule("admissions-process");
     getAdmissionsProcess();
   }, []);
 

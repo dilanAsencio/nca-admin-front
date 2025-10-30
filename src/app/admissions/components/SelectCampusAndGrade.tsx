@@ -11,11 +11,16 @@ import DropdownComponent from "@/components/shared/dropdown/DropdownComponent";
 
 interface selectCampusprops {
   isReadOnly: boolean;
+  currentData?: any;
 }
 
-export default function SelectCampusAndGrades({isReadOnly}: selectCampusprops) {
+export default function SelectCampusAndGrades({
+  isReadOnly,
+  currentData,
+}: selectCampusprops) {
   const {
     register,
+    resetField,
     control,
     setValue,
     formState: { errors },
@@ -51,24 +56,35 @@ export default function SelectCampusAndGrades({isReadOnly}: selectCampusprops) {
 
   const getGrades = async (campusId: string) => {
     try {
-        const resp = await GradeService.getGradesByCampus(campusId);
-        if (resp && resp?.campusId) {
-            if (resp.levels.length > 0) {
-                let grades: any[] = [];
-                resp.levels.forEach((level: any) => {
-                    if (level.grades.length > 0) {
-                    level.grades.forEach((grade: any) => {
-                        grades.push({
-                        ...grade,
-                        label: "Grado: "+grade.gradeName + " - Colegio: " + resp.campusName,
-                        campusId: resp.campusId,
-                        });
-                    });
-                    }
+      const resp = await GradeService.getGradesByCampus(campusId);
+      if (resp && resp?.campusId) {
+        if (resp.levels.length > 0) {
+          let grades: any[] = [];
+          resp.levels.forEach((level: any) => {
+            if (level.grades.length > 0) {
+              level.grades.forEach((grade: any) => {
+                grades.push({
+                  ...grade,
+                  label:
+                    "Grado: " +
+                    grade.gradeName +
+                    " - Colegio: " +
+                    resp.campusName,
+                  value: grade.gradeId,
+                  campusId: resp.campusId,
                 });
-                setGradeDrop(prev => [...prev, ...grades]);
+              });
             }
+          });
+          setGradeDrop((prev) => {
+            const existingValues = new Set(prev.map((g) => g.value)); // IDs existentes
+            const newGrades = grades.filter(
+              (g) => !existingValues.has(g.value)
+            ); // solo nuevos
+            return [...prev, ...newGrades];
+          });
         }
+      }
     } catch (error: any) {
       console.error(error);
     }
@@ -76,18 +92,30 @@ export default function SelectCampusAndGrades({isReadOnly}: selectCampusprops) {
 
   const handleCampus = (value: any) => {
     if (value.length > 0) {
-        value.forEach((element: any) => {
-            getGrades(element);
-        })
+      value.forEach((element: any) => {
+        getGrades(element);
+      });
     } else {
-        setGradeDrop([]);
-        setValue("grades", [""]);
+      setGradeDrop([]);
+      setValue("grades", [""]);
     }
-  }
+  };
 
   useEffect(() => {
     getCampusBranches();
   }, []);
+
+  useEffect(() => {
+    if (currentData) {
+      // Extrae solo los IDs
+      const campusIds = currentData.campuses?.map((c: any) => c.campusId) || [];
+
+      // ⚙️ Pre-cargar los grados de los campus seleccionados
+      if (campusIds.length > 0) {
+        campusIds.forEach((campusId: string) => getGrades(campusId));
+      }
+    }
+  }, [currentData]);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -105,7 +133,10 @@ export default function SelectCampusAndGrades({isReadOnly}: selectCampusprops) {
               placeholder="Escoger colegios"
               disabled={isReadOnly}
               options={campusDrop}
-              onChange={(value) => {field.onChange(value); handleCampus(value)}}
+              onChange={(value) => {
+                field.onChange(value);
+                handleCampus(value);
+              }}
               value={field.value}
               required
               error={errors.campuses && (errors.campuses.message as string)}
@@ -128,10 +159,11 @@ export default function SelectCampusAndGrades({isReadOnly}: selectCampusprops) {
               placeholder="Escoger grados"
               disabled={isReadOnly}
               options={gradeDrop}
-              onChange={(value) => field.onChange(value)}
+              onChange={(value) => {
+                field.onChange(value);
+              }}
               value={field.value}
               required
-              optVal
               error={errors.grades && (errors.grades.message as string)}
             />
           )}

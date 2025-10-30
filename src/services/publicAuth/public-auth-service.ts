@@ -101,7 +101,7 @@ export const authService = {
 
   async publicRegister(payload: RegisterPayload): Promise<ResponseAuth> {
     try {
-      const response = await apiProxy("POST", "/public/auth/register", undefined, payload);
+      const response = await apiProxy("POST", "/public/auth/register", undefined, payload);      
       const { success, data, message, timestamp } = response.data;
 
       return {
@@ -115,7 +115,7 @@ export const authService = {
       if (error.response?.data?.error) {
         message = error.response.data.error;
       }
-      throw { success: false, error: message };
+      throw { success: false, error: error.details };
     }
   },
 

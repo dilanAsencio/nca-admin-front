@@ -53,12 +53,14 @@ const ModuleItem: React.FC<ModuleItemProps> = ({ label, name, icon, path = "#", 
             <div className="content-icon">
               <img className="menu-icon" src={icon} alt="menu-icon" />
             </div>
-            {hoverSidebar ? label : isOpenSidebar && label}
-            {isOpenSidebar && children.length > 0 && (
-              <div className="arrow-icon">
-                <FontAwesomeIcon icon={isOpen.isOpen ? faChevronUp : faChevronDown} />
-              </div>
-            )}
+            <div className="flex justify-between w-full">
+              {hoverSidebar ? label : isOpenSidebar && label}
+              {isOpenSidebar && children.length > 0 && (
+                <div className="arrow-icon">
+                  <FontAwesomeIcon icon={isOpen.isOpen ? faChevronUp : faChevronDown} />
+                </div>
+              )}
+            </div>
         </div>
       </Link>
       { children.length > 0 && isOpen.isOpen &&

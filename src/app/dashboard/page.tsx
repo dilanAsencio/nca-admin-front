@@ -37,6 +37,7 @@ const AcademicDashboard: React.FC = () => {
     handleDownChecks,
     activeNavSteps,
     handleOptionLevel,
+    toggleModule
   } = useUI();
   const [viewFormSchool, setViewFormSchool] = useState<boolean>(false);
 
@@ -266,6 +267,7 @@ const AcademicDashboard: React.FC = () => {
   }
 
   useEffect(() => {
+    toggleModule("dashboard");
     initialData();
   },[]);
 
