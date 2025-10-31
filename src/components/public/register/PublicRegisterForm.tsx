@@ -1,3 +1,4 @@
+"use client";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -10,6 +11,7 @@ import Link from "next/link";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import CardMessage from "@/app/core/auth/CardMessage";
 import { showToast } from "@/utils/alerts";
+import { useSearchParams } from "next/navigation";
 
 interface FormErrors {
   [key: string]: string;
@@ -17,6 +19,8 @@ interface FormErrors {
 
 export default function PublicRegisterForm() {
   const dispatch = useDispatch<AppDispatch>();
+    const searchParams = useSearchParams();
+    const campusId = searchParams.get('campusId') || '';
 
   const [form, setForm] = useState({
     username: "",
@@ -109,7 +113,7 @@ export default function PublicRegisterForm() {
       phone: form.phone,
       password: "aa123456!!qawfsaaa",
       passwordConfirmation: "aa123456!!qawfsaaa",
-      campusId: "fba7ccf6-fcb1-4e60-8852-5c7fbdaa4a32"
+      campusId: campusId
     };
 
     dispatch(publicRegisterThunk(payload) as any)

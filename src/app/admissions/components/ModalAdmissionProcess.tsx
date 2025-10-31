@@ -34,15 +34,13 @@ const ModalAdmissionsForm: React.FC<{
       name: "",
       description: "",
       academicYear: new Date().getFullYear(),
-      campuses: [],
+      campuses: "",
+      branches: "",
       grades: [],
       requiredDocuments: [],
       requiresInterview: false,
       requiresEvaluation: false,
       maxApplications: 1,
-      notifyOnNewApplication: false,
-      notifyOnDocumentUpload: false,
-      notifyOnStatusChange: false,
     },
   });
   
@@ -51,9 +49,18 @@ const ModalAdmissionsForm: React.FC<{
     const resp = await AdmissionsServices.getAdmissionsProcessById(admissionProcessId);    
     if (resp?.success) {
       methods.reset(resp.data);
-      const campusIds = resp.data.campuses?.map((c: any) => c.campusId) || [];
+      const campusBrancheIds = resp.data.campusesBranches?.map((c: any) => c.campusBranchId) || [];
       const gradeIds = resp.data.grades?.map((g: any) => g.gradeId) || [];
-      methods.setValue("campuses", campusIds);
+      const documentsRequired = resp.data.requiredDocuments?.map((doc: any) => {
+        return {
+          ...doc,
+          required: doc.isRequired,
+          documentType: doc.documentTypeId
+        };
+      }) || [];
+      methods.setValue("requiredDocuments", documentsRequired);
+      methods.setValue("campuses", resp.data.campusId);
+      methods.setValue("branches", campusBrancheIds[0]);
       methods.setValue("grades", gradeIds);
       setCurrentPAdmission(resp.data);
       writeData.op === "view" ? setIsReadOnly(true) : setIsReadOnly(false);
@@ -70,6 +77,9 @@ const ModalAdmissionsForm: React.FC<{
       notifyOnDocumentUpload: data.notifyOnDocumentUpload,
       notifyOnStatusChange: data.notifyOnStatusChange
     }
+    let branches: string[] = [];
+    branches.push(data.branches);
+    data.campusBranches = branches;
     delete data.notifyOnNewApplication;
     delete data.notifyOnDocumentUpload;
     delete data.notifyOnStatusChange;
@@ -114,7 +124,7 @@ const ModalAdmissionsForm: React.FC<{
   };
 
   useEffect(() => {
-    if(writeData.open && writeData.data) {
+    if(writeData.open && writeData.data) {      
       getAdmissionsProcess(writeData.data.admissionProcessId);
     }
   }, [writeData.open]);

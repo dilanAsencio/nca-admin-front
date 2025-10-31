@@ -7,7 +7,10 @@ import { AdmissionApplicationFormData } from "./AdmissionApplicationsForm";
 import DropdownComponent from "@/components/shared/dropdown/DropdownComponent";
 import { optDocTypes, optDocTypes2 } from "@/app/core/constants/default-const";
 
-export default function ParentInfoSection() {
+interface ParentInfoSectionProps {
+  disabled?: boolean;
+}
+export default function ParentInfoSection({ disabled = false }: ParentInfoSectionProps) {
   const {
     register,
     control,
@@ -33,6 +36,7 @@ export default function ParentInfoSection() {
         typeInput="text"
         register={register("parent.firstName")}
         required
+        disabled={disabled}
         error={errors.parent?.firstName?.message}
       />
 
@@ -43,6 +47,7 @@ export default function ParentInfoSection() {
         typeInput="text"
         register={register("parent.lastName")}
         required
+        disabled={disabled}
         error={errors.parent?.lastName?.message}
       />
 
@@ -61,6 +66,7 @@ export default function ParentInfoSection() {
             }}
             value={field.value}
             required
+            disabled={disabled}
             error={errors.parent?.relationship?.message}
           />
         )}
@@ -81,6 +87,7 @@ export default function ParentInfoSection() {
             }}
             value={field.value}
             required
+            disabled={disabled}
             error={errors.parent?.documentType?.message}
           />
         )}
@@ -93,6 +100,7 @@ export default function ParentInfoSection() {
         typeInput="text"
         register={register("parent.documentNumber")}
         required
+        disabled={disabled}
         error={errors.parent?.documentNumber?.message}
       />
 
@@ -103,6 +111,7 @@ export default function ParentInfoSection() {
         typeInput="text"
         register={register("parent.phone")}
         required
+        disabled={disabled}
         error={errors.parent?.phone?.message}
       />
 
@@ -113,6 +122,7 @@ export default function ParentInfoSection() {
         typeInput="email"
         register={register("parent.email")}
         required
+        disabled={disabled}
         error={errors.parent?.email?.message}
       />
 
@@ -125,6 +135,7 @@ export default function ParentInfoSection() {
         className="capitalize"
         register={register("parent.address.street")}
         required
+        disabled={disabled}
         error={errors.parent?.address?.street?.message}
       />
 
@@ -136,6 +147,7 @@ export default function ParentInfoSection() {
         className="capitalize"
         register={register("parent.address.neighborhood")}
         required
+        disabled={disabled}
         error={errors.parent?.address?.neighborhood?.message}
       />
 
@@ -147,6 +159,7 @@ export default function ParentInfoSection() {
         className="capitalize"
         register={register("parent.address.city")}
         required
+        disabled={disabled}
         error={errors.parent?.address?.city?.message}
       />
 
@@ -158,6 +171,7 @@ export default function ParentInfoSection() {
         className="capitalize"
         register={register("parent.address.department")}
         required
+        disabled={disabled}
         error={errors.parent?.address?.department?.message}
       />
 
@@ -168,6 +182,7 @@ export default function ParentInfoSection() {
         typeInput="text"
         register={register("parent.address.postalCode")}
         required
+        disabled={disabled}
         error={errors.parent?.address?.postalCode?.message}
       />
     </div>

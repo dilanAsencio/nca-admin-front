@@ -329,7 +329,7 @@ const AcademicDashboard: React.FC = () => {
                                 "m-0 font-bold text-[1.15rem] leading-[1.25rem] self-center",
                                 "inline-block w-min overflow-hidden text-ellipsis whitespace-nowrap",
                               )}>
-                                {item?.name}
+                                {item?.name.toUpperCase()}
                               </span>
                             </div>
                             <div className="flex gap-[0.75rem]">

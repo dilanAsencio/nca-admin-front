@@ -5,8 +5,10 @@ import { Controller, useFormContext } from "react-hook-form";
 import TextAreaComponent from "@/components/shared/input/TextAreaComponent";
 import CheckBoxComponent from "@/components/shared/check/CheckBoxComponent";
 import { AdmissionApplicationFormData } from "./AdmissionApplicationsForm";
-
-export default function AdditionalInfoSection() {
+interface Props {
+  disabled?: boolean
+}
+export default function AdditionalInfoSection({disabled = false}: Props) {
   const { control, register, getValues, setValue, formState: { errors } } = useFormContext<AdmissionApplicationFormData>();
 
   return (
@@ -17,6 +19,7 @@ export default function AdditionalInfoSection() {
         name="specialConditions"
         rows={3}
         register={register("specialConditions")}
+        disabled={disabled}
         error={errors.specialConditions?.message}
       />
 
@@ -26,6 +29,7 @@ export default function AdditionalInfoSection() {
         name="howDidYouKnow"
         rows={2}
         register={register("howDidYouKnow")}
+        disabled={disabled}
         error={errors.howDidYouKnow?.message}
       />
 
@@ -35,6 +39,7 @@ export default function AdditionalInfoSection() {
         name="observations"
         rows={3}
         register={register("observations")}
+        disabled={disabled}
         error={errors.observations?.message}
       />
 
@@ -48,6 +53,7 @@ export default function AdditionalInfoSection() {
             <CheckBoxComponent
                 {...field}
                 checked={getValues("saveAsDraft")}
+                disabled={disabled}
                 setChecked={() => {
                     setValue("saveAsDraft", !getValues("saveAsDraft"));
                 }}
@@ -65,6 +71,7 @@ export default function AdditionalInfoSection() {
             <CheckBoxComponent
                 {...field}
                 checked={getValues("acceptTerms")}
+                disabled={disabled}
                 setChecked={() => {
                     setValue("acceptTerms", !getValues("acceptTerms"));
                 }}
@@ -82,6 +89,7 @@ export default function AdditionalInfoSection() {
             <CheckBoxComponent
                 {...field}
                 checked={getValues("acceptDataProcessing")}
+                disabled={disabled}
                 setChecked={() => {
                     setValue("acceptDataProcessing", !getValues("acceptDataProcessing"));
                 }}

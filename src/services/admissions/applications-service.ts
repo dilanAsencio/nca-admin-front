@@ -2,7 +2,7 @@ import { apiProxy } from "@/helpers/api-proxy";
 import { PaginateIMPL, Response } from "@/app/core/interfaces/api-interfaces";
 
 interface ApplicationsFilter {
-    campusId?: string;
+    campusBrancheId?: string;
     gradeId?: string;
     status?: string;
 }
@@ -23,7 +23,7 @@ export const ApplicationsService = {
   ): Promise<Response<any>> => {
     try {
         const basePath = `admin/admission-applications?${
-            filter.campusId ? `campusId=${filter.campusId}&` : ""}${
+            filter.campusBrancheId ? `campusBrancheId=${filter.campusBrancheId}&` : ""}${
             filter.gradeId ? `gradeId=${filter.gradeId}&` : ""}${
             filter.status ? `status=${filter.status}` : ""
             }`;

@@ -46,10 +46,10 @@ export const GradeService = {
    * @returns A Promise with a Response object containing the response data.
    * @throws { success: false, error: string } - If the retrieval fails.
    */
-  getGradesByCampus: async (
-    campusId: string,
+  getGradesByCampusBranches: async (
+    campusBranchesId: string,
   ): Promise<any> => 
-    apiProxy("GET", `admissions/campuses/${campusId}/grades`),
+    apiProxy("GET", `admissions/${campusBranchesId}`),
   
   /**
    * Deletes an academic grade given its ID.

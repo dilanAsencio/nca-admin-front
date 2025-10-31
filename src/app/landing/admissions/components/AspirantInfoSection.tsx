@@ -6,7 +6,11 @@ import { AdmissionApplicationFormData } from "./AdmissionApplicationsForm";
 import DropdownComponent from "@/components/shared/dropdown/DropdownComponent";
 import { optDocTypes } from "@/app/core/constants/default-const";
 
-export default function AspirantInfoSection() {
+interface Props {
+  disabled?: boolean;
+}
+
+export default function AspirantInfoSection({ disabled = false }: Props) {
   const {
     register,
     control,
@@ -26,6 +30,7 @@ export default function AspirantInfoSection() {
         typeInput="text"
         register={register("aspirant.firstName")}
         required
+        disabled={disabled}
         error={errors.aspirant?.firstName?.message}
       />
 
@@ -36,6 +41,7 @@ export default function AspirantInfoSection() {
         typeInput="text"
         register={register("aspirant.lastName")}
         required
+        disabled={disabled}
         error={errors.aspirant?.lastName?.message}
       />
 
@@ -45,6 +51,7 @@ export default function AspirantInfoSection() {
         viweType="date"
         control={control}
         required
+        disabled={disabled}
         error={errors.aspirant?.dateOfBirth?.message}
       />
 
@@ -63,6 +70,7 @@ export default function AspirantInfoSection() {
             }}
             value={field.value}
             required
+            disabled={disabled}
             error={errors.aspirant?.documentType?.message}
           />
         )}
@@ -75,6 +83,7 @@ export default function AspirantInfoSection() {
         typeInput="text"
         register={register("aspirant.documentNumber")}
         required
+        disabled={disabled}
         error={errors.aspirant?.documentNumber?.message}
       />
 
@@ -93,6 +102,7 @@ export default function AspirantInfoSection() {
             }}
             value={field.value}
             required
+            disabled={disabled}
             error={errors.aspirant?.gender?.message}
           />
         )}

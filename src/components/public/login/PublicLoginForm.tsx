@@ -135,7 +135,7 @@ export default function PublicLoginForm({ onClose }: PublicLoginFormProps) {
           {isLoading ? "Ingresando..." : "Ingresar"}
         </button>
 
-        <button
+        {/* <button
           type="button"
           onClick={() => {
             onClose();
@@ -144,7 +144,7 @@ export default function PublicLoginForm({ onClose }: PublicLoginFormProps) {
           className="btn-custom transition-colors py-2 w-full border-2 border-red-500 hover:bg-red-50 font-medium mb-2"
         >
           Registrarte
-        </button>
+        </button> */}
 
         {/* Recuperar contraseña */}
         <div className="text-center text-sm text-black">
