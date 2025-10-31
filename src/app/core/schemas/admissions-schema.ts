@@ -22,7 +22,10 @@ export const AdmissionProcessSchema = z.object({
     .string()
     .nonempty("Este campo es requerido!"),
   campuses: z
-    .array(z.string())
+    .string()
+    .nonempty("Este campo es requerido!"),
+  branches: z
+    .string()
     .nonempty("Este campo es requerido!"),
   grades: z
     .array(z.string())
@@ -56,10 +59,4 @@ export const AdmissionProcessSchema = z.object({
     .number({ required_error: "Este campo es requerido!"})
     .min(1, "El número de postulaciones debe ser mayor a 0")
     ),
-  notifyOnNewApplication: z
-    .boolean(),
-  notifyOnDocumentUpload: z
-    .boolean(),
-  notifyOnStatusChange: z
-    .boolean(),
 });

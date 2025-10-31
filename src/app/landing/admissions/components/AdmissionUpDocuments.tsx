@@ -8,15 +8,17 @@ import Image from "next/image";
 import { Tooltip } from "primereact/tooltip";
 import ModalAddDocument from "./ModalAddDocument";
 import { showConfirm, showToast } from "@/utils/alerts";
+import { AdmissionsServices } from "@/services/admissions/admissions-service";
 
 interface AdmissionUpDocumentsProps {
   infoApplication: any;
   saveDocument: () => void;
   deleteDocument: () => void;
+  isView?: boolean;
 }
 
 export default function AdmissionUpDocuments({
-  infoApplication, saveDocument, deleteDocument
+  infoApplication, saveDocument, deleteDocument, isView = false
 }: AdmissionUpDocumentsProps) {
   const [requiredDocuments, setRequiredDocuments] = useState<any[]>([]);
   const [modalDocument, setModalDocument] = useState<boolean>(false);
@@ -52,7 +54,7 @@ export default function AdmissionUpDocuments({
         return (
           <>
             {row.uploaded ? (
-              <div className="w-max flex gap-[0.625rem]">
+              <a href={`http://desktop-fr9saee.tail0d85c9.ts.net${row.pathfile}`} target="_blank" className="w-max flex gap-[0.625rem]">
                 <Image
                   src={"/assets/icon/file-attach-02.svg"}
                   alt="Document"
@@ -61,7 +63,7 @@ export default function AdmissionUpDocuments({
                   loading="lazy"
                 />
                 {row.uploaded}
-              </div>
+              </a>
             ) : (
               "-"
             )}
@@ -136,17 +138,24 @@ export default function AdmissionUpDocuments({
   };
 
   const getDetailAdmissionsProcess = async (application: any) => {
-    const admissionProcessId = application.admissionProcessId;
+    const admissionProcessId = application?.admissionProcessId || application?.process?.admissionProcessId;
     const documentsUploaded = application.documents;
     setApplicationId(application.applicationId);
     try {
-      const response =
-        await AdmissionsLandingService.getDetailAdmissionsProcess(
+      let response: any = {};
+      if (isView) {
+        response = await AdmissionsServices.getAdmissionsProcessById(
           admissionProcessId
         );
+      } else {
+        response = await AdmissionsLandingService.getDetailAdmissionsProcess(
+          admissionProcessId
+        );
+      }
 
-      if (response.admissionProcessId) {
-        let requiredDocuments = response.requiredDocuments.map((item: any) => {
+      if (response?.admissionProcessId || response?.success) {
+        const docsReq = response.requiredDocuments || response.data.requiredDocuments;
+        let requiredDocuments = docsReq.map((item: any) => {
           const uploaded = documentsUploaded.find(
             (doc: any) => item.documentTypeId === doc.documentTypeId
           );
@@ -155,6 +164,7 @@ export default function AdmissionUpDocuments({
             ...item,
             uploaded: uploaded?.fileName || null,
             documentId: uploaded?.documentId || null,
+            pathfile: uploaded?.fileUrl || null,
             applicationId: application.applicationId,
           };
         });

@@ -163,7 +163,6 @@ export default function AdmissionForm({ onSubmit, currentData, isReadOnly, isEdi
       <RequiredDocumentsField isReadonly={isReadOnly} fields={fields} append={append} remove={remove} />
 
       <hr className="mb-[0.5rem]" />
-      {/* <FormDebug errors={errors} /> */}
       {/* Checkboxes */}
       <CheckboxGroup isReadOnly={isReadOnly} />
 

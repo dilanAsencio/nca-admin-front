@@ -9,6 +9,7 @@ import ButtonComponent from "@/components/shared/button/ButtonComponent";
 import { showToast } from "@/utils/alerts";
 import { AdmissionsLandingService } from "@/services/landing/admissions/admissions-service";
 import { useUI } from "@/providers/ui-context";
+import { useRouter } from "next/navigation";
 
 interface NewApplicationAdmissionProps {
   infoIds: { processId: string; campusId: string; gradeId: string };
@@ -27,6 +28,7 @@ export default function NewApplicationAdmissionForm({
     handleSubmit,
     formState: { errors },
   } = useAdmissionForm();
+  const route = useRouter();
   const { toggleLoading } = useUI();
 
   const onSubmit = async (data: any) => {
@@ -36,6 +38,7 @@ export default function NewApplicationAdmissionForm({
       if (resp.applicationId) {
         toggleLoading(false);
         showToast(`Solicitud enviada con exito`, "success");
+        route.push("/landing/admissions");
         onClose();
       } else {
         toggleLoading(false);

@@ -57,7 +57,16 @@ export interface CampusInfo {
   id: string;
   code: string;
   name: string;
+  legalName: string;
+  description: string;
   logoUrl: string | null;
+  foundationYear: number;
+  gender: "male" | "female" | "mixed";
+  languages: string[];
+  religion: string;
+  calendarType: "A" | "B";
+  maxStudents: number;
+  branchCount: number;
 }
 
 export interface BranchResponse {

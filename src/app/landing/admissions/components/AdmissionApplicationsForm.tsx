@@ -23,14 +23,16 @@ export type AdmissionApplicationFormData = z.infer<
 
 interface formApplicationProps {
   applicatino: any;
+  onSubmited: () => void;
 }
 
 export default function AdmissionApplicationForm({
-  applicatino,
+  applicatino, onSubmited
 }: formApplicationProps) {
   const methods = useAdmissionApplicationForm();
   const [activeTabForm, setActiveTabForm] = useState<number>(0);
   const [currentApplication, setCurrentApplication] = useState<any>(null);
+  const [percentage, setPercentage] = useState<number>(0);
   const [activeTab, setActiveTab] = useState<number>(0);
   const { toggleLoading } = useUI();
 
@@ -59,11 +61,13 @@ export default function AdmissionApplicationForm({
       const resp = await AdmissionsLandingService.submittedApplication(currentApplication.applicationId);
       if (resp.applicationId) {
         showToast("La solicitud se envió correccamente a revisión", "success");
+        onSubmited();
       } else {
         showToast("Error al enviar la solicitud", "error");
       }
       toggleLoading(false);
     } catch (error) {
+      toggleLoading(false);
       console.error(error);
     }
   }
@@ -76,6 +80,8 @@ export default function AdmissionApplicationForm({
 
       if (response.applicationId) {
         methods.reset(response);
+        const progress = response.completionPercentage;
+        response.documents.length === 0 ? setPercentage(progress) : setPercentage(100);
         setCurrentApplication(response);        
       }
     } catch (error: any) {
@@ -121,7 +127,7 @@ export default function AdmissionApplicationForm({
             alt: "logo",
           }}
           campusName={currentApplication?.campus?.name ?? ""}
-          progress={currentApplication?.completionPercentage ?? 0}
+          progress={percentage}
         />
         <div className="max-w-[100%]">
           {/* Tabs Sections */}
@@ -200,7 +206,7 @@ export default function AdmissionApplicationForm({
               icon={{
                 path: "/assets/icon/arrow-right.svg", alt: "arrow right"
               }}
-              blockAccess={currentApplication?.completionPercentage < 90}
+              blockAccess={currentApplication?.completionPercentage < 100}
               onClick={() => {submittedApplication();}}
             />
           </div>

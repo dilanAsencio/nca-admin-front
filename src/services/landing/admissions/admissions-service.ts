@@ -35,7 +35,7 @@ export const AdmissionsLandingService = {
     try {
         const response = await apiProxy("GET", `parent/admission-processes${campusId ? `?campusId=${campusId}` : ""}`);
         return response;
-    } catch (error) {
+    } catch (error) {      
         throw { success: false, error: error || "Error al obtener la solicitud" };
     }
   },

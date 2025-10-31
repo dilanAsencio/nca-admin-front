@@ -33,7 +33,7 @@ const MainAuthAdmissions: React.FC = () => {
       render: (row: any) => (
         <div
           className={`m-0 font-semibold text-center max-w-[80%] py-[0.25rem] px-[0.75rem] w-max rounded-[0.5rem] ${
-            row.status === "ACTIVE" || row.status === "APPROVED"
+            row.status === "ACTIVE" || row.status === "APPROVED" || row.status === "SUBMITTED"
               ? "text-green-600 bg-[#00ff0042] border-2 border-solid border-[#2dd42d]"
               : row.status === "UNDER_REVIEW"
                 ? "text-blue-600 bg-[#0000ff42] border-2 border-solid border-[#2727ad]"
@@ -93,6 +93,7 @@ const MainAuthAdmissions: React.FC = () => {
           { label: "Admisiones" },
         ])
         setApplicationsSelected(null);
+        getParentsApplicationsProcess();
         break;
     
       default:
@@ -128,7 +129,7 @@ const MainAuthAdmissions: React.FC = () => {
       </header>
       {
         applicationsSelected ?
-          <AdmissionApplicationForm applicatino={applicationsSelected} />
+          <AdmissionApplicationForm onSubmited={() => {handleBreadcrumb("back")}} applicatino={applicationsSelected} />
         :
           <section className="flex flex-col w-full rounded-[0.5rem] bg-white p-[1.5rem]">
             { parentsAdmissionsProcess.length > 0 ?

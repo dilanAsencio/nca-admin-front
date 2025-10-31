@@ -172,7 +172,7 @@ const BranchesViewer: React.FC<{
                         "tg-tooltip m-0 font-medium text-[1rem] leading-[1.25rem]",
                         "inline-block w-min overflow-hidden text-ellipsis whitespace-nowrap",
                 )}>
-                    {branche.title}
+                    {branche.title &&branche.title.toUpperCase()}
                 </span>
             </div>
             <div className="flex  items-center gap-[0.75rem]">
@@ -204,7 +204,7 @@ const BranchesViewer: React.FC<{
         
       { isOpenModalBranche.display && (
         <ModalComponent
-          title={`Sede del colegio: ${branche.campus_info &&branche?.campus_info.name}`}
+          title={`Sede del colegio: ${branche.campus_info &&branche?.campus_info.name.toUpperCase()}`}
           labelBtnAccept="Crear"
           sizeModal="large"
           buttonAcceptVisible={false}

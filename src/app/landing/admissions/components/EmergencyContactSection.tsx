@@ -5,8 +5,10 @@ import { Controller, useFormContext } from "react-hook-form";
 import InputComponent from "@/components/shared/input/InputComponent";
 import { AdmissionApplicationFormData } from "./AdmissionApplicationsForm";
 import DropdownComponent from "@/components/shared/dropdown/DropdownComponent";
-
-export default function EmergencyContactSection() {
+interface Props {
+  disabled?: boolean;
+}
+export default function EmergencyContactSection({disabled = false}: Props) {
   const { register, control, formState: { errors } } = useFormContext<AdmissionApplicationFormData>();
     const [relationshipOptions, setRelationshipOptions] = useState<
       { label: string; value: string }[]
@@ -29,6 +31,7 @@ export default function EmergencyContactSection() {
         typeInput="text"
         register={register("emergencyContact.fullName")}
         required
+        disabled={disabled}
         error={errors.emergencyContact?.fullName?.message}
       />
 
@@ -45,6 +48,7 @@ export default function EmergencyContactSection() {
             onChange={(value) => {field.onChange(value)}}
             value={field.value}
             required
+            disabled={disabled}
             error={errors.emergencyContact?.relationship?.message}
           />
         )}
@@ -57,6 +61,7 @@ export default function EmergencyContactSection() {
         typeInput="text"
         register={register("emergencyContact.phone")}
         required
+        disabled={disabled}
         error={errors.emergencyContact?.phone?.message}
       />
     </div>

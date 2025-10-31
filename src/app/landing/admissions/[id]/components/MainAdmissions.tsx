@@ -11,6 +11,8 @@ import { AdmissionsLandingService } from "@/services/landing/admissions/admissio
 import { useLanding } from "@/providers/landing-context";
 import NewApplicationAdmissionForm from "./NewApplicationAdmissionForm";
 import ButtonComponent from "@/components/shared/button/ButtonComponent";
+import { showToast } from "@/utils/alerts";
+import { formatCurrency } from "@/utils/format-number";
 
 const MainAdmissions: React.FC = () => {
   const { id } = useParams<{ id: string; tenantId: string }>();
@@ -25,14 +27,29 @@ const MainAdmissions: React.FC = () => {
     { label: "Admisiones" },
   ];
 
-  const getAdmissonsProcessesCampus = async (campusId?: string) => {
+  const getAdmissonsProcessesCampus = async (campusId: string) => {
     try {
       const response =
         await AdmissionsLandingService.getAdmissionsProcessByCampus(campusId);
-      if (response?.availableProcesses) {        
+      if (response?.availableProcesses) {
+        let grades: any[] = [];
+        response.availableProcesses.map((process: any, index: any) => {
+          for (let item of process.availableGrades) {
+            grades.push({
+              ...item,
+              value: formatCurrency(item.value.toString()),
+              nameBranche: process.availableCampuses[0].name,
+              fullAddressBranche: process.availableCampuses[0].address,
+            })
+          }
+          process.availableGrades = grades;
+        })
         setAdmissionsProcess(response.availableProcesses);
+      } else {
+        showToast("No se encontraron procesos de admisiones", "error");
       }
     } catch (error: any) {
+      showToast("No se encontraron procesos de admisiones", "error");
       console.error(error);
     }
   };

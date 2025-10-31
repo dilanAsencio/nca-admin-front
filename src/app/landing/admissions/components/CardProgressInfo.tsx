@@ -50,11 +50,11 @@ export default function CardProgressInfo({
         </div>
       </div>
 
-      <div className="min-w-[14.75rem]">
+      <div className="flex min-w-[14.75rem]">
         <ProgressBarComponent value={currentProgress ?? 0} height="10px"  />
       </div>
 
-      <div className="flex justify-between w-full md:justify-start md:items-center md:gap-[0.625rem]">
+      <div className="flex justify-between w-full md:justify-end md:items-center md:gap-[0.625rem]">
         <SwitchComponent
           checked={enabled}
           onChange={setEnabled}

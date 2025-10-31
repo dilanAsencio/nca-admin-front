@@ -14,11 +14,13 @@ import * as alerts from "@/utils/alerts";
 import "./style.css";
 import ButtonComponent from "@/components/shared/button/ButtonComponent";
 import CardProcessComponent from "../components/CardProcess";
+import { useLanding } from "@/providers/landing-context";
 
 const SchoolDetailsPage: React.FC = () => {
   const { id } = useParams<{id: string, tenantId: string}>();
   const searchParams = useSearchParams();
   const tenantId = searchParams.get('tenantId') || '';
+  const {handleMenu} = useLanding();
   const [campusData, setCampusData] = useState<CampusDetail | null>(null);
   const [ branches, setBranches ] = useState<BranchResponse[]>([]);
   const [ breadcrumbs, setBreadcrumbs ] = useState<{ label: string; href?: string }[]>([]);
@@ -51,8 +53,8 @@ const SchoolDetailsPage: React.FC = () => {
   }
 
   const handleAdmission = () => {
-    if (!id || !tenantId) return showToast("Error al obtener los datos del colegio", "error");
-    router.push(`/landing/admissions/${id}?tenantId=${tenantId}`);
+    if (!infoTab?.id || !tenantId) return showToast("Error al obtener los datos del colegio", "error");
+    router.push(`/landing/admissions/${infoTab?.id}?tenantId=${tenantId}`);
   }
 
   const handleSedeClick = (idx: number, data: any) => {
@@ -67,6 +69,7 @@ const SchoolDetailsPage: React.FC = () => {
   }
 
   useEffect(() => {
+    handleMenu("colegios");
     initialData();
   }, [id && tenantId]);
 
@@ -87,7 +90,7 @@ const SchoolDetailsPage: React.FC = () => {
             className="cursor-pointer"
           />
 
-          <h5 className="m-0 text-[1.25rem] text-gray-900 leading-[120%] font-medium">Colegio - { infoTab ? infoTab.campusInfo.name : "*" }</h5>
+          <h5 className="m-0 text-[1.25rem] text-gray-900 leading-[120%] font-medium">Colegio - { infoTab ? infoTab.campusInfo.name.toUpperCase() : "*" }</h5>
         </div>
 
         <BreadcumbComponent items={breadcrumbs} />
@@ -99,7 +102,7 @@ const SchoolDetailsPage: React.FC = () => {
               <TabsComponent
                 key={index}
                 handleClick={() => handleSedeClick(index, branch)}
-                label={branch.name}
+                label={branch.name.toUpperCase()}
                 isActive={selectedTab === index}
                 icon={{ path: `/assets/icon/${selectedTab === index ? "school-icon-02" : "school-icon-01"}.svg`, alt: "icon-school" }}
               />
@@ -118,7 +121,7 @@ const SchoolDetailsPage: React.FC = () => {
                   height={50}
                   loading="lazy"
                 />
-                <h3 className="m-0 text-gray-900 leading-[120%] font-medium self-center">{ infoTab && infoTab.campusInfo.name }</h3>
+                <h3 className="m-0 text-gray-900 leading-[120%] font-medium self-center">{ infoTab && infoTab.campusInfo.name.toUpperCase() }</h3>
               </div>
 
               <div className="flex gap-[0.5rem]">
@@ -219,7 +222,7 @@ const SchoolDetailsPage: React.FC = () => {
                   icon={{ path: "/assets/icon/phone.svg", alt: "icon-image" }}
                   label="Quiero ser contactado"
                   onClick={() => {
-                    router.push("/auth/register");
+                    router.push(`/auth/register?campusId=${infoTab && infoTab?.campusId}`);
                   }}  
                   size="small"
                   className="primary"
@@ -238,7 +241,7 @@ const SchoolDetailsPage: React.FC = () => {
           <div className="flex flex-col gap-[1.51rem]">
             <h2 className="text-gray-900 text-[2.45rem] text-center font-semibold">Nuestro Colegio</h2>
             <p className="text-gray-900 text-[1rem] h-[7rem] text-justify">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+              {infoTab && infoTab?.campusInfo?.description}
             </p>
           </div>
           

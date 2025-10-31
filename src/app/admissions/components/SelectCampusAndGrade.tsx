@@ -8,6 +8,7 @@ import { showToast } from "@/utils/alerts";
 import { useEffect, useState } from "react";
 import { GradeService } from "@/services/managementAcademic/grade-service";
 import DropdownComponent from "@/components/shared/dropdown/DropdownComponent";
+import { BranchesService } from "@/services/managementAcademic/branches-service";
 
 interface selectCampusprops {
   isReadOnly: boolean;
@@ -27,13 +28,14 @@ export default function SelectCampusAndGrades({
   } = useFormContext<AdmissionProcessFormData>();
 
   const [campusDrop, setCampusDrop] = useState<any[]>([]);
+  const [branchesDrop, setBranchesDrop] = useState<any[]>([]);
   const [gradeDrop, setGradeDrop] = useState<any[]>([]);
 
-  const getCampusBranches = async () => {
+  const getCampus = async () => {
     try {
       const campusResp = (await CampusService.getCampus({
         page: 0,
-        size: 10,
+        size: 100,
       })) as Response<any>;
       if (campusResp?.success) {
         let campusDrop: any[] = [];
@@ -53,37 +55,44 @@ export default function SelectCampusAndGrades({
       console.error(error);
     }
   };
-
-  const getGrades = async (campusId: string) => {
+  
+  const getCampusBranches = async (campusId: string) => {
     try {
-      const resp = await GradeService.getGradesByCampus(campusId);
-      if (resp && resp?.campusId) {
-        if (resp.levels.length > 0) {
-          let grades: any[] = [];
-          resp.levels.forEach((level: any) => {
-            if (level.grades.length > 0) {
-              level.grades.forEach((grade: any) => {
-                grades.push({
-                  ...grade,
-                  label:
-                    "Grado: " +
-                    grade.gradeName +
-                    " - Colegio: " +
-                    resp.campusName,
-                  value: grade.gradeId,
-                  campusId: resp.campusId,
-                });
-              });
-            }
-          });
-          setGradeDrop((prev) => {
-            const existingValues = new Set(prev.map((g) => g.value)); // IDs existentes
-            const newGrades = grades.filter(
-              (g) => !existingValues.has(g.value)
-            ); // solo nuevos
-            return [...prev, ...newGrades];
+      const resp = (await BranchesService.getBranchesByCampus(campusId, {
+        page: 0,
+        size: 100,
+      })) as Response<any>;
+      if (resp?.success) {
+        let gradesDrop: any[] = [];
+        if (!resp.data?.content) {
+          showToast("No se encontraron sedes", "warning");
+          return;
+        }
+        for (const item of resp.data.content) {
+          gradesDrop.push({
+            value: item.id,
+            label: item.name,
           });
         }
+        setBranchesDrop(gradesDrop);
+      }
+    } catch (error: any) {
+      console.error(error);
+    }
+  };
+
+  const getGrades = async (campusBranchesId: string) => {
+    try {
+      const resp = await GradeService.getGradesByCampusBranches(campusBranchesId);
+      if (resp?.success) {
+        let grades: any[] = [];
+        for (const item of resp.data) {
+          grades.push({
+            value: item.gradeId,
+            label: item.gradeName,
+          });
+        }
+        setGradeDrop(grades);
       }
     } catch (error: any) {
       console.error(error);
@@ -91,10 +100,23 @@ export default function SelectCampusAndGrades({
   };
 
   const handleCampus = (value: any) => {
-    if (value.length > 0) {
-      value.forEach((element: any) => {
-        getGrades(element);
-      });
+    if (value) {
+      // value.forEach((element: any) => {
+        getCampusBranches(value);
+      // });
+    } else {
+      setGradeDrop([]);
+      setBranchesDrop([]);
+      setValue("grades", [""]);
+      setValue("branches", "");
+    }
+  };
+
+  const handleBranches = (value: any) => {
+    if (value) {
+      // value.forEach((element: any) => {
+        getGrades(value);
+      // });
     } else {
       setGradeDrop([]);
       setValue("grades", [""]);
@@ -102,25 +124,26 @@ export default function SelectCampusAndGrades({
   };
 
   useEffect(() => {
-    getCampusBranches();
+    getCampus();
   }, []);
 
   useEffect(() => {
     if (currentData) {
+      getCampusBranches(currentData.campusId);
+
       // Extrae solo los IDs
-      const campusIds = currentData.campuses?.map((c: any) => c.campusId) || [];
+      const campusBrancheIds = currentData.campusesBranches?.map((c: any) => c.campusBranchId) || [];
 
       // ⚙️ Pre-cargar los grados de los campus seleccionados
-      if (campusIds.length > 0) {
-        campusIds.forEach((campusId: string) => getGrades(campusId));
+      if (campusBrancheIds.length > 0) {
+        campusBrancheIds.forEach((campusId: string) => getGrades(campusId));
       }
     }
   }, [currentData]);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       {/* Campus */}
-      <div>
         <Controller
           name="campuses"
           control={control}
@@ -128,7 +151,6 @@ export default function SelectCampusAndGrades({
             <DropdownComponent
               name="campuses"
               label="Colegios"
-              isMulti
               className="primary"
               placeholder="Escoger colegios"
               disabled={isReadOnly}
@@ -143,10 +165,31 @@ export default function SelectCampusAndGrades({
             />
           )}
         />
-      </div>
+        
+      {/* branches */}
+        <Controller
+          name="branches"
+          control={control}
+          render={({ field }) => (
+            <DropdownComponent
+              name="branches"
+              label="Sedes"
+              className="primary"
+              placeholder="Escoger Sede"
+              disabled={isReadOnly}
+              options={branchesDrop}
+              onChange={(value) => {
+                field.onChange(value);
+                handleBranches(value);
+              }}
+              value={field.value}
+              required
+              error={errors.branches && (errors.branches.message as string)}
+            />
+          )}
+        />
 
       {/* Grados */}
-      <div>
         <Controller
           name="grades"
           control={control}
@@ -168,7 +211,6 @@ export default function SelectCampusAndGrades({
             />
           )}
         />
-      </div>
     </div>
   );
 }

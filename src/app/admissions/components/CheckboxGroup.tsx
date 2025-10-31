@@ -15,14 +15,8 @@ export default function CheckboxGroup({ isReadOnly }: CheckboxGroupProps) {
   useEffect(() => {
     register("requiresInterview");
     register("requiresEvaluation");
-    register("notifyOnNewApplication");
-    register("notifyOnDocumentUpload");
-    register("notifyOnStatusChange");
     setValue("requiresInterview", false);
     setValue("requiresEvaluation", false);
-    setValue("notifyOnNewApplication", false);
-    setValue("notifyOnDocumentUpload", false);
-    setValue("notifyOnStatusChange", false);
   }, [register]);
 
   return (
@@ -60,57 +54,6 @@ export default function CheckboxGroup({ isReadOnly }: CheckboxGroupProps) {
                     setValue("requiresEvaluation", !getValues("requiresEvaluation"));
                 }}
                 label="Requiere evaluación"
-            />
-          )}
-        />
-
-        <Controller
-          name="notifyOnNewApplication"
-          control={control}
-          defaultValue={false}
-          render={({ field }) => (
-            <CheckBoxComponent
-                {...field}
-                checked={getValues("notifyOnNewApplication")}
-                disabled={isReadOnly}
-                setChecked={() => {
-                    setValue("notifyOnNewApplication", !getValues("notifyOnNewApplication"));
-                }}
-                label="Notificar nuevas postulaciones"
-            />
-          )}
-        />
-
-        <Controller
-          name="notifyOnDocumentUpload"
-          control={control}
-          defaultValue={false}
-          render={({ field }) => (
-            <CheckBoxComponent
-                {...field}
-                checked={getValues("notifyOnDocumentUpload")}
-                disabled={isReadOnly}
-                setChecked={() => {
-                    setValue("notifyOnDocumentUpload", !getValues("notifyOnDocumentUpload"));
-                }}
-                label="Notificar carga de documentos"
-            />
-          )}
-        />
-        
-        <Controller
-          name="notifyOnStatusChange"
-          control={control}
-          defaultValue={false}
-          render={({ field }) => (
-            <CheckBoxComponent
-                {...field}
-                checked={getValues("notifyOnStatusChange")}
-                disabled={isReadOnly}
-                setChecked={() => {
-                    setValue("notifyOnStatusChange", !getValues("notifyOnStatusChange"));
-                }}
-                label="Notificar cambio de estado"
             />
           )}
         />

@@ -32,6 +32,20 @@ export const AdmissionsServices = {
   ): Promise<any> => 
     apiProxy("PUT", `admin/admission-processes/${admissionProcessId}`, undefined, data),
 
+    
+  /**
+   * Updates the status of an admission process.
+   * @param {string} admissionProcessId - The ID of the admission process to update the status for.
+   * @param {any} data - An object containing the status to update the admission process to.
+   * @returns A Promise with a Response object containing the response data.
+   * @throws { success: false, error: string } - If the update fails.
+   */
+  updateAdmissionProcessStatus: async (
+    admissionProcessId: string,
+    data: any,
+  ): Promise<any> => 
+    apiProxy("PATCH", `admin/admission-processes/${admissionProcessId}/status`, undefined, data),
+
 
   /**
    * Retrieves a list of academic grades for a given level, filtered by pagination data.
