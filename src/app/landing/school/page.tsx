@@ -75,7 +75,7 @@ const SchoolPage: React.FC = () => {
           <div className="content-grid-school basis-3/4 grid grid-cols-3 gap-3">
             {
               campus?.map((item, index) => {
-                return <CardSchool key={index} nameSchool={item.name} onSubmit={() => viewCampus(item)}></CardSchool>;
+                return <CardSchool key={index} nameSchool={item.name.toUpperCase()} onSubmit={() => viewCampus(item)}></CardSchool>;
               })
             }
           </div>

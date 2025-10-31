@@ -10,7 +10,6 @@ import {
   ResendVerificationPayload,
   UpdateProfilePayload,
 } from "@/services/publicAuth/public-auth-service";
-// import { User } from "@/types/auth";
 import {
   combineReducers,
   configureStore,

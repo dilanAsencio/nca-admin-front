@@ -15,7 +15,8 @@ import { ApplicationsService } from "@/services/admissions/applications-service"
 const ModalApproved: React.FC<{
   toggleModal: () => void;
   applicationId: string | null;
-}> = ({ toggleModal, applicationId }) => {
+  onSubmit: () => void;
+}> = ({ toggleModal, applicationId, onSubmit }) => {
   const { toggleLoading } = useUI();
   const {
     register,
@@ -47,6 +48,7 @@ const ModalApproved: React.FC<{
       const resp = await ApplicationsService.admissionApplicationApprove(data.applicationId, {comments: data.comments, sendEmail: true, nextSteps: data.nextSteps}) as any;
       if (resp.success) {
         showToast(`Solicitud aprobada con exito`, "success");
+        onSubmit();
         toggleModal();
       } else {
         showToast(resp.message || `Error al aprobar la solicitud`, "error");

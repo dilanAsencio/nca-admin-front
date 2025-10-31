@@ -101,9 +101,7 @@ export default function SelectCampusAndGrades({
 
   const handleCampus = (value: any) => {
     if (value) {
-      // value.forEach((element: any) => {
-        getCampusBranches(value);
-      // });
+      getCampusBranches(value);
     } else {
       setGradeDrop([]);
       setBranchesDrop([]);
@@ -114,9 +112,7 @@ export default function SelectCampusAndGrades({
 
   const handleBranches = (value: any) => {
     if (value) {
-      // value.forEach((element: any) => {
-        getGrades(value);
-      // });
+      getGrades(value);
     } else {
       setGradeDrop([]);
       setValue("grades", [""]);

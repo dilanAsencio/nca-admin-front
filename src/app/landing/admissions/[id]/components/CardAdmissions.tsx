@@ -62,17 +62,6 @@ const CardAdmissions: React.FC<{
         <TableComponent
           columns={columns}
           data={grades}
-          // paginate={{
-          //   totalItems: totalItems,
-          //   itemsPerPage: itemsPerPage,
-          //   currentPage: currentPage,
-          //   onPageChange: setCurrentPage,
-          //   perPageOptions: [5],
-          //   onItemsPerPageChange: (size) => {
-          //     setItemsPerPage(size);
-          //     setCurrentPage(1);
-          //   },
-          // }}
         />
       </div>
     </>

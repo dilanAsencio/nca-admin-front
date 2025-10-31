@@ -1,6 +1,5 @@
 import { apiProxy } from "@/helpers/api-proxy";
 import { ChangePassword, ForgotPassword, LoginFormData, LoginResponse, ResetPassword, ResponseAuth } from "@/app/core/interfaces/auth-interfaces";
-// import { hashPassword } from "@/helpers/bcryptjs";
 
 export const authService = {
   

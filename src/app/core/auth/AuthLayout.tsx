@@ -39,7 +39,6 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
           </div>
           <div className="flex items-center justify-center gap-[0.75rem] mt-[2.5rem]">
             <p className="m-0 linked-forgotpass">By</p>
-            {/* <Image src={logo} priority alt="logo-nexuscore" /> */}
             <img src={logo} alt="logo-nexuscore" />
           </div>
         </div>

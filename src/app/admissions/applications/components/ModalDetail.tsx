@@ -38,25 +38,6 @@ export default function ModalDetail({
   const [activeTab, setActiveTab] = useState<number>(0);
   const { toggleLoading } = useUI();
 
-  const onSubmit = async (data: any) => {
-    toggleLoading(true);
-    try {
-      const resp = await AdmissionsLandingService.updateApplication(
-        currentApplication.applicationId,
-        data
-      );
-      if (resp.applicationId) {
-        getApplicationsById(resp);
-        showToast("La solicitud se actualizo con exito", "success");
-      } else {
-        showToast("Error al actualizar la solicitud", "error");
-      }
-      toggleLoading(false);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   const getApplicationsById = async (applicationId: string) => {
     try {
       const response =
@@ -64,6 +45,16 @@ export default function ModalDetail({
 
       if (response?.success) {
         methods.reset(response.data);
+        const infoAddress = JSON.parse(response.data.parent?.address);
+        const data = response.data;
+        
+        methods.setValue("parent.address.street", infoAddress?.street ?? "");
+        methods.setValue("parent.address.neighborhood", infoAddress?.neighborhood ?? "");
+        methods.setValue("parent.address.city", infoAddress?.city ?? "");
+        methods.setValue("parent.address.department", infoAddress?.department ?? "");
+        methods.setValue("parent.address.postalCode", infoAddress?.postalCode ?? "");
+        methods.setValue("parent.documentType", data.parent.documentTypeId);
+        methods.setValue("aspirant.documentType", data.aspirant.documentType);
         setCurrentApplication(response.data);
       }
     } catch (error: any) {
@@ -119,7 +110,7 @@ export default function ModalDetail({
             </div>
             <div className="p-[1rem] bg-white rounded-tr-[0.5rem] rounded-b-[0.5rem]">
               <form
-                onSubmit={methods.handleSubmit(onSubmit)}
+                // onSubmit={methods.handleSubmit(onSubmit)}
                 className="flex flex-col gap-[1rem] overflow-hidden"
               >
                 {activeTab === 0 ? (

@@ -21,7 +21,6 @@ const PaginationComponent: React.FC<PaginationProps> = ({
   perPageOptions,
 }) => {
   const totalPages = Math.ceil(totalItems / itemsPerPage);
-  // if (totalPages <= 1) return null;
 
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 

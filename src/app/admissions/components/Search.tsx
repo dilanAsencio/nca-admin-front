@@ -9,20 +9,23 @@ import { Response } from "@/app/core/interfaces/api-interfaces";
 import { GradeService } from "@/services/managementAcademic/grade-service";
 import { showToast } from "@/utils/alerts";
 import ButtonComponent from "@/components/shared/button/ButtonComponent";
+import { BranchesService } from "@/services/managementAcademic/branches-service";
 
 const SearchComponent: React.FC<{
   changeValue?: (values: {
     campus?: string;
+    branche?: string;
     grade?: string;
     status?: string;
   }) => void;
-  brancheSelected?: string;
-}> = ({ changeValue, brancheSelected }) => {
+}> = ({ changeValue }) => {
   const { toggleLoading } = useUI();
   const [campusDrop, setCampusDrop] = useState<any[]>([]);
+  const [branchesDrop, setBranchesDrop] = useState<any[]>([]);
   const [gradeDrop, setGradeDrop] = useState<any[]>([]);
   const [campusSelected, setCampusSelected] = useState<string>();
   const [gradeSelected, setGradeSelected] = useState<string>();
+  const [brancheSelected, setBrnacheSelected] = useState<string>();
   const [statusSelected, setStatusSelected] = useState<string>();
   const statuses = [
     { value: "APPROVED", label: "Aprobado" },
@@ -54,17 +57,37 @@ const SearchComponent: React.FC<{
         setCampusDrop(campus);
         toggleLoading(false);
       }
+      toggleLoading(false);
     } catch (error: any) {
       toggleLoading(false);
       console.error(error);
     }
-    toggleLoading(false);
   };
 
-  const getGradesByCampus = async (id: string) => {
+  const getBrancheByCampus = async (campusId: string) => {
+    try {
+      const resp = await BranchesService.getBranchesByCampus(campusId) as any;
+      
+      if (resp?.success) {
+        let campus: any[] = [];
+        for (const item of resp.data.content) {
+          campus.push({
+            value: item.id,
+            label: item.name,
+          });
+        }
+        setBranchesDrop(campus);
+        toggleLoading(false);
+      }
+    } catch (error: any) {
+      console.error(error);
+    }
+  };
+
+  const getGradesByBranche = async (brancheId: string) => {
     toggleLoading(true);
     try {
-      const gradeResp = await GradeService.getGradesByCampusBranches(id);
+      const gradeResp = await GradeService.getGradesByCampusBranches(brancheId);
       if (gradeResp?.success) {
         let grades: any[] = [];
         for (const item of gradeResp.data) {
@@ -87,13 +110,17 @@ const SearchComponent: React.FC<{
 
   const handleSelect = (
     value: string | string[],
-    op: "campus" | "grade" | "status"
+    op: "campus" | "grade" | "status" | "branche"
   ) => {
     const selectedValue = Array.isArray(value) ? value[0] : value;
-    // if (op === "campus") {
-    //     getGradesByCampus(selectedValue);
-    //     setCampusSelected(selectedValue);
-    // }
+    if (op === "campus") {
+      setCampusSelected(selectedValue);
+      getBrancheByCampus(selectedValue);
+    }
+    if (op === "branche") {
+      getGradesByBranche(selectedValue);
+      setBrnacheSelected(selectedValue);
+    }
     if (op === "grade") setGradeSelected(selectedValue);
     if (op === "status") setStatusSelected(selectedValue);
 
@@ -103,6 +130,7 @@ const SearchComponent: React.FC<{
         campus: op === "campus" ? selectedValue : campusSelected,
         grade: op === "grade" ? selectedValue : gradeSelected,
         status: op === "status" ? selectedValue : statusSelected,
+        branche: op === "branche" ? selectedValue : brancheSelected,
       });
     }
   };
@@ -111,13 +139,6 @@ const SearchComponent: React.FC<{
     getCampus();
   }, []);
 
-  useEffect(() => {
-    if (brancheSelected) {
-      getGradesByCampus(brancheSelected);
-    //   setCampusSelected(brancheSelected);
-    }
-  }, [brancheSelected]);
-
   return (
     <div
       className={clsx(
@@ -125,7 +146,7 @@ const SearchComponent: React.FC<{
         "bg-white rounded-[2.5rem]"
       )}
     >
-      <div className="basis-2/5">
+      <div className="basis-1/6">
         <DropdownComponent
           name="campus"
           className="primary"
@@ -133,6 +154,16 @@ const SearchComponent: React.FC<{
           options={campusDrop}
           onChange={(value) => handleSelect(value, "campus")}
           value={campusSelected || ""}
+        />
+      </div>
+      <div className="basis-1/6">
+        <DropdownComponent
+          name="branches"
+          className="primary"
+          placeholder="Escoger Sede"
+          options={branchesDrop}
+          onChange={(value) => handleSelect(value, "branche")}
+          value={brancheSelected || ""}
         />
       </div>
       <div className="basis-1/6">

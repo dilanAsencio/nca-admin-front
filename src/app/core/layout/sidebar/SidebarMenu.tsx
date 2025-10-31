@@ -48,56 +48,6 @@ const SidebarMenu: React.FC = () => {
         },
       ]
     },
-    // {
-    //   label: "Formularios",
-    //   name: "#",
-    //   path: "/dashboard",
-    //   icon: "/assets/icon/sidebar/user-profile.svg",
-    //   drop: false,
-    //   children: [
-    //     {
-    //       label: "Formularios",
-    //       name: "#",
-    //       path: "/dashboard",
-    //     },
-    //   ]
-    // },
-    // {
-    //   label: "Activos",
-    //   name: "#",
-    //   path: "/dashboard",
-    //   icon: "/assets/icon/sidebar/file-branch.svg",
-    // },
-    // {
-    //   label: "Rutas",
-    //   name: "#",
-    //   path: "/dashboard",
-    //   icon: "/assets/icon/sidebar/icon-schoolbus.svg",
-    // },
-    // { label: "Agendas",
-    //   name: "#",
-    //   path: "/dashboard",
-    //   icon: "/assets/icon/sidebar/calendar.svg"
-    // },
-    // {
-    //   label: "Certificaciones",
-    //   name: "#",
-    //   path: "/dashboard",
-    //   icon: "/assets/icon/sidebar/certified.svg",
-    // },
-    // {
-    //   label: "Control de Accesos",
-    //   name: "#",
-    //   path: "/dashboard",
-    //   icon: "/assets/icon/sidebar/lock-open.svg",
-    // },
-    // {
-    //   label: "Personalización",
-    //   name: "#",
-    //   path: "/dashboard",
-    //   icon: "/assets/icon/sidebar/settings.svg",
-    // },
-    // Agrega más módulos según sea necesario
   ];
 
   return (

@@ -37,7 +37,6 @@ export default function AdmissionForm({ onSubmit, currentData, isReadOnly, isEdi
   });
 
   const onSubmitForm = (data: any) => {
-    // e.preventDefault();
     console.log("SEND DATATA", data);
     
   };

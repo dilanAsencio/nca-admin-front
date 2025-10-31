@@ -53,21 +53,6 @@ export default function PublicRegisterForm() {
     if (!/^[a-zA-ZÀ-ÿ0-9\s]{2,}$/.test(form.username)) {
       newErrors.username = "Ingrese un nombre de usuario válido (mínimo 4 caracteres).";
     }
-    // if (
-    //   !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(form.password)
-    // ) {
-    //   newErrors.password =
-    //     "La contraseña debe tener al menos 8 caracteres, mayúscula, minúscula, número y caracter especial.";
-    // }
-    // if (form.password !== form.confirmPassword) {
-    //   newErrors.confirmPassword = "Las contraseñas no coinciden.";
-    // }
-    // if (form.address.trim().length < 5) {
-    //   newErrors.address = "Ingrese una dirección válida (mínimo 5 caracteres).";
-    // }
-    // if (!form.city) {
-    //   newErrors.city = "Seleccione una ciudad.";
-    // }
     if (!/^\d{7,}$/.test(form.phone)) {
       newErrors.phone = "Ingrese un número de teléfono válido (mínimo 7 dígitos).";
     }
@@ -258,90 +243,6 @@ export default function PublicRegisterForm() {
               <p className="text-red-500 text-xs mt-1">{errors.username}</p>
             )}
           </div>
-
-          {/* <div>
-            <label className="block text-sm font-medium mb-1">
-              Crea una contraseña
-            </label>
-            <input
-              type="password"
-              name="password"
-              value={form.password}
-              onChange={handleChange}
-              placeholder="Escribe tu contraseña"
-              className={`w-full border ${
-                errors.password ? "border-red-500" : "border-gray-300"
-              } rounded-full px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400`}
-            />
-            {errors.password && (
-              <p className="text-red-500 text-xs mt-1">{errors.password}</p>
-            )}
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Confirmar contraseña
-            </label>
-            <input
-              type="password"
-              name="confirmPassword"
-              value={form.confirmPassword}
-              onChange={handleChange}
-              placeholder="Confirmar contraseña"
-              className={`w-full border ${
-                errors.confirmPassword ? "border-red-500" : "border-gray-300"
-              } rounded-full px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400`}
-            />
-            {errors.confirmPassword && (
-              <p className="text-red-500 text-xs mt-1">
-                {errors.confirmPassword}
-              </p>
-            )}
-          </div> */}
-
-          {/* 
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Dirección de residencia
-            </label>
-            <input
-              type="text"
-              name="address"
-              value={form.address}
-              onChange={handleChange}
-              placeholder="Dirección de residencia"
-              className={`w-full border ${
-                errors.address ? "border-red-500" : "border-gray-300"
-              } rounded-full px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400`}
-            />
-            {errors.address && (
-              <p className="text-red-500 text-xs mt-1">{errors.address}</p>
-            )}
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Ciudad de residencia
-            </label>
-            <select
-              name="city"
-              value={form.city}
-              onChange={handleChange}
-              className={`w-full border ${
-                errors.city ? "border-red-500" : "border-gray-300"
-              } rounded-full px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400`}
-            >
-              <option value="" disabled hidden>
-                Ciudad
-              </option>
-              <option value="Bogotá">Bogotá</option>
-              <option value="Medellín">Medellín</option>
-              <option value="Cali">Cali</option>
-            </select>
-            {errors.city && (
-              <p className="text-red-500 text-xs mt-1">{errors.city}</p>
-            )}
-          </div> */}
 
           {/* Botón + Política */}
           <div className="flex flex-col items-center gap-2 sm:col-span-2 mt-4">
