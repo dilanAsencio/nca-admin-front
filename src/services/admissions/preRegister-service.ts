@@ -94,16 +94,4 @@ export const PreregistrationService = {
     }
   },
 
-  // getAdmissionsApplications: async (
-  //   paginate?: PaginateIMPL,
-  //   campusId: string = "",
-  //   status: string = "",
-  //   dateFrom: string = "",
-  //   dateTo: string = ""
-  // ): Promise<any> =>
-  //   apiProxy(
-  //     "GET",
-  //     `admissions/pre-registrations?campusId=${campusId}&status=${status}&dateFrom=${dateFrom}&dateTo=${dateTo}`,
-  //     paginate
-  //   ),
 };

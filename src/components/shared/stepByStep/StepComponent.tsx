@@ -44,7 +44,6 @@ const StepComponent: React.FC<StepIndicatorProps> = ({ steps, currentStep, onSte
               onClick={() => {step.navCheck && onStepClick(step.value)}}
               className={clsx(
                 "w-8 h-8 rounded-full z-10 flex items-center justify-center border-2 text-sm font-bold cursor-pointer",
-                // step.formChecked ? "cursor-pointer" : "cursor-not-allowed",
                 isActive || isCompleted && !step.formChecked
                   ? "bg-[#5409D5] border-[#A06DF8] text-white"
                   : step.formChecked ? "bg-[#00D369] border-0" : "bg-white border-[#A06DF8] text-purple-600"

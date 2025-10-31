@@ -33,11 +33,6 @@ export default function BreadcumbComponent({items, className}: BreadcumbComponen
   return (
     <nav aria-label="Breadcrumb">
       <ol className={`flex items-center space-x-2 text-sm m-0 text-gray-700 ${className && className}`}>
-        {/* <li>
-          <Link href="/" className="font-medium text-[0.75rem]" onClick={() => toggleModule("dashboard")} style={{ textDecoration: "none", color: "#515151" }}>
-            Dashboard
-          </Link>
-        </li> */}
         {breadcrumbs.length === 0
           ? null
           : breadcrumbs.map((item, idx) => (

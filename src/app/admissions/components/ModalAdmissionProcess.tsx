@@ -143,7 +143,6 @@ const ModalAdmissionsForm: React.FC<{
             isReadOnly={isReadOnly}
             currentData={writeData.op === "add" ? undefined : currentPAdmission}
             isEdit={isEdit}
-            // onSubmitForm={(data) => onSubmitedForm(data)}
             onSubmit={methods.handleSubmit(onSubmited)} />
       </FormProvider>
     </ModalComponent>

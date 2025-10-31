@@ -19,16 +19,24 @@ export const ApplicationsService = {
  */
   getAdmissionsApplications: async (
     paginate: PaginateIMPL,
-    filter: ApplicationsFilter,
+    campusBrancheId?: string,
+    status?: string,
+    gradeId?: string
   ): Promise<Response<any>> => {
     try {
-        const basePath = `admin/admission-applications?${
-            filter.campusBrancheId ? `campusBrancheId=${filter.campusBrancheId}&` : ""}${
-            filter.gradeId ? `gradeId=${filter.gradeId}&` : ""}${
-            filter.status ? `status=${filter.status}` : ""
-            }`;
-        const response = await apiProxy("GET", basePath, paginate);
-        return response;
+      const queryParams = new URLSearchParams();
+
+      if (campusBrancheId) queryParams.append("campusBrancheId", campusBrancheId);
+      if (status) queryParams.append("status", status);
+      if (gradeId) queryParams.append("gradeId", gradeId);
+
+      // Construye el endpoint final
+      const endpoint = `admin/admission-applications${
+        queryParams.toString() ? `?${queryParams.toString()}` : ""
+      }`;
+
+      const response = await apiProxy("GET", endpoint, paginate);
+      return response;
     } catch (error) {
         throw { success: false, error: error || "Error al obtener las solicitudes" };
     }

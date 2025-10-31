@@ -15,8 +15,9 @@ import InputComponent from "@/components/shared/input/InputComponent";
 
 const ModalReject: React.FC<{
   toggleModal: () => void;
+  onSubmit: () => void;
   applicationId: string | null;
-}> = ({ toggleModal, applicationId }) => {
+}> = ({ toggleModal, applicationId, onSubmit }) => {
   const { toggleLoading } = useUI();
   const {
     register,
@@ -48,6 +49,7 @@ const ModalReject: React.FC<{
       const resp = await ApplicationsService.admissionApplicationReject(data.applicationId, {comments: data.comments, sendEmail: true, reason: data.reason}) as any;
       if (resp.success) {
         showToast(`Solicitud rechazada con exito`, "success");
+        onSubmit();
         toggleModal();
       } else {
         showToast(resp.message || `Error al rechazar la solicitud`, "error");

@@ -11,7 +11,7 @@ import TableComponent from "@/components/shared/table/TableComponent";
 import { useUI } from "@/providers/ui-context";
 import { ButtonActions } from "../../core/interfaces/tables-interfaces";
 import { showToast } from "@/utils/alerts";
-import SearchCampusComponent from "@/app/admissions/components/Search";
+import SearchComponent from "@/app/admissions/components/Search";
 import TabsComponent from "@/components/shared/tabs/TabsComponent";
 import { BranchesService } from "@/services/managementAcademic/branches-service";
 import { BranchesResponse } from "@/app/core/interfaces/academicManagement/branches-interfaces";
@@ -27,12 +27,11 @@ import ModalDetail from "./components/ModalDetail";
 
 const AdmissionsProcessesPage: React.FC = () => {
   const { toggleLoading, iconsActions, toggleModule } = useUI();
-  const [branches, setBranches] = useState<any[] | null>([]);
+  // const [branches, setBranches] = useState<any[] | null>([]);
   const [applications, setApplications] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalItems, setTotalItems] = useState<number>(0);
   const [itemsPerPage, setItemsPerPage] = useState<number>(5);
-  const [selectedTab, setSelectedTab] = useState<string>("");
   const [openComments, setOpenComments] = useState<{
     isOpen: boolean;
     applicationId: string | null;
@@ -63,7 +62,9 @@ const AdmissionsProcessesPage: React.FC = () => {
     { key: "parentName", nameField: "Nombre Padre" },
     { key: "aspirantName", nameField: "Nombre Aspirante" },
     { key: "applicationNumber", nameField: "No. Solicitud" },
-    { key: "campusName", nameField: "Colegio" },
+    { key: "campusName", nameField: "Colegio", render: (row: any) => (
+        <span className="m-0">{row.campusName.toUpperCase()}</span>
+    ) },
     { key: "gradeName", nameField: "Grado" },
     { key: "dateCr", nameField: "Fecha Creación", width: "w-[10rem]" },
     {
@@ -163,42 +164,21 @@ const AdmissionsProcessesPage: React.FC = () => {
 
   const handleSearchChange = (value: {
     campus?: string;
+    branche?: string;
     grade?: string;
     status?: string;
   }) => {
-    value.campus ? getbranchesByCampus(value.campus) : setBranches(null);
     if (
       value.campus === undefined &&
       value.grade === undefined &&
-      value.status === undefined
+      value.status === undefined &&
+      value.branche === undefined
     ) {
       getAdmissionsProcess();
-      setBranches([]);
       return;
     }
 
-    getAdmissionsProcess(selectedTab, value.status, value.grade);
-  };
-
-  const handleBranchClick = (branchId: string) => {
-    getAdmissionsProcess(branchId);
-  };
-
-  const getbranchesByCampus = async (campusId: string) => {
-    const branchesResp = (await BranchesService.getBranchesByCampus(campusId, {
-      page: 0,
-      size: 10,
-    })) as Response<any>;
-    if (branchesResp?.success && branchesResp.data?.content) {
-      setSelectedTab(branchesResp.data.content[0].id);
-      const bran = branchesResp.data.content.map(
-        (branch: BranchesResponse) => ({
-          ...branch,
-          display: false,
-        })
-      );
-      setBranches(bran);
-    }
+    getAdmissionsProcess(value.branche, value.status, value.grade);
   };
 
   const getAdmissionsProcess = async (
@@ -212,12 +192,10 @@ const AdmissionsProcessesPage: React.FC = () => {
         page: currentPage - 1,
         size: itemsPerPage,
         sort: ["createdAt", "DESC"],
-      },
-      {
-        campusBrancheId: campusBrancheId,
-        gradeId: gradeId,
-        status: status,
-      }
+      }, 
+      campusBrancheId,
+      status,
+      gradeId
     );
 
     if (resp.success) {
@@ -256,6 +234,7 @@ const AdmissionsProcessesPage: React.FC = () => {
   };
   useEffect(() => {
     toggleModule("admissions-applications");
+    getAdmissionsProcess();
   }, []);
   return (
     <>
@@ -272,27 +251,10 @@ const AdmissionsProcessesPage: React.FC = () => {
           <BreadcumbComponent items={[{ label: "Solicitudes" }]} />
         </div>
         <div className="flex flex-col gap-[0.5rem]">
-          <SearchCampusComponent
-            brancheSelected={selectedTab}
+          <SearchComponent
             changeValue={(value) => handleSearchChange(value)}
           />
           <div className="flex flex-col">
-            <div className="flex">
-              {branches &&
-                branches.length > 0 &&
-                branches.map((branch, idx) => (
-                  <TabsComponent
-                    handleClick={() => {
-                      handleBranchClick(branch.id);
-                      setSelectedTab(branch.id);
-                    }}
-                    key={branch.id}
-                    label={branch.name}
-                    icon={iconSchool}
-                    isActive={selectedTab === branch.id}
-                  />
-                ))}
-            </div>
             <div className="p-2 bg-white rounded-b-[1rem] shadow-[0_7px_21px_0_#451A1A0A]">
               <TableComponent
                 columns={columns}
@@ -323,6 +285,7 @@ const AdmissionsProcessesPage: React.FC = () => {
 
       {openApproved.isOpen && (
         <ModalApproved
+          onSubmit={() => getAdmissionsProcess()}
           applicationId={openApproved.applicationId}
           toggleModal={toggleApprovedModal}
         />
@@ -330,6 +293,7 @@ const AdmissionsProcessesPage: React.FC = () => {
 
       {openReject.isOpen && (
         <ModalReject
+          onSubmit={() => getAdmissionsProcess()}
           applicationId={openReject.applicationId}
           toggleModal={toggleRejectModal}
         />

@@ -78,8 +78,11 @@ export default function AdmissionApplicationForm({
       const response =
         await AdmissionsLandingService.getApplicationsById(applicationId);
 
-      if (response.applicationId) {
+      if (response.applicationId) {        
         methods.reset(response);
+        methods.setValue("aspirant.documentType", response.aspirant.documentTypeId);
+        methods.setValue("parent.documentType", response.parent.documentTypeId);
+        methods.setValue("emergencyContact.fullName", response.emergencyContact.firstName + " " + response.emergencyContact.lastName);
         const progress = response.completionPercentage;
         response.documents.length === 0 ? setPercentage(progress) : setPercentage(100);
         setCurrentApplication(response);        
@@ -206,7 +209,7 @@ export default function AdmissionApplicationForm({
               icon={{
                 path: "/assets/icon/arrow-right.svg", alt: "arrow right"
               }}
-              blockAccess={currentApplication?.completionPercentage < 100}
+              blockAccess={percentage < 100}
               onClick={() => {submittedApplication();}}
             />
           </div>
