@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect, useState } from "react";
 import InputComponent from "@/components/shared/input/InputComponent";
 import DropdownComponent from "@/components/shared/dropdown/DropdownComponent";
@@ -6,17 +7,34 @@ import MapComponent from "@/components/shared/map/MapComponent";
 import CheckBoxComponent from "@/components/shared/check/CheckBoxComponent";
 import ButtonComponent from "@/components/shared/button/ButtonComponent";
 import { Controller, useForm } from "react-hook-form";
-import { BranchesForm, BranchesResponse } from "@/app/core/interfaces/academicManagement/branches-interfaces";
-import { barriosPorCiudad, ciudadesPorDepartamento, departamentos } from "@/app/core/constants/location-data";
+import {
+  BranchesForm,
+  BranchesResponse,
+} from "@/app/core/interfaces/academicManagement/branches-interfaces";
+import {
+  barriosPorCiudad,
+  ciudadesPorDepartamento,
+  departamentos,
+} from "@/app/core/constants/location-data";
 import { useUI } from "@/providers/ui-context";
 import * as alerts from "@/utils/alerts";
 import { BranchesService } from "@/services/managementAcademic/branches-service";
 import { LevelService } from "@/services/managementAcademic/level-services";
 import DropTableComponent from "@/components/shared/drop-table/DropTable";
-import { ButtonActions, Columns } from "@/app/core/interfaces/tables-interfaces";
+import {
+  ButtonActions,
+  Columns,
+} from "@/app/core/interfaces/tables-interfaces";
 import { GradeService } from "@/services/managementAcademic/grade-service";
-import { ProgressSpinner } from 'primereact/progressspinner';
-import { GradeLevelChildColumnsDropTable, LevelColumnsDropTable } from "@/app/core/interfaces/columns-interfaces";
+import { ProgressSpinner } from "primereact/progressspinner";
+import {
+  GradeLevelChildColumnsDropTable,
+  LevelColumnsDropTable,
+} from "@/app/core/interfaces/columns-interfaces";
+import MapPicker from "@/components/shared/map/MapPicker";
+import { calendarTypeOptions } from "@/app/core/constants/default-const";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { BranchesFormSchema } from "@/app/core/schemas/forms-academic-schemas";
 
 interface BranchesFormProps {
   title?: string;
@@ -29,7 +47,13 @@ interface BranchesFormProps {
 }
 
 const BranchesFormComponent: React.FC<BranchesFormProps> = ({
-    title, hideForm, dataBranches, writeData, resetForm = false, isSubmited, isDetail = false
+  title,
+  hideForm,
+  dataBranches,
+  writeData,
+  resetForm = false,
+  isSubmited,
+  isDetail = false,
 }) => {
   const {
     currentCampus,
@@ -55,18 +79,32 @@ const BranchesFormComponent: React.FC<BranchesFormProps> = ({
     clearErrors,
     watch,
   } = useForm<BranchesForm>({
-    // resolver: zodResolver(brancheSchema),
+    resolver: zodResolver(BranchesFormSchema),
+    defaultValues: {
+      photos: [],
+      has_green_zones: false,
+      has_laboratory: false,
+      has_sports_zones: false,
+    },
   });
   const [uploadedUrls, setUploadedUrls] = useState<string[]>([]);
-  const [uploadGreenAreasUrls, setUploadGreenAreasUrls] = useState<string[] | null>(null);
+  const [uploadGreenAreasUrls, setUploadGreenAreasUrls] = useState<
+    string[] | null
+  >(null);
   const [uploadLabsUrls, setUploadLabsUrls] = useState<string[] | null>(null);
-  const [uploadSportsAreasUrls, setUploadSportsAreasUrls] = useState<string[] | null>(null);
+  const [uploadSportsAreasUrls, setUploadSportsAreasUrls] = useState<
+    string[] | null
+  >(null);
   const [checkGreenAreas, setCheckGreenAreas] = useState<boolean>(false);
   const [checkLabs, setCheckLabs] = useState<boolean>(false);
   const [checkSportsAreas, setCheckSportsAreas] = useState<boolean>(false);
   const [openMap, setOpenMap] = useState<boolean>(false);
   const [levels, setLevels] = useState<any[]>([]);
   const [loadLevels, setLoadLevels] = useState<boolean>(true);
+  const [coords, setCoords] = useState<{ lat: number; lon: number }>({
+    lat: 0,
+    lon: 0,
+  });
   const showToast = alerts.showToast;
   const showConfirm = alerts.showConfirm;
 
@@ -86,8 +124,12 @@ const BranchesFormComponent: React.FC<BranchesFormProps> = ({
     setUploadSportsAreasUrls(urls);
   };
 
-  const [ciudades, setCiudades] = useState<{ label: string; value: string }[]>([]);
-  const [barrios, setBarrios] = useState<{ label: string; value: string }[]>([]);
+  const [ciudades, setCiudades] = useState<{ label: string; value: string }[]>(
+    []
+  );
+  const [barrios, setBarrios] = useState<{ label: string; value: string }[]>(
+    []
+  );
   const [branches, setBranches] = useState<BranchesForm[] | null>(null);
   const [campusId, setCampusId] = useState<string>("");
 
@@ -101,15 +143,14 @@ const BranchesFormComponent: React.FC<BranchesFormProps> = ({
     { nameField: "Nombre grado", key: "displayName" },
     { nameField: "Capacidad máxima", key: "maxCapacity" },
     { nameField: "Valor grado", key: "formattedPrice" },
-  ]
+  ];
 
   const iconEdit = iconsActions.edit;
   const iconDetail = iconsActions.view;
   const iconDelete = iconsActions.delete;
-  const isEdit = writeData ? true : false; 
+  const isEdit = writeData ? true : false;
 
   const handleDepartamentoChange = (value: any) => {
-    
     setValue("department", value);
     setValue("city", ""); // Reset city
     setValue("neighborhood", ""); // Reset neighborhood
@@ -127,7 +168,7 @@ const BranchesFormComponent: React.FC<BranchesFormProps> = ({
   const handleBarrioChange = (value: any) => {
     setValue("neighborhood", value);
   };
-  
+
   const getLevelsCampusBranche = async (brancheId: string) => {
     setLoadLevels(true);
     try {
@@ -138,14 +179,16 @@ const BranchesFormComponent: React.FC<BranchesFormProps> = ({
         for (const item of response.content) {
           const gradesLevel: any = await GradeService.getGradesByLevel(item.id);
           let grades = [];
-          levelsDrop.push({value: item.id, label: item.name});
-          if(gradesLevel?.content){
+          levelsDrop.push({ value: item.id, label: item.name });
+          if (gradesLevel?.content) {
             grades = gradesLevel.content;
             levels.push({
               ...item,
-              periodoAcademico: item.academicPeriod ? item.academicPeriod.name : "N/A",
-              children: grades.length > 0 ? grades : []
-            })
+              periodoAcademico: item.academicPeriod
+                ? item.academicPeriod.name
+                : "N/A",
+              children: grades.length > 0 ? grades : [],
+            });
           }
         }
         handleOptionLevel(levelsDrop);
@@ -160,51 +203,67 @@ const BranchesFormComponent: React.FC<BranchesFormProps> = ({
 
   const addBranche = async (data: BranchesForm) => {
     try {
-        toggleLoading(true);
-        const campus = isEdit ? campusId : currentCampus?.basicData?.id;
-        if(campus){
-          let response = null;
-          if(isEdit && data.id){
-            response = await BranchesService.updateBranches(campus, data.id, data) as any;
-          } else {
-            response = await BranchesService.createBranche(campus, data) as any;
-          }
-          if(response?.success){
-              const sede: BranchesResponse = {
-                ...response.data,
-                display: false,
-                title: response.data?.name ? `${response.data.name} - ${response.data.full_address}` : '',
-              };
-              let updatedBranches: BranchesForm[] = [sede];
-              branches && branches.map((item) => {
-                if (item.id === sede.id) return;
-                updatedBranches.push(item);
-              })
-              
-              showToast(`Sede ${response.data.name}, fue ${isEdit ? "actualizada" : "creada"} con exito!`, "success");
-              addBranches(updatedBranches);
-              dataBranches && dataBranches(updatedBranches);
-              setBranches(updatedBranches);
-              handlerSteps(2);
-              activeNavSteps(2);
-              activeNavSteps(3);
-              isSubmited();
-              hideForm && hideForm();
-              toggleLoading(false);
-          } else {
-              showToast(`Error al ${isEdit ? "actualizar" : "crear"} la sede: ${response.message}`, "error");
-              toggleLoading(false);
-          }
+      toggleLoading(true);
+      const campus = isEdit ? campusId : currentCampus?.basicData?.id;
+      if (campus) {
+        let response = null;
+        if (isEdit && data.id) {
+          response = (await BranchesService.updateBranches(
+            campus,
+            data.id,
+            data
+          )) as any;
         } else {
-          showToast("Debe haber un colegio asociado", "warning");
+          response = (await BranchesService.createBranche(campus, data)) as any;
         }
+        if (response?.success) {
+          const sede: BranchesResponse = {
+            ...response.data,
+            display: false,
+            title: response.data?.name
+              ? `${response.data.name} - ${response.data.full_address}`
+              : "",
+          };
+          let updatedBranches: BranchesForm[] = [sede];
+          branches &&
+            branches.map((item) => {
+              if (item.id === sede.id) return;
+              updatedBranches.push(item);
+            });
+
+          showToast(
+            `Sede ${response.data.name}, fue ${isEdit ? "actualizada" : "creada"} con exito!`,
+            "success"
+          );
+          addBranches(updatedBranches);
+          dataBranches && dataBranches(updatedBranches);
+          setBranches(updatedBranches);
+          handlerSteps(2);
+          activeNavSteps(2);
+          activeNavSteps(3);
+          isSubmited();
+          hideForm && hideForm();
+          toggleLoading(false);
+        } else {
+          showToast(
+            `Error al ${isEdit ? "actualizar" : "crear"} la sede: ${response.message}`,
+            "error"
+          );
+          toggleLoading(false);
+        }
+      } else {
+        showToast("Debe haber un colegio asociado", "warning");
+      }
     } catch (error: any) {
-        console.error(error);
+      if (error?.details) {
+        showToast(error.details.message || "Error al crear la sede", "error");
+      }
+      console.error(error);
     }
     toggleLoading(false);
   };
-  
-  const btnActionsNivel = (item: any): ButtonActions[] =>{
+
+  const btnActionsNivel = (item: any): ButtonActions[] => {
     return [
       {
         tooltip: "Detalle nivel",
@@ -221,9 +280,9 @@ const BranchesFormComponent: React.FC<BranchesFormProps> = ({
         action: () => handleDeleteLevel(item),
         icon: iconDelete,
       },
-    ]
-  }
-  const btnActionsNivelGrados = (item: any): ButtonActions[] =>{
+    ];
+  };
+  const btnActionsNivelGrados = (item: any): ButtonActions[] => {
     return [
       {
         tooltip: "Detalle grado",
@@ -240,14 +299,14 @@ const BranchesFormComponent: React.FC<BranchesFormProps> = ({
         action: () => handleDeleteGrade(item),
         icon: iconDelete,
       },
-    ]
-  }
+    ];
+  };
 
   const handleDeleteLevel = async (item: any) => {
     const consfirm = await showConfirm(
       "Está seguro?",
       `está apunto de eliminar el nivel "${item.displayName}"`,
-      "warning",
+      "warning"
     );
     if (consfirm) {
       toggleLoading(true);
@@ -256,24 +315,27 @@ const BranchesFormComponent: React.FC<BranchesFormProps> = ({
           .then((response) => {
             if (response?.success) {
               toggleLoading(false);
-              showToast(`Nivel "${item.displayName}", eliminado con exito!`, "info");
+              showToast(
+                `Nivel "${item.displayName}", eliminado con exito!`,
+                "info"
+              );
               getLevelsCampusBranche(item.campusBranchId);
             }
           })
           .catch((error) => {
             toggleLoading(false);
-            console.error(error); 
-        });
+            console.error(error);
+          });
       } catch (error: any) {
         console.error(error);
-      } 
+      }
     }
-  }
+  };
   const handleDeleteGrade = async (item: any) => {
     const consfirm = await showConfirm(
       "Está seguro?",
       `está apunto de eliminar el grado "${item.displayName}"`,
-      "warning",
+      "warning"
     );
     if (consfirm) {
       toggleLoading(true);
@@ -282,22 +344,31 @@ const BranchesFormComponent: React.FC<BranchesFormProps> = ({
           .then((response) => {
             if (response?.success) {
               toggleLoading(false);
-              showToast(`Nivel "${item.displayName}", eliminado con exito!`, "info");
+              showToast(
+                `Nivel "${item.displayName}", eliminado con exito!`,
+                "info"
+              );
               getLevelsCampusBranche(item.campusBranchId);
             }
           })
           .catch((error) => {
             toggleLoading(false);
-            console.error(error); 
-        });
+            console.error(error);
+          });
       } catch (error: any) {
         console.error(error);
       }
     }
-  }
+  };
+
+  const handleCoordsChange = (coords: any) => {
+    setCoords(coords);
+    setValue("latitude", coords.lat);
+    setValue("longitude", coords.lon);
+  };
 
   useEffect(() => {
-    if(writeData){
+    if (writeData) {
       setValue("name", writeData.name);
       setValue("street_type", writeData.street_type);
       setValue("number_primary", writeData.number_primary);
@@ -315,6 +386,13 @@ const BranchesFormComponent: React.FC<BranchesFormProps> = ({
       setValue("has_green_zones", writeData.has_green_zones);
       setValue("has_laboratory", writeData.has_laboratory);
       setValue("has_sports_zones", writeData.has_sports_zones);
+      setValue("calendar_type", writeData.calendar_type);
+      setValue("latitude", writeData.latitude);
+      setValue("longitude", writeData.longitude);
+      setCoords({
+        lat: writeData.latitude || 0,
+        lon: writeData.longitude || 0,
+      });
       setValue("id", writeData.id);
       setCampusId(writeData.campus_id);
       getLevelsCampusBranche(writeData.id || "");
@@ -335,249 +413,365 @@ const BranchesFormComponent: React.FC<BranchesFormProps> = ({
       setLoadLevels(false);
     }
   }, [resetForm]);
-  
-  return(
-  <div className="relative flex flex-col p-[1.25rem_1rem_1rem_1rem] gap-[1rem] rounded-[0.5rem] border border-solid border-[#610CF4]">
-    <label className="absolute w-auto top-[-0.8rem] left-4 bg-white text-[#610CF4] font-normal text-[1rem]">
-      {title && title || getName()}
-    </label>
-    <div className="grid grid-cols-4 gap-y-[2rem] gap-x-[1rem] pb-[1rem]">
-      <InputComponent
-        label="Nombre de la sede"
-        placeholder="Ej: Sede Sur, Sede Norte"
-        name="name"
-        className="capitalize"
-        typeInput="text"
-        register={register("name", {
-          disabled: isDetail,
-        })}
-        required
-        error=""
-      />
-      <Controller
-        name="street_type"
-        control={control}
-        defaultValue=""
-        render={({ field }) => (
-          <DropdownComponent
-            disabled={isDetail}
-            name="street_type"
-            label="Calle/Carrera"
-            className="primary"
-            placeholder="Calle, Carrera,"
-            options={[
-              { label: "Calle", value: "Calle" },
-              { label: "Carrera", value: "Carrera" },
-              { label: "Diagonal", value: "Diagonal" },
-              { label: "Transversal", value: "Transversal" },
-            ]}
-            onChange={field.onChange}
-            value={field.value}
-          />
-        )}
-      />
-      <InputComponent
-        label="Nombre de la calle (Opcional)"
-        placeholder="Ej: Calle Bellavista"
-        name="street_name"
-        className="capitalize"
-        typeInput="text"
-        register={register("street_name", {
-          disabled: isDetail,
-        })}
-      />
-      <InputComponent
-        typeInput="number"
-        label="Número"
-        placeholder=""
-        name="number_primary"
-        register={register("number_primary", {
-          disabled: isDetail,
-        })}
-      />
-      <InputComponent
-        label="Complemento"
-        placeholder="Ej:A, B, Sur, Norte"
-        name="complement_primary"
-        className="capitalize"
-        typeInput="text"
-        register={register("complement_primary", {
-          disabled: isDetail,
-        })}
-      />
-      <InputComponent
-        typeInput="number"
-        label="# Número"
-        placeholder=""
-        name="number_secondary"
-        register={register("number_secondary", {
-          disabled: isDetail,
-        })}
-      />
-      <InputComponent
-        label="Complemento"
-        placeholder="Ej:Piso 3"
-        name="complement_secondary"
-        className="capitalize"
-        typeInput="text"
-        register={register("complement_secondary", {
-          disabled: isDetail,
-        })}
-      />
-      <Controller
-        name="department"
-        control={control}
-        defaultValue=""
-        render={({ field }) => (
-          <DropdownComponent
-            disabled={isDetail}
-            name="department"
-            label="Departamento"
-            className="primary"
-            placeholder="Ej: Atlántico, Cundinamarca"
-            options={departamentos}
-            value={field.value}
-            onChange={(value) => {
-              field.onChange(value);
-              handleDepartamentoChange(value);
-            }}
-          />
-        )}
-      />
-      <Controller
-        name="city"
-        control={control}
-        defaultValue=""
-        render={({ field }) => (
-          <DropdownComponent
-            disabled={isDetail}
-            name="city"
-            label="Ciudad"
-            className="primary"
-            placeholder="Escoger ciudad"
-            options={ciudades}
-            value={field.value}
-            onChange={(value) => {
-              field.onChange(value);
-              handleCiudadChange(value);
-            }}
-          />
-        )}
-      />
-      <Controller
-        name="neighborhood"
-        control={control}
-        defaultValue=""
-        render={({ field }) => (
-          <DropdownComponent
-            disabled={isDetail}
-            name="neighborhood"
-            label="Barrio / Localidad"
-            className="primary"
-            placeholder="Escoger barrio"
-            options={barrios}
-            value={field.value}
-            onChange={(value) => {
-              field.onChange(value);
-              handleBarrioChange && handleBarrioChange(value);
-            }}
-          />
-        )}
-      />
-    </div>
-    <hr className="my-[0.5rem]" />
-    { loadLevels ?
-      <div className="flex flex-col justify-center text-center">
-        <ProgressSpinner aria-label="Cargando..." />
-        <span className="text-gray-800 font-bold text-[1rem]">Cargando...</span>
-      </div>
-    : <DropTableComponent<LevelColumnsDropTable, GradeLevelChildColumnsDropTable>
-        columns={columnsLevels}
-        childrenColumns={childColumnsGrade}
-        data={levels}
-        title="Niveles asociados a la sede"
-        btnActions={(row) => btnActionsNivel(row)}
-        btnActionsChild={(row) => btnActionsNivelGrados(row)}
-      />
+
+  useEffect(() => {
+    if (isDetail) {
+      setOpenMap(true);
     }
-    <hr className="my-[0.5rem]" />
-    <ImageUploader
-      maxImages={5}
-      maxSizeMB={30}
-      onChange={handleImagesChange}
-    />
-    <hr className="my-[0.5rem]" />
-    <span className="mb-[1rem] text-[#262626] font-bold text-[1rem]">
-      Fotos adicionales (Opcional)
-    </span>
-    <div className="form-check">
-      <CheckBoxComponent
-        checked={checkGreenAreas}
-        onChange={() => setCheckGreenAreas(prev => !prev)}
-        name="checkGreenAreas"
-        label="¿La sede cuenta con zonas verdes? (Opcional)"
-      />
-    </div>
-    {checkGreenAreas && (
-      <ImageUploader
-        maxImages={5}
-        maxSizeMB={30}
-        onChange={handleImagesGreenAreasChange}
-      />
-    )}
-    <div className="form-check">
-      <CheckBoxComponent
-        checked={checkLabs}
-        name="checkLabs"
-        onChange={() => setCheckLabs(prev => !prev)}
-        label="¿La sede cuenta con laboratorios? (Opcional)"
-      />
-    </div>
-    {checkLabs && (
-      <ImageUploader
-        maxImages={5}
-        maxSizeMB={30}
-        onChange={handleImagesLabsChange}
-      />
-    )}
-    <div className="form-check">
-      <CheckBoxComponent
-        checked={checkSportsAreas}
-        name="checkSportsAreas"
-        onChange={() => setCheckSportsAreas(prev => !prev)}
-        label="¿La sede cuenta con zonas deportivas? (Opcional)"
-      />
-    </div>
-    {checkSportsAreas && (
-      <ImageUploader
-        maxImages={5}
-        maxSizeMB={30}
-        onChange={handleImagesSportsAreasChange}
-      />
-    )}
-    <div className="flex justify-end gap-4">
-      <ButtonComponent
-        className="tertiary-outline"
-        icon={{ path: "/assets/icon/map-02.svg", alt: "localizar-icon" }}
-        label="Localizar en el mapa"
-        onClick={() => setOpenMap((prev) => !prev)}
-      />
-      {hideForm && <ButtonComponent
-        className="secondary"
-        label="Cancelar"
-        onClick={() => hideForm()}
-      />}
-      { isDetail ? null :
-        <ButtonComponent
-          className="primary"
-          type="submit"
-          label={`${isEdit ? "Actualizar" : "Crear"} sede`}
-          onClick={handleSubmit(addBranche)}
+  }, [isDetail]);
+
+  return (
+    <div className="relative flex flex-col p-[1.25rem_1rem_1rem_1rem] gap-[1rem] rounded-[0.5rem] border border-solid border-[#610CF4]">
+      <label className="absolute w-auto top-[-0.8rem] left-4 bg-white text-[#610CF4] font-normal text-[1rem]">
+        {(title && title) || getName()}
+      </label>
+      <div className="grid grid-cols-4 gap-y-[2rem] gap-x-[1rem] pb-[1rem]">
+        <InputComponent
+          label="Nombre de la sede"
+          placeholder="Ej: Sede Sur, Sede Norte"
+          name="name"
+          className="capitalize"
+          typeInput="text"
+          register={register("name", {
+            disabled: isDetail,
+          })}
+          required
+          error={errors.name?.message}
         />
-      }
+        <Controller
+          name="street_type"
+          control={control}
+          render={({ field }) => (
+            <DropdownComponent
+              disabled={isDetail}
+              name="street_type"
+              label="Calle/Carrera"
+              className="primary"
+              placeholder="Calle, Carrera,"
+              options={[
+                { label: "Calle", value: "Calle" },
+                { label: "Carrera", value: "Carrera" },
+                { label: "Diagonal", value: "Diagonal" },
+                { label: "Transversal", value: "Transversal" },
+              ]}
+              required
+              onChange={field.onChange}
+              value={field.value}
+              error={errors.street_type?.message}
+            />
+          )}
+        />
+        <InputComponent
+          label="Nombre de la calle (Opcional)"
+          placeholder="Ej: Calle Bellavista"
+          name="street_name"
+          className="capitalize"
+          typeInput="text"
+          register={register("street_name", {
+            disabled: isDetail,
+          })}
+          error={errors.street_name?.message}
+        />
+        <InputComponent
+          typeInput="number"
+          label="Número"
+          placeholder=""
+          name="number_primary"
+          register={register("number_primary", {
+            disabled: isDetail,
+          })}
+          required
+          error={errors.number_primary?.message}
+        />
+        <InputComponent
+          label="Complemento"
+          placeholder="Ej:A, B, Sur, Norte"
+          name="complement_primary"
+          className="capitalize"
+          typeInput="text"
+          required
+          register={register("complement_primary", {
+            disabled: isDetail,
+          })}
+          error={errors.complement_primary?.message}
+        />
+        <InputComponent
+          typeInput="number"
+          label="# Número"
+          placeholder=""
+          name="number_secondary"
+          required
+          register={register("number_secondary", {
+            disabled: isDetail,
+          })}
+          error={errors.number_secondary?.message}
+        />
+        <InputComponent
+          label="Complemento"
+          placeholder="Ej:Piso 3"
+          name="complement_secondary"
+          className="capitalize"
+          typeInput="text"
+          required
+          register={register("complement_secondary", {
+            disabled: isDetail,
+          })}
+          error={errors.complement_secondary?.message}
+        />
+        <Controller
+          name="department"
+          control={control}
+          defaultValue=""
+          render={({ field }) => (
+            <DropdownComponent
+              disabled={isDetail}
+              name="department"
+              label="Departamento"
+              className="primary"
+              placeholder="Ej: Atlántico, Cundinamarca"
+              options={departamentos}
+              value={field.value}
+              onChange={(value) => {
+                field.onChange(value);
+                handleDepartamentoChange(value);
+              }}
+              required
+              error={errors.department?.message}
+            />
+          )}
+        />
+        <Controller
+          name="city"
+          control={control}
+          defaultValue=""
+          render={({ field }) => (
+            <DropdownComponent
+              disabled={isDetail}
+              name="city"
+              label="Ciudad"
+              className="primary"
+              placeholder="Escoger ciudad"
+              options={ciudades}
+              value={field.value}
+              onChange={(value) => {
+                field.onChange(value);
+                handleCiudadChange(value);
+              }}
+              required
+              error={errors.city?.message}
+            />
+          )}
+        />
+        <Controller
+          name="neighborhood"
+          control={control}
+          defaultValue=""
+          render={({ field }) => (
+            <DropdownComponent
+              disabled={isDetail}
+              name="neighborhood"
+              label="Barrio / Localidad"
+              className="primary"
+              placeholder="Escoger barrio"
+              options={barrios}
+              value={field.value}
+              onChange={(value) => {
+                field.onChange(value);
+                handleBarrioChange && handleBarrioChange(value);
+              }}
+              required
+              error={errors.neighborhood?.message}
+            />
+          )}
+        />
+        <Controller
+          name="calendar_type"
+          control={control}
+          render={({ field }) => (
+            <DropdownComponent
+              name="calendar_type"
+              label="Tipo de calendario"
+              className="primary"
+              options={calendarTypeOptions}
+              onChange={(value) => field.onChange(value)}
+              value={field.value}
+              required
+              disabled={isDetail}
+              error={errors.calendar_type?.message}
+            />
+          )}
+        />
+        <div className="flex items-end">
+          <ButtonComponent
+            size="normal"
+            className="tertiary-outline"
+            icon={{ path: "/assets/icon/map-02.svg", alt: "localizar-icon" }}
+            label="Localizar en el mapa"
+            onClick={() => setOpenMap((prev) => !prev)}
+          />
+        </div>
+        <InputComponent
+          label="Latitud"
+          placeholder="Ej: 4.710989"
+          name="latitude"
+          typeInput="text"
+          required
+          register={register("latitude", {
+            disabled: true,
+          })}
+          error={errors.latitude?.message}
+        />
+        <InputComponent
+          label="Longitud"
+          placeholder="Ej: -74.072090"
+          name="longitude"
+          className="capitalize"
+          typeInput="text"
+          required
+          register={register("longitude", {
+            disabled: true,
+          })}
+          error={errors.longitude?.message}
+        />
+      </div>
+      {openMap && (
+        <>
+          <MapPicker
+            value={coords}
+            onChange={(val) => handleCoordsChange(val)}
+          />
+        </>
+      )}
+      <hr className="my-[0.5rem]" />
+      {loadLevels ? (
+        <div className="flex flex-col justify-center text-center">
+          <ProgressSpinner aria-label="Cargando..." />
+          <span className="text-gray-800 font-bold text-[1rem]">
+            Cargando...
+          </span>
+        </div>
+      ) : (
+        <DropTableComponent<
+          LevelColumnsDropTable,
+          GradeLevelChildColumnsDropTable
+        >
+          columns={columnsLevels}
+          childrenColumns={childColumnsGrade}
+          data={levels}
+          title="Niveles asociados a la sede"
+          btnActions={(row) => btnActionsNivel(row)}
+          btnActionsChild={(row) => btnActionsNivelGrados(row)}
+        />
+      )}
+      <hr className="my-[0.5rem]" />
+      <ImageUploader
+        maxImages={5}
+        maxSizeMB={30}
+        onChange={handleImagesChange}
+      />
+      <hr className="my-[0.5rem]" />
+      <span className="mb-[1rem] text-[#262626] font-bold text-[1rem]">
+        Fotos adicionales (Opcional)
+      </span>
+      <div className="form-check">
+        <Controller
+          name="has_green_zones"
+          control={control}
+          defaultValue={false}
+          render={({ field }) => (
+            <CheckBoxComponent
+              {...field}
+              checked={checkGreenAreas}
+              disabled={isDetail}
+              onChange={(e) => {
+                setCheckGreenAreas(e.target.checked);
+                setValue("has_green_zones", e.target.checked);
+              }}
+              label="¿La sede cuenta con zonas verdes? (Opcional)"
+            />
+          )}
+        />
+      </div>
+      {checkGreenAreas && (
+        <ImageUploader
+          maxImages={5}
+          maxSizeMB={30}
+          onChange={handleImagesGreenAreasChange}
+        />
+      )}
+      <div className="form-check">
+        <Controller
+          name="has_laboratory"
+          control={control}
+          defaultValue={false}
+          render={({ field }) => (
+            <CheckBoxComponent
+              {...field}
+              checked={checkLabs}
+              disabled={isDetail}
+              onChange={(e) => {
+                setCheckLabs(e.target.checked);
+                setValue("has_laboratory", e.target.checked);
+              }}
+              label="¿La sede cuenta con laboratorios? (Opcional)"
+            />
+          )}
+        />
+      </div>
+      {checkLabs && (
+        <ImageUploader
+          maxImages={5}
+          maxSizeMB={30}
+          onChange={handleImagesLabsChange}
+        />
+      )}
+      <div className="form-check">
+        <Controller
+          name="has_sports_zones"
+          control={control}
+          defaultValue={false}
+          render={({ field }) => (
+            <CheckBoxComponent
+              {...field}
+              checked={checkSportsAreas}
+              disabled={isDetail}
+              onChange={(e) => {
+                setCheckSportsAreas(e.target.checked);
+                setValue("has_sports_zones", e.target.checked);
+              }}
+              label="¿La sede cuenta con zonas deportivas? (Opcional)"
+            />
+          )}
+        />
+      </div>
+      {checkSportsAreas && (
+        <ImageUploader
+          maxImages={5}
+          maxSizeMB={30}
+          onChange={handleImagesSportsAreasChange}
+        />
+      )}
+      <div className="flex justify-end gap-4">
+        {hideForm && (
+          <ButtonComponent
+            size="small"
+            className="secondary"
+            label="Cancelar"
+            onClick={() => hideForm()}
+          />
+        )}
+        {isDetail ? null : (
+          <ButtonComponent
+            size="small"
+            className="primary"
+            type="submit"
+            label={`${isEdit ? "Actualizar" : "Crear"} sede`}
+            onClick={handleSubmit(addBranche)}
+          />
+        )}
+      </div>
     </div>
-    {openMap && <MapComponent />}
-  </div>
-)}
+  );
+};
 
 export default BranchesFormComponent;

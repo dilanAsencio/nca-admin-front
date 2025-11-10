@@ -72,11 +72,15 @@ const SchoolPage: React.FC = () => {
           <Filter />
         </div>
         <div className="flex flex-col gap-4">
-          <div className="content-grid-school basis-3/4 grid grid-cols-3 gap-3">
+          <div className="content-grid-school basis-3/4 grid max-[960px]:grid-cols-1 gap-3 max-[1165px]:grid-cols-2 min-[1165px]:grid-cols-3">
             {
               campus?.map((item, index) => {
-                return <CardSchool key={index} nameSchool={item.name.toUpperCase()} onSubmit={() => viewCampus(item)}></CardSchool>;
-              })
+                return (
+                <CardSchool
+                  key={index}
+                  infoSchool={item}
+                  onSubmit={() => viewCampus(item)}></CardSchool>
+              )})
             }
           </div>
           <div className="flex justify-start">

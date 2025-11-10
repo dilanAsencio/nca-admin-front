@@ -1,5 +1,6 @@
 import { apiProxy } from "@/helpers/api-proxy";
 import { ChangePassword, ForgotPassword, LoginFormData, LoginResponse, ResetPassword, ResponseAuth } from "@/app/core/interfaces/auth-interfaces";
+import { AuthHelper } from "@/helpers/auth-helper";
 
 export const authService = {
   
@@ -21,6 +22,8 @@ export const authService = {
       if (!success) {
         throw { success: success, error: message };
       }
+      const tenantData = AuthHelper(data?.accessToken || null);
+      localStorage.setItem("tenant", JSON.stringify(tenantData));
       localStorage.setItem("first_login", data?.isFirstLogin ? "true" : "false");
       localStorage.setItem("auth_token", data?.accessToken || "");
       localStorage.setItem("refresh_token", data?.refreshToken || "");

@@ -1,3 +1,4 @@
+import { CalendarType } from "../../enums/academic-enums";
 
 interface CampusInfo {
   code: string;
@@ -10,20 +11,22 @@ export interface BranchesForm {
   id?: string;
   name: string;
   title?: string;
-  display?: boolean;
   department: string;
   city: string;
   neighborhood: string;
+  calendar_type: 'SEMESTER' | 'TRIMESTER' | 'BIMESTER';
+  latitude: number;
+  longitude: number;
   photos: string[];
   street_type: string;
-  street_name: string;
+  street_name: string | null;
   number_primary: string;
   complement_primary: string;
   number_secondary: string;
   complement_secondary: string;
-  has_green_zones?: boolean;
-  has_laboratory?: boolean;
-  has_sports_zones?: boolean;
+  has_green_zones: boolean;
+  has_laboratory: boolean;
+  has_sports_zones: boolean;
 }
 
 export interface BranchesResponse extends BranchesForm {

@@ -13,6 +13,7 @@ export interface ButtonComponentProps {
     loading?: boolean;
     className?: string;
     onClick?: () => void;
+    isSpinner?: any;
 
 }
 

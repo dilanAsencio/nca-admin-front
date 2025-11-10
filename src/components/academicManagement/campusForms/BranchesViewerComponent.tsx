@@ -17,13 +17,12 @@ import clsx from "clsx";
 
 const BranchesViewer: React.FC<{
     branche: BranchesResponse,
-    hideForm?: () => void;
-    setBranches?: React.Dispatch<React.SetStateAction<BranchesForm[] | null>>
-    ishandleBranche?: (branche: BranchesForm) => void,
+    isVisibleAlert?: boolean,
     handleActions?: (branche: BranchesForm, option: "level" | "grade") => void,
     deleteBranches: () => void,
+    isSubmitedBranches?: () => void,
 }> = ({
-    branche, hideForm, setBranches, ishandleBranche, deleteBranches, handleActions
+    branche, deleteBranches, handleActions, isVisibleAlert = false, isSubmitedBranches
 }) => {
     
     const {toggleModalNivel, toggleModalGrado, toggleLoading, iconsActions} = useUI();
@@ -127,8 +126,8 @@ const BranchesViewer: React.FC<{
     }
 
     const isBranchAlert = (branch: BranchesResponse): boolean => {
-        if (branch?.academic_grade_count !== undefined && branch?.academic_grade_count === 0) return true;
-        if (branch?.academic_level_count !== undefined && branch?.academic_level_count === 0) return true;
+        if (isVisibleAlert && branch?.academic_grade_count !== undefined && branch?.academic_grade_count === 0) return true;
+        if (isVisibleAlert && branch?.academic_level_count !== undefined && branch?.academic_level_count === 0) return true;
         return false;
     }
 
@@ -211,7 +210,7 @@ const BranchesViewer: React.FC<{
           handleModal={() => setIsOpenModalBranche({display: false, op: null})} >
             <BranchesFormComponent
                 isDetail={isOpenModalBranche.op === "detail"}
-                isSubmited={() => setIsOpenModalBranche({display: false, op: null})}
+                isSubmited={() => {setIsOpenModalBranche({display: false, op: null}); isSubmitedBranches && isSubmitedBranches()}}
                 writeData={branche}
                 title={branche.title} />
         </ModalComponent> 

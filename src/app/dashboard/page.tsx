@@ -8,8 +8,7 @@ import AcademicManagementFormsComponent from "@/components/academicManagement/Ac
 import clsx from "clsx";
 import Image from "next/image";
 import { CampusService } from "@/services/managementAcademic/campus-services";
-import ButtonComponent from "@/components/shared/button/ButtonComponent";
-import { BranchesForm, BranchesResponse } from "@/app/core/interfaces/academicManagement/branches-interfaces";
+import { BranchesResponse } from "@/app/core/interfaces/academicManagement/branches-interfaces";
 import BranchesViewer from "@/components/academicManagement/campusForms/BranchesViewerComponent";
 import { Response } from "@/app/core/interfaces/api-interfaces";
 
@@ -162,24 +161,6 @@ const AcademicDashboard: React.FC = () => {
     );
     initialData();
   }
-
-  const handleBranches = (branche: any) => {
-    setCampus((prevCampus) =>
-        prevCampus && prevCampus.map((item) => {
-          if(item.id === branche.campus_id) {
-            return {
-              ...item,
-              branches: item.branches.map((branch: BranchesForm) =>
-                branch.name === branche.name
-                  ? {...branch, display: !branch.display}
-                  : branch
-              )
-            };
-          }
-          return item;
-        }) || []
-    );
-  };
 
   const handleActions = (branche: any, op: "level" | "grade") => {
     if(op === "level") {
@@ -353,9 +334,10 @@ const AcademicDashboard: React.FC = () => {
                           {item.branches && item.branches?.map(
                             (branche: BranchesResponse, index: number) => (
                               <BranchesViewer
+                                isVisibleAlert={true}
                                 branche={branche}
                                 key={index}
-                                ishandleBranche={handleBranches}
+                                isSubmitedBranches={() => toggleCreateSchool()}
                                 deleteBranches={() => initialData()}
                                 handleActions={handleActions}
                               />
@@ -363,13 +345,6 @@ const AcademicDashboard: React.FC = () => {
                           )}
                         </div>
                       ))}
-                      <div className="flex justify-end">
-                        <ButtonComponent
-                          onClick={() => {setViewFormSchool(true); handlerSteps(1);}}
-                          className="primary"
-                          label="Crear otro colegio"
-                        />
-                      </div>
                     </div>
                 </div>
               </div>

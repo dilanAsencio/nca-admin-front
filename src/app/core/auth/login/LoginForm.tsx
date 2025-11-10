@@ -20,6 +20,7 @@ import AuthButton from "@/components/shared/button/AuthButton";
 
 import "./style.css";
 import { useUI } from "@/providers/ui-context";
+import { useTenant } from "@/providers/tenant-context";
 
 const LoginForm = () => {
   const {
@@ -31,6 +32,7 @@ const LoginForm = () => {
     getValues,
   } = useForm({ resolver: zodResolver(loginSchema) });
   const router = useRouter();
+  const { setTenant } = useTenant();
   const dispatch = useDispatch<AppDispatch>();
   const [rememberMe, setRememberMe] = useState(false);
   const [blockAccess, setBlockAccess] = useState(false);
@@ -56,6 +58,8 @@ const LoginForm = () => {
           showToast(resp?.message ? resp?.message : "Autenticación exitosa, debe cambiar la contraseña", "info");
           setValue("password", "");
         }
+        const tenantData = localStorage.getItem("tenant") || null;
+        setTenant(JSON.parse(tenantData || "{}"));
         
         if (localStorage.getItem("first_login") !== "true") {
           router.push('/');

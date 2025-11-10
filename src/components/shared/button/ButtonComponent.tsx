@@ -3,6 +3,7 @@ import { ButtonComponentProps } from "@/app/core/interfaces/shared-interfaces";
 import style from "@/app/font.module.css";
 import "./style.css";
 import Image from "next/image";
+import { ProgressSpinner } from "primereact/progressspinner";
 
 const ButtonComponent: React.FC<ButtonComponentProps> = ({
     icon,
@@ -13,6 +14,7 @@ const ButtonComponent: React.FC<ButtonComponentProps> = ({
     className = "primary",
     size = "normal",
     iconPosition = "left",
+    isSpinner,
 }) => {
 
     return(
@@ -25,6 +27,7 @@ const ButtonComponent: React.FC<ButtonComponentProps> = ({
         { iconPosition === "left" && icon && <Image className="icon-btn" src={icon?.path} alt={icon?.alt} width={20} height={20} loading="lazy" />}
         {label && label}
         { iconPosition === "right" && icon && <Image className="icon-btn" src={icon?.path} alt={icon?.alt} width={20} height={20} loading="lazy" />}
+        {isSpinner && blockAccess && <ProgressSpinner style={{ width: "24px", height: "24px", marginLeft: "0.5rem", marginRight: "0" }} />}
     </button>
     );
 }

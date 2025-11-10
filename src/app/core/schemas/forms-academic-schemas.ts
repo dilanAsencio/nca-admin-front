@@ -39,9 +39,6 @@ export const campusSchema = z.object({
   religion: z
     .string()
     .nonempty("Este campo es requerido!"),
-  calendar_type: z
-    .string()
-    .nonempty("Este campo es requerido!"),
   mission: z
     .string()
     .nonempty("Este campo es requerido!"),
@@ -122,3 +119,46 @@ export const gradoAcademicoSchema = z.object({
     .string({ required_error: "Este campo es requerido!"})
     .nonempty("Este campo es requerido!"),
 });
+
+export const BranchesFormSchema = z.object({
+
+  name: z
+    .string()
+    .nonempty("Este campo es requerido!")
+    .max(200, "El nombre no puede tener más de 200 caracteres"),
+
+
+  department: z.string().nonempty("Este campo es requerido!"),
+  city: z.string().nonempty("Este campo es requerido!"),
+  neighborhood: z.string().nonempty("Este campo es requerido!"),
+
+  calendar_type: z.enum(["SEMESTER", "TRIMESTER", "BIMESTER"], {
+    errorMap: () => ({ message: "Tipo de calendario inválido" }),
+  }),
+
+  latitude: z.number({ required_error: "Este campo es requerido!"}),
+  longitude: z.number({ required_error: "Este campo es requerido!"}),
+
+  // fotos: permitimos array vacío, y aceptamos strings (podría validarse como URL si lo deseas)
+
+  number_primary: z.string().nonempty("Este campo es requerido!"),
+  street_type: z.string({ required_error: "Este campo es requerido!"}).nonempty("Este campo es requerido!"),
+  street_name: z.string().nullable().default(""),
+  complement_primary: z.string().nonempty("Este campo es requerido!"),
+  number_secondary: z.string().nonempty("Este campo es requerido!"),
+  complement_secondary: z.string().nonempty("Este campo es requerido!"),
+
+  has_green_zones: z.boolean().default(false),
+  has_laboratory: z.boolean().default(false),
+  has_sports_zones: z.boolean().default(false),
+  id: z.string().uuid().optional(),
+
+  title: z.string().max(300).optional(),
+
+  photos: z.array(z.string().nonempty()).default([]),
+});
+
+/**
+ * Tipo TypeScript inferido desde el schema
+ */
+export type BranchesFormType = z.infer<typeof BranchesFormSchema>;

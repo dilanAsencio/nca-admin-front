@@ -84,18 +84,6 @@ async function handleProxy(request: NextRequest, method: string) {
 
     return NextResponse.json(response.data);
   } catch (error: any) {
-
-    if (error.response.status === 401) {
-      console.warn("Guard 401 - Token expirado o inválido, redirigiendo...");
-
-      // Elimina cookies inválidas
-      request.cookies.delete("auth_token");
-      request.cookies.delete("auth_tokenP");
-      return NextResponse.json(
-        { error: error.message, details: error.response?.data },
-        { status: error.response?.status || 401 }
-      );
-    }
     console.error("Proxy error:", error);
     return NextResponse.json(
       { error: error.message, details: error.response?.data },

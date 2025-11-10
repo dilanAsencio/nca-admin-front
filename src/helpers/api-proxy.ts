@@ -1,5 +1,5 @@
-import axios from "axios";
 import { PaginateIMPL } from "@/app/core/interfaces/api-interfaces";
+import api from "./api-interceptors";
 
 export async function apiProxy<T = any, R = any>(
   method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH",
@@ -35,15 +35,10 @@ export async function apiProxy<T = any, R = any>(
       },
     };
 
-    const response = await axios(config);
+    const response = await api(config);
     return response.data as R;
   } catch (error: any) {
-    if (error.status === 401) {
-      localStorage.removeItem("auth_token");
-      localStorage.removeItem("auth_tokenP");
-    }
-    console.error("API HELPER Proxy Error:", error);
-    
+    console.error("API HELPER Proxy Error:", error);    
     throw error.response?.data || error;
   }
 }

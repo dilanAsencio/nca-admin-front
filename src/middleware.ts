@@ -12,7 +12,7 @@ export function middleware(request: NextRequest) {
   const resetRoutes = ["/reset-password", "/change-password"];
 
   // Permitir acceso libre a /landing y subrutas
-  if (pathname.startsWith('/landing') || !tokenP) {
+  if (pathname.startsWith('/landing')) {
     return NextResponse.next();
   }
 
