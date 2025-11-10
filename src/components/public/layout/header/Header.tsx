@@ -76,7 +76,8 @@ const Header: React.FC = () => {
       <div className="content-profile">
         <div
           ref={iconRef}
-          className="custom-profile hidden h-[2.813rem] w-[5.438rem] justify-between
+          onClick={() => setOpen((prev) => !prev)}
+          className="custom-profile hidden h-[2.813rem] w-[5.438rem] justify-between cursor-pointer
           xl:flex xl:items-center xl:gap-3.5 xl:rounded-4xl xl:px-2 xl:py-1.5"
         >
           <img
@@ -88,7 +89,6 @@ const Header: React.FC = () => {
           />
           <FontAwesomeIcon
             icon={faChevronDown}
-            onClick={() => setOpen((prev) => !prev)}
             className={`w-4 h-4 transition-transform ${open ? "rotate-180" : "rotate-0"}`}
           />
         </div>

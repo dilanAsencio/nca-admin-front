@@ -24,10 +24,10 @@ import ModalComments from "./components/ModalComments";
 import ModalApproved from "./components/ModalApprove";
 import ModalReject from "./components/ModalReject";
 import ModalDetail from "./components/ModalDetail";
+import ButtonPopUpComponent from "@/components/shared/button/ButtonPopUp";
 
 const AdmissionsProcessesPage: React.FC = () => {
   const { toggleLoading, iconsActions, toggleModule } = useUI();
-  // const [branches, setBranches] = useState<any[] | null>([]);
   const [applications, setApplications] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalItems, setTotalItems] = useState<number>(0);
@@ -58,6 +58,44 @@ const AdmissionsProcessesPage: React.FC = () => {
     alt: "icon-school",
   };
 
+  const optionsActions = (row: any): { label: string; onClick: () => void, icon: {path: string; alt: string} }[] =>{
+    return [
+      {
+        label: "Detalle solicitud",
+        onClick: () => {
+          setOpenDetail({ isOpen: true, applicationId: row.applicationId });
+        },
+        icon: iconDetail,
+      },
+      {
+        label: "Aprobar solicitud",
+        onClick: () => {
+          setOpenApproved({
+            isOpen: true,
+            applicationId: row.applicationId,
+          })
+        },
+        icon: iconApprove,
+      },
+      {
+        label: "Rechazar solicitud",
+        onClick: () => {
+          setOpenReject({ isOpen: true, applicationId: row.applicationId })
+        },
+        icon: iconReject,
+      },
+      {
+        label: "Agregar comentario",
+        onClick: () => {
+          setOpenComments({
+            isOpen: true,
+            applicationId: row.applicationId,
+          });
+        },
+        icon: iconComment,
+      },
+    ]
+  }
   const columns = [
     { key: "parentName", nameField: "Nombre Padre" },
     { key: "aspirantName", nameField: "Nombre Aspirante" },
@@ -86,78 +124,12 @@ const AdmissionsProcessesPage: React.FC = () => {
       key: "statusR",
       nameField: "Acciones",
       render: (row: any) => (
-        <div className="flex">
-          <Tooltip target=".tooltip-target0" />
-          <div
-            onClick={() => {
-              setOpenDetail({ isOpen: true, applicationId: row.applicationId });
-            }}
-            className="mr-3 cursor-pointer tooltip-target0"
-            data-pr-tooltip={"Detalle"}
-            data-pr-position="top"
-          >
-            <Image
-              src={iconDetail.path}
-              alt={iconDetail.alt}
-              width={24}
-              height={24}
-            />
-          </div>
-          <Tooltip target=".tooltip-target1" />
-          <div
-            onClick={() =>
-              setOpenApproved({
-                isOpen: true,
-                applicationId: row.applicationId,
-              })
-            }
-            className="mr-3 cursor-pointer tooltip-target1"
-            data-pr-tooltip={"Aprobar"}
-            data-pr-position="top"
-          >
-            <Image
-              src={iconApprove.path}
-              alt={iconApprove.alt}
-              width={24}
-              height={24}
-            />
-          </div>
-          <Tooltip target=".tooltip-target1" />
-          <div
-            onClick={() =>
-              setOpenReject({ isOpen: true, applicationId: row.applicationId })
-            }
-            className="mr-3 cursor-pointer tooltip-target1"
-            data-pr-tooltip={"Rechazar"}
-            data-pr-position="top"
-          >
-            <Image
-              src={iconReject.path}
-              alt={iconReject.alt}
-              width={24}
-              height={24}
-            />
-          </div>
-          <Tooltip target=".tooltip-target1" />
-          <div
-            onClick={() =>
-              setOpenComments({
-                isOpen: true,
-                applicationId: row.applicationId,
-              })
-            }
-            className="cursor-pointer tooltip-target1"
-            data-pr-tooltip={"Comentario"}
-            data-pr-position="top"
-          >
-            <Image
-              src={iconComment.path}
-              alt={iconComment.alt}
-              width={23}
-              height={23}
-            />
-          </div>
-        </div>
+        <ButtonPopUpComponent
+          size="small"
+          className="primary-outline"
+          label="Acciones"
+          options={optionsActions(row)}
+        />
       ),
     },
   ];

@@ -1,6 +1,7 @@
 import { apiProxy } from "@/helpers/api-proxy";
 import { ResponseAuth } from "@/app/core/interfaces/auth-interfaces";
 import axios from "axios";
+import { AuthHelper } from "@/helpers/auth-helper";
 
 export interface LoginPayload {
   username: string;
@@ -75,14 +76,14 @@ export const authService = {
         };
       }
 
-
       const { success, data, message, timestamp } = response;
       const { access_token, refresh_token } = data;
-
       localStorage.setItem("auth_tokenP", access_token);
       localStorage.setItem("refresh_tokenP", refresh_token);
 
       document.cookie = `auth_tokenP=${access_token}; path=/;`;
+      const tenantData = AuthHelper(data?.accessToken || null);
+      localStorage.setItem("tenant", JSON.stringify(tenantData));
       
       return {
         success,

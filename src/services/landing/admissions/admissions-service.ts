@@ -1,25 +1,5 @@
 import { apiProxy } from "@/helpers/api-proxy";
-import { PaginateIMPL, Response } from "@/app/core/interfaces/api-interfaces";
 import { AdmissionApplication } from "@/app/core/interfaces/public/admissions-interfaces";
-import axios from "axios";
-
-const token = document.cookie.match(/auth_token=([^;]+)/)?.[1] || false;
-const tokenP = document.cookie.match(/auth_tokenP=([^;]+)/)?.[1] || false;
-const authToken = token || tokenP || "";
-const instance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
-  headers: {
-    "Authorization": `Bearer ${authToken}`,
-    "Content-Type": "multipart/form-data",
-  },
-});
-
-interface ApplicationsFilter {
-    campusId?: string;
-    gradeId?: string;
-    status?: string;
-}
-
 
 export const AdmissionsLandingService = {
 

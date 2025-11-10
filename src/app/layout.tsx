@@ -9,6 +9,7 @@ import MainContent from "@/app/core/layout/main/MainContent";
 import { PrimeReactProvider } from 'primereact/api';
 
 import dynamic from "next/dynamic";
+import { TenantProvider } from "@/providers/tenant-context";
 const PersistGate = dynamic(
   () =>
     import("redux-persist/integration/react").then((mod) => mod.PersistGate),
@@ -39,11 +40,13 @@ export default function RootLayout({
           <PersistGate loading={null} persistor={persistor}>
             <PrimeReactProvider>
               <UIProvider>
-                <div className="app-layout h-[100vh] bg-[#FCFBFF]">
-                  <div className="main-content">
-                    <MainContent>{children}</MainContent>
+                <TenantProvider>
+                  <div className="app-layout h-[100vh] bg-[#FCFBFF]">
+                    <div className="main-content">
+                      <MainContent>{children}</MainContent>
+                    </div>
                   </div>
-                </div>
+                </TenantProvider>
               </UIProvider>
             </PrimeReactProvider>
           </PersistGate>

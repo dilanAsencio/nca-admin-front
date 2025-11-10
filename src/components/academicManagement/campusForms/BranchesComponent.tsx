@@ -48,7 +48,6 @@ const BranchesComponent: React.FC<{onNext: () => void, onBack: () => void, isDet
           <BranchesViewer
             key={branche.id}
             branche={branche}
-            setBranches={setBranches}
             deleteBranches={() => setShowForm(false)}
           />
         )}

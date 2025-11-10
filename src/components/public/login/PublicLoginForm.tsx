@@ -9,6 +9,9 @@ import { faUser as faUserRegular, faEye, faEyeSlash } from "@fortawesome/free-re
 import { publicLoginThunk, AppDispatch } from "@/providers/store/public-auth-store";
 import * as alerts from "@/utils/alerts";
 import { useLanding } from "@/providers/landing-context";
+import ButtonComponent from "@/components/shared/button/ButtonComponent";
+import { ProgressSpinner } from "primereact/progressspinner";
+import { useTenant } from "@/providers/tenant-context";
 
 interface LoginFormData {
   username: string;
@@ -27,6 +30,7 @@ const errorMessage = {
 
 export default function PublicLoginForm({ onClose }: PublicLoginFormProps) {
   const router = useRouter();
+  const { setTenant } = useTenant();
   const { handleMenu } = useLanding();
   const dispatch = useDispatch<AppDispatch>();
   const [showPassword, setShowPassword] = useState(false);
@@ -52,9 +56,11 @@ export default function PublicLoginForm({ onClose }: PublicLoginFormProps) {
     dispatch(publicLoginThunk(payload) as any)
       .unwrap()
       .then((resp: any) => {
+        const tenantData = localStorage.getItem("tenant") || null;
+        setTenant(JSON.parse(tenantData || "{}"));
         localStorage.setItem("username", data.username);
         showToast(resp?.message, "info");
-        reset()
+        reset();
         onClose();
         router.push("/landing");
         handleMenu("home");
@@ -77,7 +83,7 @@ export default function PublicLoginForm({ onClose }: PublicLoginFormProps) {
   return (
     <div className="bg-white rounded-xl shadow-xl p-6 w-[320px] sm:w-[360px]">
       <h3 className="text-center font-semibold text-lg mb-6">
-        <FontAwesomeIcon icon={faUserRegular} className="mr-1"/>
+        <FontAwesomeIcon icon={faUserRegular} className="mr-1" />
         Iniciar sesión
       </h3>
 
@@ -127,29 +133,18 @@ export default function PublicLoginForm({ onClose }: PublicLoginFormProps) {
           <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
         )}
 
-        <button
+        <ButtonComponent
           type="submit"
-          disabled={isLoading}
-          className="btn-custom transition-colors py-2 w-full bg-gray-300 hover:bg-gray-400 text-white font-medium mb-3"
-        >
-          {isLoading ? "Ingresando..." : "Ingresar"}
-        </button>
-
-        {/* <button
-          type="button"
-          onClick={() => {
-            onClose();
-            router.push("/auth/register");
-          }}
-          className="btn-custom transition-colors py-2 w-full border-2 border-red-500 hover:bg-red-50 font-medium mb-2"
-        >
-          Registrarte
-        </button> */}
+          size="small"
+          label={isLoading ? "Iniciando sesión..." : "Ingresar"}
+          blockAccess={isLoading}
+          isSpinner={true}
+          className="primary w-full"
+        />
 
         {/* Recuperar contraseña */}
         <div className="text-center text-sm text-black">
-          ¿Olvidaste tu contraseña?{" "}
-          <br />
+          ¿Olvidaste tu contraseña? <br />
           Recupérala{" "}
           <button
             type="button"

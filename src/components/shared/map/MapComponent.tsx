@@ -11,7 +11,7 @@ interface MapComponentProps {
 }
 
 const MapComponent: React.FC<MapComponentProps> = ({
-  position = [4.60971, -74.08175], // Bogotá por defecto
+  position = [4.570868, -74.297333], // Bogotá por defecto
   zoom = 14,
 }) => {
   const [searchValue, setSearchValue] = useState("");

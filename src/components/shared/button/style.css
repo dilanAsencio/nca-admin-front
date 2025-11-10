@@ -54,7 +54,7 @@
         focus:border-[#610CF4]
 
         /* :disabled */
-        disabled:opacity-15
+        disabled:opacity-45
 }
 
 .btn-custom.primary-outline {

@@ -14,6 +14,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { campusSchema } from "@/app/core/schemas/forms-academic-schemas";
 import clsx from "clsx";
 import { Response } from "@/app/core/interfaces/api-interfaces";
+import { genderOptions, religionOptions } from "@/app/core/constants/default-const";
 
 const BasicDataForm: React.FC<{onBack: () => void, onNext: () => void, isEdit: boolean, isDetail: boolean}> = ({onBack, onNext, isEdit, isDetail}) => {
     const showToast = alerts.showToast;
@@ -34,7 +35,6 @@ const BasicDataForm: React.FC<{onBack: () => void, onNext: () => void, isEdit: b
      });
 
     const [blockForm, setBlockForm] = useState(true);
-    const [previewImg, setPreviewImg] = useState("");
 
     const onSubmit = async (data: any) => {
         toggleLoading(true);
@@ -165,11 +165,7 @@ const BasicDataForm: React.FC<{onBack: () => void, onNext: () => void, isEdit: b
                         label="Género del colegio"
                         className='primary'
                         placeholder="Escoger género"
-                        options={[
-                            { label: "Masculino", value: "male" },
-                            { label: "Femenino", value: "female" },
-                            { label: "Mixto", value: "mixed" },
-                        ]}
+                        options={genderOptions}
                         onChange={(value) => field.onChange(value)}
                         value={field.value}
                         disabled={isDetail}
@@ -266,39 +262,12 @@ const BasicDataForm: React.FC<{onBack: () => void, onNext: () => void, isEdit: b
                         label="Religión"
                         className='primary'
                         placeholder="Escoge la religión"
-                        options={[
-                            { label: "Catolica", value: "Cathalic" },
-                            { label: "Evangélico", value: "Evangelical" },
-                            { label: "Mormon", value: "Mormon" },
-                        ]}
+                        options={religionOptions}
                         onChange={(value) => field.onChange(value)}
                         value={field.value}
                         required
                         disabled={isDetail}
                         error={errors.religion && errors.religion.message as string}
-                        />
-                    )}
-                    />
-                <Controller
-                    name="calendar_type"
-                    control={control}
-                    defaultValue=""
-                    render={({ field }) => (
-                        <DropdownComponent
-                        name='calendar_type'
-                        label="Tipo de calendario"
-                        className='primary'
-                        placeholder="Ejemplo: Calendario A"
-                        options={[
-                            { label: "A", value: "A" },
-                            { label: "B", value: "B" },
-                            { label: "Flexible", value: "Flexible" },
-                        ]}
-                        onChange={(value) => field.onChange(value)}
-                        value={field.value}
-                        required
-                        disabled={isDetail}
-                        error={errors.calendar_type && errors.calendar_type.message as string}
                         />
                     )}
                     />

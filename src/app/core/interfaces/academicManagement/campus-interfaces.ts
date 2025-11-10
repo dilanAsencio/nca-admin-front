@@ -14,7 +14,6 @@ export interface CampusForm {
     legal_name: string;
     max_students: number;
     foundation_year: number;
-    calendar_type: CalendarType;
     logo_url?: string;
     custom_fields?: {
         [key: string]: Record<string, any>;
