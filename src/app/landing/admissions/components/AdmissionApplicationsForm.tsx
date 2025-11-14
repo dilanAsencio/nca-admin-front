@@ -84,7 +84,7 @@ export default function AdmissionApplicationForm({
         methods.setValue("parent.documentType", response.parent.documentTypeId);
         methods.setValue("emergencyContact.fullName", response.emergencyContact.firstName + " " + response.emergencyContact.lastName);
         const progress = response.completionPercentage;
-        response.documents.length === 0 ? setPercentage(progress) : setPercentage(100);
+        setPercentage(progress);
         setCurrentApplication(response);        
       }
     } catch (error: any) {

@@ -126,8 +126,8 @@ export default function DropsSelectsGrade({
       getCampusBranches(currentData.campusId);
 
       // Extrae solo los IDs
-      const campusBrancheIds = currentData.campusesBranches?.map((c: any) => c.campusBranchId) || [];
-
+      const campusBrancheIds = currentData.campusesBranches?.map((c: any) => c.campusBranchId) || [];      
+      getGrades(currentData.campusBranchId);
       // ⚙️ Pre-cargar los grados de los campus seleccionados
       if (campusBrancheIds.length > 0) {
         campusBrancheIds.forEach((campusId: string) => getGrades(campusId));
