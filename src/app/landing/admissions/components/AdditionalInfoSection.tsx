@@ -14,6 +14,17 @@ export default function AdditionalInfoSection({disabled = false}: Props) {
   return (
     <div className="flex flex-col gap-4">
       <TextAreaComponent
+        label="¿Cómo supo de nosotros?"
+        placeholder="Ej: Recomendación, redes sociales..."
+        name="howDidYouKnow"
+        rows={3}
+        required={true}
+        register={register("howDidYouKnow")}
+        disabled={disabled}
+        error={errors.howDidYouKnow?.message}
+      />
+
+      <TextAreaComponent
         label="Condiciones especiales"
         placeholder="Ej: Alergias, TDAH, dislexia..."
         name="specialConditions"
@@ -21,16 +32,6 @@ export default function AdditionalInfoSection({disabled = false}: Props) {
         register={register("specialConditions")}
         disabled={disabled}
         error={errors.specialConditions?.message}
-      />
-
-      <TextAreaComponent
-        label="¿Cómo supo de nosotros?"
-        placeholder="Ej: Recomendación, redes sociales..."
-        name="howDidYouKnow"
-        rows={2}
-        register={register("howDidYouKnow")}
-        disabled={disabled}
-        error={errors.howDidYouKnow?.message}
       />
 
       <TextAreaComponent

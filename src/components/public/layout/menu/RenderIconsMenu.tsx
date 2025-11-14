@@ -55,7 +55,7 @@ const RenderIcon: React.FC<{name: string}> = ({name}) => {
             </svg>
           </div>
         );
-      case "inscripcion":
+      case "registrations":
         
         return (
           <div className='container-icon'>

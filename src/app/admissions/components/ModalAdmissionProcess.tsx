@@ -6,12 +6,12 @@ import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as alerts from "@/utils/alerts";
 import ModalComponent from "@/components/ui/ModalComponent";
-import { LevelService } from "@/services/managementAcademic/level-services";
+import { LevelService } from "@/services/admin/managementAcademic/level-services";
 import { AcademicLevelResponse } from "@/app/core/interfaces/academicManagement/academic-level-interfaces";
 import { AdmissionProcessSchema } from "@/app/core/schemas/admissions-schema";
 import { z } from "zod";
 import AdmissionForm from "./AdmissionForm";
-import { AdmissionsServices } from "@/services/admissions/admissions-service";
+import { AdmissionsServices } from "@/services/admin/admissions/admissions-service";
 
 export type AdmissionProcessFormData = z.infer<typeof AdmissionProcessSchema>;
 

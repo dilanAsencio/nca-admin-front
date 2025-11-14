@@ -1,8 +1,12 @@
 import { NextResponse, NextRequest } from "next/server";
 import axios from "axios";
 
+const API_URL_SERVER = process.env.API_URL_SERVER || "http://localhost";
+const API_PORT = process.env.API_PORT || ":8080/api/";
+const API_PAYMENTS_PORT = process.env.API_PAYMENTS_PORT || ":8090/api/";
+
 const api = axios.create({
-  baseURL: process.env.API_URL_SERVER || "http://localhost:8080",
+  baseURL: API_URL_SERVER+API_PORT || "http://localhost:8080",
 });
 
 /**
@@ -36,6 +40,7 @@ async function handleProxy(request: NextRequest, method: string) {
       return NextResponse.json({ error: "Endpoint required" }, { status: 400 });
 
     const contentType = searchParams.get("contentType");
+    const microservice = searchParams.get("microservice") || "academicManagement";
     const token = request.headers.get("authorization");
 
     // Extrae todos los parámetros de paginación
@@ -72,6 +77,7 @@ async function handleProxy(request: NextRequest, method: string) {
     }
     
     const response = await api.request({
+      baseURL: microservice === "payments" ? API_URL_SERVER+API_PAYMENTS_PORT : API_URL_SERVER+API_PORT,
       url: fullEndpoint,
       method,
       data: body,

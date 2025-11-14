@@ -13,6 +13,7 @@ export interface ModuleItemProps {
   icon?: string;
   path?: string;
   drop?: boolean;
+  index?: number;
   children?: ModuleItemProps[];
 }
 

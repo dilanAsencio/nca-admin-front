@@ -9,14 +9,16 @@
  * @returns {string} A string representing the currency value according to the given locale and currency.
  */
 export function formatCurrency(value: string, locale = "es-CO", currency = "COP") {
-  const numeric = value.replace(/[^\d]/g, "");
-  if (!numeric) return "";
-  const number = parseInt(numeric, 10);
+  const numeric = value;
+  
+  if (!numeric) return "$ -";
+  const number = parseFloat(numeric);
+  
   return number.toLocaleString(locale, {
     style: "currency",
     currency,
     minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
+    maximumFractionDigits: 2,
   });
 }
 

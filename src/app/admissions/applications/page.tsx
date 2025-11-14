@@ -5,7 +5,7 @@ import BreadcumbComponent from "@/components/shared/breadcumb/BreadcumbComponent
 
 import style from "@/app/font.module.css";
 import { useEffect, useState } from "react";
-import { AdmissionsServices } from "@/services/admissions/admissions-service";
+import { AdmissionsServices } from "@/services/admin/admissions/admissions-service";
 import ModalAdmissionsForm from "../components/ModalAdmissionProcess";
 import TableComponent from "@/components/shared/table/TableComponent";
 import { useUI } from "@/providers/ui-context";
@@ -13,10 +13,10 @@ import { ButtonActions } from "../../core/interfaces/tables-interfaces";
 import { showToast } from "@/utils/alerts";
 import SearchComponent from "@/app/admissions/components/Search";
 import TabsComponent from "@/components/shared/tabs/TabsComponent";
-import { BranchesService } from "@/services/managementAcademic/branches-service";
+import { BranchesService } from "@/services/admin/managementAcademic/branches-service";
 import { BranchesResponse } from "@/app/core/interfaces/academicManagement/branches-interfaces";
 import { Response } from "@/app/core/interfaces/api-interfaces";
-import { ApplicationsService } from "@/services/admissions/applications-service";
+import { ApplicationsService } from "@/services/admin/admissions/applications-service";
 import { DateUtils } from "@/utils/date-utils";
 import { Tooltip } from "primereact/tooltip";
 import Image from "next/image";

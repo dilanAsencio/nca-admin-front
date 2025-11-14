@@ -33,6 +33,7 @@ export interface SimpleTableProps<T> {
   title?: string;
   columns: SimpleTableColumn<T>[];
   data: T[];
+  hideHeader?: boolean;
   paginate?: {
     totalItems: number;
     itemsPerPage: number;
@@ -50,6 +51,7 @@ function TableComponent<T>({
   data,
   btnActions,
   paginate,
+  hideHeader = false,
 }: SimpleTableProps<T>) {
   const { iconsActions } = useUI();
   const iconFilter = iconsActions.filter;
@@ -109,11 +111,12 @@ function TableComponent<T>({
   return (
     <div className={clsx("custom-table", style["font-outfit"])}>
       {title && (
-        <div className="p-2 font-medium text-lg text-gray-900">{title}</div>
+        <div className="font-medium text-lg text-gray-900">{title}</div>
       )}
 
-      <div className="p-2 flex flex-col max-w-[100%] overflow-x-auto gap-[1rem]">
+      <div className="flex flex-col max-w-[100%] overflow-x-auto gap-[1rem]">
         <table className="w-full">
+          {hideHeader ? null : (
           <thead className="custom-border-b">
             <tr className="text-left text-sm font-semibold text-gray-800">
               {columns.map((col) => (
@@ -195,6 +198,7 @@ function TableComponent<T>({
               )}
             </tr>
           </thead>
+          )}
           <tbody className="custom-border-b">
             {data.length === 0 ? (
               <tr>

@@ -7,7 +7,7 @@ import DropdownComponent from "@/components/shared/dropdown/DropdownComponent";
 import InputComponent from "@/components/shared/input/InputComponent";
 import { InputImageComponent } from "@/components/shared/input/InputImage";
 import TextAreaComponent from "@/components/shared/input/TextAreaComponent";
-import { CampusService } from "@/services/managementAcademic/campus-services";
+import { CampusService } from "@/services/admin/managementAcademic/campus-services";
 import { useUI } from "@/providers/ui-context";
 import * as alerts from "@/utils/alerts";
 import { zodResolver } from "@hookform/resolvers/zod";

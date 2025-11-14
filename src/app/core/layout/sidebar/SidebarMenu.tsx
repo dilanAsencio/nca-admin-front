@@ -6,7 +6,7 @@ import { useUI } from "@/providers/ui-context";
 
 const SidebarMenu: React.FC = () => {
   const { isOpenSidebar, hoverSidebar } = useUI();
-  const modules:ModuleItemProps[] = [
+  const modules:any[] = [
     {
       label: "Gestión Académica",
       name: "dashboard",
@@ -42,11 +42,17 @@ const SidebarMenu: React.FC = () => {
       icon: "/assets/icon/currency-coin-dollar.svg",
       children: [
         {
-          label: "Matriculas",
-          name: "payments-registrations",
-          path: "/registrations",
+          label: "Conceptos de Pago",
+          name: "payments-concepts",
+          path: "/concepts",
         },
       ]
+    },
+    {
+      label: "Gestión Estudiantes",
+      name: "students-management",
+      path: "/students",
+      icon: "/assets/icon/sidebar/graduetion.svg",
     },
   ];
 
@@ -63,8 +69,9 @@ const SidebarMenu: React.FC = () => {
             className={`${isOpenSidebar || hoverSidebar ? "pl-[1rem]" : "px-[0.75rem]"}`} alt="logo-nexus" />
         </div>
         <nav className="sidebar-nav overflow-y-auto w-[100%] flex flex-col gap-[0.313rem]">
-          {modules.map((module) => (
+          {modules.map((module, index) => (
             <ModuleItem
+              index={index}
               key={module.label}
               path={module.path}
               label={module.label}

@@ -1,16 +1,10 @@
 import { apiProxy } from "@/helpers/api-proxy";
 import { PaginateIMPL, Response } from "@/app/core/interfaces/api-interfaces";
-
-interface ApplicationsFilter {
-    campusId?: string;
-    gradeId?: string;
-    status?: string;
-}
+import { PaymentConfig } from "@/app/payments/concepts/core/interfaces/paymentsConcepts-interfaces";
 
 const API_V = process.env.NEXT_PUBLIC_API_V || "v1";
 
-
-export const RegistrationsService = {
+export const PaymentsParentsService = {
    
   /**
    * Retrieves a list of payment concepts for a given academic year, filtered by isActive and isVigente,
@@ -22,10 +16,10 @@ export const RegistrationsService = {
    * @returns A Promise with a Response object containing the response data.
    * @throws { success: false, error: string } - If the retrieval fails.
    */
-  getPaymentConcept: async (
+  getPayments: async (
     academicYear: number,
-    isActive: boolean,
-    isVigente: boolean,
+    isActive: boolean | null,
+    isVigente: boolean | null,
     paginate: PaginateIMPL,
   ): Promise<Response<any>> => {
     try {
@@ -36,7 +30,7 @@ export const RegistrationsService = {
         if (isVigente) queryParams.append("isVigente", isVigente.valueOf().toString());
 
         // Construye el endpoint final
-        const endpoint = `${API_V}/admin/payment-concepts${
+        const endpoint = `${API_V}/parent/payment-concepts${
             queryParams.toString() ? `?${queryParams.toString()}` : ""
         }`;
         const response = await apiProxy("GET", endpoint, paginate);
@@ -46,20 +40,17 @@ export const RegistrationsService = {
     }
   },
 
-  
-/**
- * Rejects an admission application.
- * @param applicationId - The ID of the admission application to reject.
- * @param data - An object containing the reason for rejecting the application, a comment and a flag indicating if an email should be sent to the applicant.
- * @returns A Promise with a Response object containing the response data.
- * @throws { success: false, error: string } - If the rejection fails.
- */
-  admissionApplicationReject: async (
-    applicationId: string,
-    data: {reason: string, comments: string, sendEmail: boolean},
+  /**
+   * Submits a payment for a given payment concept ID.
+   * @param paymentConceptId - The ID of the payment concept to submit.
+   * @returns A Promise with a Response object containing the response data.
+   * @throws { success: false, error: string } - If the submission fails.
+   */
+  submitPayment: async (
+    paymentConceptId: string,
   ): Promise<Response<any>> => {
     try {
-        const response = await apiProxy("POST", `admin/admission-applications/${applicationId}/reject`, undefined, data);
+        const response = await apiProxy("PATCH", `${API_V}/parent/payment-concepts/${paymentConceptId}`);
         return response;
     } catch (error) {
         throw { success: false, error: error || "Error al obtener la solicitud" };

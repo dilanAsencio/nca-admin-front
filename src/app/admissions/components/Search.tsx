@@ -4,12 +4,12 @@ import { useEffect, useState } from "react";
 import clsx from "clsx";
 import DropdownComponent from "../../../components/shared/dropdown/DropdownComponent";
 import { useUI } from "@/providers/ui-context";
-import { CampusService } from "@/services/managementAcademic/campus-services";
+import { CampusService } from "@/services/admin/managementAcademic/campus-services";
 import { Response } from "@/app/core/interfaces/api-interfaces";
-import { GradeService } from "@/services/managementAcademic/grade-service";
+import { GradeService } from "@/services/admin/managementAcademic/grade-service";
 import { showToast } from "@/utils/alerts";
 import ButtonComponent from "@/components/shared/button/ButtonComponent";
-import { BranchesService } from "@/services/managementAcademic/branches-service";
+import { BranchesService } from "@/services/admin/managementAcademic/branches-service";
 
 const SearchComponent: React.FC<{
   changeValue?: (values: {

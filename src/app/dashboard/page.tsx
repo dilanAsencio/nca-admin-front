@@ -7,18 +7,18 @@ import CardActionComponent from "@/components/shared/cardAction/CardActionCompon
 import AcademicManagementFormsComponent from "@/components/academicManagement/AcademicManagementComponent";
 import clsx from "clsx";
 import Image from "next/image";
-import { CampusService } from "@/services/managementAcademic/campus-services";
+import { CampusService } from "@/services/admin/managementAcademic/campus-services";
 import { BranchesResponse } from "@/app/core/interfaces/academicManagement/branches-interfaces";
 import BranchesViewer from "@/components/academicManagement/campusForms/BranchesViewerComponent";
 import { Response } from "@/app/core/interfaces/api-interfaces";
 
 import "./style.css";
-import { LevelService } from "@/services/managementAcademic/level-services";
+import { LevelService } from "@/services/admin/managementAcademic/level-services";
 import * as alerts from "@/utils/alerts";
 import { useUI } from "@/providers/ui-context";
 import BranchesFormComponent from "@/components/academicManagement/campusForms/BranchesFormComponent";
 import ButtonPopUpComponent from "@/components/shared/button/ButtonPopUp";
-import { BranchesService } from "@/services/managementAcademic/branches-service";
+import { BranchesService } from "@/services/admin/managementAcademic/branches-service";
 import ModalLevelForm from "@/components/academicManagement/ModalLevelForm";
 import ModalGradeForm from "@/components/academicManagement/ModalGradeForm";
 

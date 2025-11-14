@@ -6,7 +6,7 @@ import BreadcumbComponent from "@/components/shared/breadcumb/BreadcumbComponent
 import style from "@/app/font.module.css";
 import { useEffect, useState } from "react";
 import CardActionComponent from "@/components/shared/cardAction/CardActionComponent";
-import { AdmissionsServices } from "@/services/admissions/admissions-service";
+import { AdmissionsServices } from "@/services/admin/admissions/admissions-service";
 import ModalAdmissionsForm from "../components/ModalAdmissionProcess";
 import TableComponent from "@/components/shared/table/TableComponent";
 import { useUI } from "@/providers/ui-context";

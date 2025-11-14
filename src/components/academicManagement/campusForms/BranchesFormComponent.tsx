@@ -18,14 +18,14 @@ import {
 } from "@/app/core/constants/location-data";
 import { useUI } from "@/providers/ui-context";
 import * as alerts from "@/utils/alerts";
-import { BranchesService } from "@/services/managementAcademic/branches-service";
-import { LevelService } from "@/services/managementAcademic/level-services";
+import { BranchesService } from "@/services/admin/managementAcademic/branches-service";
+import { LevelService } from "@/services/admin/managementAcademic/level-services";
 import DropTableComponent from "@/components/shared/drop-table/DropTable";
 import {
   ButtonActions,
   Columns,
 } from "@/app/core/interfaces/tables-interfaces";
-import { GradeService } from "@/services/managementAcademic/grade-service";
+import { GradeService } from "@/services/admin/managementAcademic/grade-service";
 import { ProgressSpinner } from "primereact/progressspinner";
 import {
   GradeLevelChildColumnsDropTable,
