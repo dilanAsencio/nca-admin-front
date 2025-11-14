@@ -62,8 +62,8 @@ export default function PublicLoginForm({ onClose }: PublicLoginFormProps) {
         showToast(resp?.message, "info");
         reset();
         onClose();
-        router.push("/landing");
         handleMenu("home");
+        window.location.reload();
       })
       .catch(() => {
         setError("username", {

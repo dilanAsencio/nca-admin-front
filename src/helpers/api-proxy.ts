@@ -6,7 +6,8 @@ export async function apiProxy<T = any, R = any>(
   endpoint: string,
   paginate?: PaginateIMPL,
   data?: T,
-  contentType?: string
+  contentType?: string,
+  microservice: "payments" | "academicManagement" = "academicManagement"
 ): Promise<R> {
   try {
     const token = document.cookie.match(/auth_token=([^;]+)/)?.[1] || false;
@@ -14,6 +15,7 @@ export async function apiProxy<T = any, R = any>(
     const authToken = token || tokenP || "";
 
     let url = `/api/proxy?endpoint=${encodeURIComponent(endpoint)}&method=${method}`;
+    url += `&microservice=${microservice}`;
     if (contentType) url += `&contentType=${encodeURIComponent(contentType)}`;
 
     // Agregar paginación

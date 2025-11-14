@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import TableComponent from "@/components/shared/table/TableComponent";
 import { useUI } from "@/providers/ui-context";
 import { Response } from "@/app/core/interfaces/api-interfaces";
-import { AdmissionsServices } from "@/services/admissions/admissions-service";
+import { AdmissionsServices } from "@/services/admin/admissions/admissions-service";
 import { showConfirm, showToast } from "@/utils/alerts";
 import { Statuses } from "@/app/core/enums/academic-enums";
 import { Tooltip } from "primereact/tooltip";
@@ -16,9 +16,9 @@ import Image from "next/image";
 import ButtonComponent from "@/components/shared/button/ButtonComponent";
 import { Controller, useForm } from "react-hook-form";
 import DropdownComponent from "@/components/shared/dropdown/DropdownComponent";
-import { CampusService } from "@/services/managementAcademic/campus-services";
+import { CampusService } from "@/services/admin/managementAcademic/campus-services";
 import InputDateComponent from "@/components/shared/input/InputDateComponent";
-import { PreregistrationService } from "@/services/admissions/preRegister-service";
+import { PreregistrationService } from "@/services/admin/admissions/preRegister-service";
 
 const PreregistrationPage: React.FC = () => {
   const { toggleLoading, iconsActions, toggleModule } = useUI();

@@ -8,7 +8,7 @@ import Image from "next/image";
 import { Tooltip } from "primereact/tooltip";
 import ModalAddDocument from "./ModalAddDocument";
 import { showConfirm, showToast } from "@/utils/alerts";
-import { AdmissionsServices } from "@/services/admissions/admissions-service";
+import { AdmissionsServices } from "@/services/admin/admissions/admissions-service";
 
 interface AdmissionUpDocumentsProps {
   infoApplication: any;

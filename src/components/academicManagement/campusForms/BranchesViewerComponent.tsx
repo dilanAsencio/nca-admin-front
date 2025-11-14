@@ -8,7 +8,7 @@ import BranchesFormComponent from "./BranchesFormComponent";
 import { useUI } from "@/providers/ui-context";
 import ButtonPopUpComponent from "@/components/shared/button/ButtonPopUp";
 import Swal from "sweetalert2";
-import { BranchesService } from "@/services/managementAcademic/branches-service";
+import { BranchesService } from "@/services/admin/managementAcademic/branches-service";
 import { Tooltip } from 'primereact/tooltip';
 import * as alerts from "@/utils/alerts";
 import "./style.css";

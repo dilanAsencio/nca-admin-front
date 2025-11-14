@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { nivelAcademicoSchema } from "@/app/core/schemas/forms-academic-schemas";
 import * as alerts from "@/utils/alerts";
 import ModalComponent from "../ui/ModalComponent";
-import { LevelService } from "@/services/managementAcademic/level-services";
+import { LevelService } from "@/services/admin/managementAcademic/level-services";
 import TextAreaComponent from "../shared/input/TextAreaComponent";
 import { AcademicLevelResponse } from "@/app/core/interfaces/academicManagement/academic-level-interfaces";
 

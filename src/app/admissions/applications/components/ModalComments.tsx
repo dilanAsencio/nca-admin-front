@@ -10,7 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { showToast } from "@/utils/alerts";
 import { useUI } from "@/providers/ui-context";
-import { ApplicationsService } from "@/services/admissions/applications-service";
+import { ApplicationsService } from "@/services/admin/admissions/applications-service";
 
 const ModalComments: React.FC<{
   toggleModal: () => void;

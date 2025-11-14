@@ -2,13 +2,13 @@
 
 import { Controller, useFormContext } from "react-hook-form";
 import { AdmissionProcessFormData } from "./ModalAdmissionProcess";
-import { CampusService } from "@/services/managementAcademic/campus-services";
+import { CampusService } from "@/services/admin/managementAcademic/campus-services";
 import { Response } from "@/app/core/interfaces/api-interfaces";
 import { showToast } from "@/utils/alerts";
 import { useEffect, useState } from "react";
-import { GradeService } from "@/services/managementAcademic/grade-service";
+import { GradeService } from "@/services/admin/managementAcademic/grade-service";
 import DropdownComponent from "@/components/shared/dropdown/DropdownComponent";
-import { BranchesService } from "@/services/managementAcademic/branches-service";
+import { BranchesService } from "@/services/admin/managementAcademic/branches-service";
 
 interface selectCampusprops {
   isReadOnly: boolean;

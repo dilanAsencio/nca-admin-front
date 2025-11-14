@@ -11,7 +11,7 @@ import * as alerts from "@/utils/alerts";
 import ModalComponent from "../ui/ModalComponent";
 import TextAreaComponent from "../shared/input/TextAreaComponent";
 import DropdownComponent from "../shared/dropdown/DropdownComponent";
-import { GradeService } from "@/services/managementAcademic/grade-service";
+import { GradeService } from "@/services/admin/managementAcademic/grade-service";
 import { AcademicGradeResponse } from "@/app/core/interfaces/academicManagement/academic-grade-interfaces";
 
 const ModalGradeForm: React.FC<{

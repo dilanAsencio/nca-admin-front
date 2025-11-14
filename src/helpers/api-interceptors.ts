@@ -10,8 +10,8 @@ api.interceptors.request.use(
   (config) => {
 
     if (typeof window !== "undefined") {
-      const tenantData = localStorage.getItem("tenant") || null;
-      if (tenantData && config.headers) {
+      const tenantData = localStorage.getItem("tenant") || null;      
+      if (tenantData && tenantData !== "null" && config.headers) {
         const { tenantId, subdomain } = JSON.parse(tenantData);
         config.headers["X-Tenant-ID"] = tenantId;
         config.headers["X-Subdomain"] = subdomain;
@@ -28,7 +28,6 @@ api.interceptors.response.use(
   (error) => {
     const status = error?.response?.status;
     const message = error?.response?.data?.message || "Error inesperado";
-
     switch (status) {
       case 401:
         showToast("Tu sesión expiró. Por favor inicia sesión nuevamente.", "warning");

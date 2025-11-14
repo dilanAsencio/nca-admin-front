@@ -16,7 +16,7 @@ import TabsComponent from "@/components/shared/tabs/TabsComponent";
 import AdmissionUpDocuments from "@/app/landing/admissions/components/AdmissionUpDocuments";
 import { useUI } from "@/providers/ui-context";
 import ModalComponent from "@/components/ui/ModalComponent";
-import { ApplicationsService } from "@/services/admissions/applications-service";
+import { ApplicationsService } from "@/services/admin/admissions/applications-service";
 
 export type AdmissionApplicationFormData = z.infer<
   typeof AdmissionApplicationSchema

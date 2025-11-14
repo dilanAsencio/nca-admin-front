@@ -33,7 +33,7 @@ export interface Response<T = any> {
   data: DataResponse<T> | T;
   success: boolean;
   message: string;
-  timestamp: string;
+  timestamp?: string;
   error?: any;
   path?: string;
   status?: number;

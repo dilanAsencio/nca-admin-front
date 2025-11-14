@@ -101,7 +101,7 @@ export const AdmissionApplicationSchema = z.object({
   }),
 
   specialConditions: z.string().optional(),
-  howDidYouKnow: z.string().optional(),
+  howDidYouKnow: z.string({ required_error: "Este campo es requerido!"}).nonempty("Este campo es requerido!"),
   observations: z.string().optional(),
 
   saveAsDraft: z.boolean().default(false),

@@ -44,7 +44,7 @@
         }
     }
 }
-.custom-link.inscripcion:hover, .custom-link.inscripcion.active {
+.custom-link.registrations:hover, .custom-link.registrations.active {
     @apply
         font-bold
         text-[#000000];

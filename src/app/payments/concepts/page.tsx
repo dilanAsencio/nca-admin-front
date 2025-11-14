@@ -6,18 +6,21 @@ import BreadcumbComponent from "@/components/shared/breadcumb/BreadcumbComponent
 import style from "@/app/font.module.css";
 import { useEffect, useState } from "react";
 import CardActionComponent from "@/components/shared/cardAction/CardActionComponent";
-import { AdmissionsServices } from "@/services/admissions/admissions-service";
 import TableComponent from "@/components/shared/table/TableComponent";
 import { useUI } from "@/providers/ui-context";
 import { ButtonActions } from "../../core/interfaces/tables-interfaces";
-import { showToast } from "@/utils/alerts";
-import { RegistrationsService } from "@/services/registrations/registrations-service";
+import { showConfirm, showToast } from "@/utils/alerts";
+import { PaymentsConceptsService } from "@/services/admin/payments/paymentsConcepts-service";
 import ButtonComponent from "@/components/shared/button/ButtonComponent";
 import InputComponent from "@/components/shared/input/InputComponent";
 import { Controller, useForm } from "react-hook-form";
 import CheckBoxComponent from "@/components/shared/check/CheckBoxComponent";
+import ModalConceptForm from "./components/ModalConceptsForm";
+import { PaymentConceptResponse } from "./core/interfaces/paymentsConcepts-interfaces";
+import { formatCurrency } from "@/utils/format-number";
+import { DateUtils } from "@/utils/date-utils";
 
-const RegistrationsPage: React.FC = () => {
+const ConceptPage: React.FC = () => {
   const { toggleLoading, iconsActions, toggleModule } = useUI();
   const {
     register,
@@ -33,32 +36,35 @@ const RegistrationsPage: React.FC = () => {
     data: any;
     op: "view" | "edit" | "add";
   }>({ open: false, data: null, op: "add" });
-  const [admissionsProcess, setAdmissionsProcess] = useState<any[]>([]);
+  const [paymentConcept, setPaymentConcept] = useState<PaymentConceptResponse[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalItems, setTotalItems] = useState<number>(0);
   const [itemsPerPage, setItemsPerPage] = useState<number>(5);
 
   const iconEdit = iconsActions.edit;
-  const iconDetail = iconsActions.view;
+  const iconReject = iconsActions.reject;
+  const iconApprove = iconsActions.approve;
 
-  const columns = [
-    { key: "name", nameField: "Estudiante" },
-    { key: "academicYear", nameField: "Colegio" },
-    { key: "startDate", nameField: "Grados" },
-    { key: "endDate", nameField: "Fechas" },
-    { key: "2", nameField: "Acuerdo de pago" },
+  const columns: any = [
+    { key: "name", nameField: "Nombre" },
+    { key: "paymentPurposeName", nameField: "Tipo" },
+    { key: "ammountFormat", nameField: "Monto" },
+    { key: "academicYear", nameField: "Año" },
+    { key: "campusName", nameField: "Colegio" },
+    { key: "gradeName", nameField: "Grado" },
+    { key: "dateUntilFormat", nameField: "Fecha de vencimiento" },
     {
-      key: "3",
+      key: "statusName",
       nameField: "Estado",
       render: (row: any) => (
         <div
           className={`m-0 font-semibold text-center max-w-[80%] py-[0.25rem] px-[0.75rem] rounded-[0.5rem] ${
-            row.status === "Activo"
+            row.statusName === "Activo"
               ? "text-green-600 bg-[#00ff0042] border-2 border-solid border-[#00ff00]"
               : "text-red-600 bg-[#ff000042] border-2 border-solid border-[#ff0000]"
           }`}
         >
-          {row.status ?? "Pendiente de pago"}
+          {row.statusName ?? "N/A"}
         </div>
       ),
     },
@@ -66,37 +72,43 @@ const RegistrationsPage: React.FC = () => {
   const btnActions = (item: any): ButtonActions[] => {
     return [
       {
-        tooltip: "Detalle Proceso de Admision",
-        action: () => {
-          setOpenModal({ open: true, data: item, op: "view" });
-        },
-        icon: iconDetail,
-      },
-      {
-        tooltip: "Editar Proceso de Admision",
+        tooltip: "Editar Concepto de Pago",
         action: () => {
           setOpenModal({ open: true, data: item, op: "edit" });
         },
         icon: iconEdit,
       },
+      {
+        tooltip: `${item.statusName === "Activo" ? "Desactivar" : "Activar"} Concepto de Pago`,
+        action: () => {
+          confirmToggleStatus(item);
+        },
+        icon: item.statusName === "Activo" ? iconReject : iconApprove,
+      },
     ];
   };
-  const getRegistrations = async (
+  const getPaymentConcept = async (
     page: number = 1,
     size: number = 5,
     academicYear: number = 0,
-    isActive: boolean = true,
-    isVigente: boolean = true
+    isActive: boolean | null = null,
+    isVigente: boolean | null = null
   ) => {
     toggleLoading(true);
-    const resp = await RegistrationsService.getPaymentConcept(
+    const resp = await PaymentsConceptsService.getPaymentConcept(
       academicYear,
       isActive,
       isVigente,
       { page: page - 1, size: size }
     );
-    if (resp?.success && resp.data?.content) {
-      setAdmissionsProcess(resp.data.content);
+    if (resp?.success) {
+      const data = resp.data.content as PaymentConceptResponse[];
+
+      setPaymentConcept(data.map((item) => ({
+        ...item,
+        ammountFormat: formatCurrency(item.amount?.toString() ?? "0") ?? 0,
+        dateUntilFormat: DateUtils.formatDate(item.paymentUntil),
+      })));
       setTotalItems(resp.data.totalElements);
       toggleLoading(false);
     } else {
@@ -105,13 +117,42 @@ const RegistrationsPage: React.FC = () => {
     toggleLoading(false);
   };
 
+  const confirmToggleStatus = async (row: any) => {
+    const confirm = await showConfirm(
+      "Precaucion!",
+      `¿Estás seguro de ${row.statusName === "Activo" ? "desactivar" : "activar"} este concepto de pago?`,
+      "warning"
+    );
+    if (confirm) {
+      toggleLoading(true);
+      const status = row.statusName === "Activo" ? "INACTIVE" : "ACTIVE";
+      try {
+        const resp = await PaymentsConceptsService.updatePaymentConceptStatus(row.id, status);
+        if (resp?.success) {
+          showToast(`Concepto de pago ${row.statusName === "Activo" ? "desactivado" : "activado"} con exito`, "success");
+          getPaymentConcept();
+        } else {
+          showToast(`Error al ${row.statusName === "Activo" ? "desactivar" : "activar"} el concepto de pago`, "error");
+        }
+      } catch (error) {
+        
+      }
+    }
+    toggleLoading(false);
+  }
+
+  const toggleModalConceptsForm = () => {
+    setOpenModal({ open: !openModal.open, data: null, op: "add" });
+    getPaymentConcept();
+  };
+
   useEffect(() => {
-    toggleModule("payments-registrations");
-    getRegistrations();
+    toggleModule("payments-concepts");
+    getPaymentConcept();
   }, []);
 
   useEffect(() => {
-    getRegistrations(currentPage, itemsPerPage, getValues("academicYear"), getValues("isActive"), getValues("isVigente"));
+    getPaymentConcept(currentPage, itemsPerPage, getValues("academicYear"), getValues("isActive"), getValues("isVigente"));
   }, [currentPage, itemsPerPage, watch("isActive"), watch("isVigente"), watch("academicYear")]);
 
   return (
@@ -126,9 +167,9 @@ const RegistrationsPage: React.FC = () => {
           className={clsx(`flex md:justify-between items-center h-[3.125rem]`)}
         >
           <span className="font-semibold text-[1.25rem] text-gray-900">
-            Pagos - Matriculas
+            Gestión de conceptos de pago
           </span>
-          <BreadcumbComponent items={[{ label: "Pagos-Matriculas" }]} />
+          <BreadcumbComponent items={[{ label: "Conceptos de pago" }]} />
         </div>
         <div className="flex flex-row gap-[1.5rem]">
           <div
@@ -158,7 +199,7 @@ const RegistrationsPage: React.FC = () => {
                 <CheckBoxComponent
                   {...field}
                   checked={getValues("isActive")}
-                  setChecked={() => {
+                  onChange={() => {
                     setValue(
                       "isActive",
                       !getValues("isActive")
@@ -176,7 +217,7 @@ const RegistrationsPage: React.FC = () => {
                 <CheckBoxComponent
                   {...field}
                   checked={getValues("isVigente")}
-                  setChecked={() => {
+                  onChange={() => {
                     setValue(
                       "isVigente",
                       !getValues("isVigente")
@@ -191,15 +232,15 @@ const RegistrationsPage: React.FC = () => {
                 className="primary"
                 onClick={() => {
                   reset();
-                  getRegistrations();
+                  getPaymentConcept();
                 }}
                 label={"Limpiar"}
               />
             </div>
           </div>
           <CardActionComponent
-            checked={admissionsProcess.length > 0}
-            labelButton="Crear Matricula"
+            checked={paymentConcept.length > 0}
+            labelButton="Crear Concepto"
             handleClick={() => {
               setOpenModal({ open: true, data: null, op: "add" });
             }}
@@ -213,10 +254,9 @@ const RegistrationsPage: React.FC = () => {
         </div>
         <div className="p-2 bg-white rounded-[1rem] shadow-[0_7px_21px_0_#451A1A0A]">
           <TableComponent
-            title="Matriculas"
             columns={columns}
             btnActions={btnActions}
-            data={admissionsProcess}
+            data={paymentConcept}
             paginate={{
               perPageOptions: [5],
               totalItems: totalItems,
@@ -230,8 +270,15 @@ const RegistrationsPage: React.FC = () => {
           />
         </div>
       </div>
+
+      {openModal.open && (
+        <ModalConceptForm
+          toggleModal={toggleModalConceptsForm}
+          writeData={openModal}
+        />
+      )}
     </>
   );
 };
 
-export default RegistrationsPage;
+export default ConceptPage;

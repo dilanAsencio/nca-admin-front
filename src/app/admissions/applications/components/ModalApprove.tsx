@@ -10,7 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { showConfirm, showToast } from "@/utils/alerts";
 import { useUI } from "@/providers/ui-context";
-import { ApplicationsService } from "@/services/admissions/applications-service";
+import { ApplicationsService } from "@/services/admin/admissions/applications-service";
 
 const ModalApproved: React.FC<{
   toggleModal: () => void;
@@ -54,7 +54,9 @@ const ModalApproved: React.FC<{
         showToast(resp.message || `Error al aprobar la solicitud`, "error");
       }
       toggleLoading(false);
-    } catch (error) {
+    } catch (error: any) {
+      toggleLoading(false);
+      showToast(error.error.details.message || "Error al aprobar la solicitud", "error");
       console.error(error);
     }
   };

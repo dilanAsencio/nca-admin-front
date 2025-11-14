@@ -82,7 +82,7 @@ export const authService = {
       localStorage.setItem("refresh_tokenP", refresh_token);
 
       document.cookie = `auth_tokenP=${access_token}; path=/;`;
-      const tenantData = AuthHelper(data?.accessToken || null);
+      const tenantData = AuthHelper(access_token || null);
       localStorage.setItem("tenant", JSON.stringify(tenantData));
       
       return {
