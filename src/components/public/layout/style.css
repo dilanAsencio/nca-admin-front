@@ -1,8 +1,0 @@
-@import "tailwindcss";
-
-.custom-layout {
-    @apply
-        bg-[url("/assets/landing/background.png")]
-        bg-repeat-y
-        bg-cover;
-}

@@ -2,18 +2,18 @@
 
 import React, { useEffect, useState } from "react";
 import { FieldPath, FormProvider } from "react-hook-form";
-import { useAdmissionApplicationForm } from "@/app/landing/admissions/hook/useAdmissionApplicationsForm";
-import AspirantInfoSection from "@/app/landing/admissions/components/AspirantInfoSection";
-import ParentInfoSection from "@/app/landing/admissions/components/ParentInfoSection";
-import EmergencyContactSection from "@/app/landing/admissions/components/EmergencyContactSection";
-import AdditionalInfoSection from "@/app/landing/admissions/components/AdditionalInfoSection";
+// import { useAdmissionApplicationForm } from "@/app/landing/admissions/hook/useAdmissionApplicationsForm";
+// import AspirantInfoSection from "@/app/landing/admissions/components/AspirantInfoSection";
+// import ParentInfoSection from "@/app/landing/admissions/components/ParentInfoSection";
+// import EmergencyContactSection from "@/app/landing/admissions/components/EmergencyContactSection";
+// import AdditionalInfoSection from "@/app/landing/admissions/components/AdditionalInfoSection";
 import ButtonComponent from "@/components/shared/button/ButtonComponent";
 import { showToast } from "@/utils/alerts";
 import { z } from "zod";
 import { AdmissionApplicationSchema } from "@/app/core/schemas/admissions-landing-schema";
-import { AdmissionsLandingService } from "@/services/landing/admissions/admissions-service";
+// import { AdmissionsLandingService } from "@/services/landing/admissions/admissions-service";
 import TabsComponent from "@/components/shared/tabs/TabsComponent";
-import AdmissionUpDocuments from "@/app/landing/admissions/components/AdmissionUpDocuments";
+// import AdmissionUpDocuments from "@/app/landing/admissions/components/AdmissionUpDocuments";
 import { useUI } from "@/providers/ui-context";
 import ModalComponent from "@/components/ui/ModalComponent";
 import { ApplicationsService } from "@/services/admin/admissions/applications-service";
@@ -31,7 +31,7 @@ export default function ModalDetail({
   applicatinoId,
   toggleModal,
 }: formApplicationProps) {
-  const methods = useAdmissionApplicationForm();
+  // const methods = useAdmissionApplicationForm();
   const [activeTabForm, setActiveTabForm] = useState<number>(0);
   const [currentApplication, setCurrentApplication] = useState<any>(null);
   const [percentage, setPercentage] = useState<number>(0);
@@ -44,17 +44,17 @@ export default function ModalDetail({
         await ApplicationsService.getAdmissionsApplicationsById(applicationId);
 
       if (response?.success) {
-        methods.reset(response.data);
+        // methods.reset(response.data);
         const infoAddress = JSON.parse(response.data.parent?.address);
         const data = response.data;
-        
-        methods.setValue("parent.address.street", infoAddress?.street ?? "");
-        methods.setValue("parent.address.neighborhood", infoAddress?.neighborhood ?? "");
-        methods.setValue("parent.address.city", infoAddress?.city ?? "");
-        methods.setValue("parent.address.department", infoAddress?.department ?? "");
-        methods.setValue("parent.address.postalCode", infoAddress?.postalCode ?? "");
-        methods.setValue("parent.documentType", data.parent.documentTypeId);
-        methods.setValue("aspirant.documentType", data.aspirant.documentType);
+
+        // methods.setValue("parent.address.street", infoAddress?.street ?? "");
+        // methods.setValue("parent.address.neighborhood", infoAddress?.neighborhood ?? "");
+        // methods.setValue("parent.address.city", infoAddress?.city ?? "");
+        // methods.setValue("parent.address.department", infoAddress?.department ?? "");
+        // methods.setValue("parent.address.postalCode", infoAddress?.postalCode ?? "");
+        // methods.setValue("parent.documentType", data.parent.documentTypeId);
+        // methods.setValue("aspirant.documentType", data.aspirant.documentType);
         setCurrentApplication(response.data);
       }
     } catch (error: any) {
@@ -63,10 +63,11 @@ export default function ModalDetail({
   };
 
   const tabsForms = [
-    { label: "Aspirante", component: <AspirantInfoSection disabled={true} /> },
-    { label: "Acudiente", component: <ParentInfoSection disabled={true} /> },
-    { label: "Emergencia", component: <EmergencyContactSection disabled={true} /> },
-    { label: "Adicional", component: <AdditionalInfoSection disabled={true} /> },
+    // { label: "Aspirante", component: <AspirantInfoSection disabled={true} /> },
+    // { label: "Acudiente", component: <ParentInfoSection disabled={true} /> },
+    // { label: "Emergencia", component: <EmergencyContactSection disabled={true} /> },
+    // { label: "Adicional", component: <AdditionalInfoSection disabled={true} /> },
+    { label: "Aspirante", component: <div>Componente no disponible</div> },
   ];
 
   const tabs = [{ label: "Formulario" }, { label: "Documentación" }];
@@ -90,11 +91,15 @@ export default function ModalDetail({
         handleCloseModal();
       }}
     >
-      <FormProvider {...methods}>
+      <div className="p-4">
+        <p>Detalle de solicitud no disponible debido a la eliminación de componentes públicos.</p>
+        <pre>{JSON.stringify(currentApplication, null, 2)}</pre>
+      </div>
+      {/* <FormProvider {...methods}>
         <div className="flex flex-col gap-[1.25rem]">
           <div className="max-w-[100%]">
             {/* Tabs Sections */}
-            <div className="flex flex-1 shadow-[0_7px_21px_0_#451A1A0A]">
+      {/* <div className="flex flex-1 shadow-[0_7px_21px_0_#451A1A0A]">
               {tabs.map((tab, index) => (
                 <TabsComponent
                   key={index}
@@ -116,25 +121,24 @@ export default function ModalDetail({
                 {activeTab === 0 ? (
                   <>
                     {/* TabsForms Header */}
-                    <div className="flex gap-[0.5rem] overflow-x-auto">
+      {/* <div className="flex gap-[0.5rem] overflow-x-auto">
                       {tabsForms.map((tab, index) => (
                         <button
                           key={index}
                           type="button"
                           onClick={() => setActiveTabForm(index)}
-                          className={`px-3 py-2 rounded-t-md ${
-                            activeTabForm === index
+                          className={`px-3 py-2 rounded-t-md ${activeTabForm === index
                               ? "bg-[#F4F4F4] text-gray-900"
                               : "bg-[#FFFFFF] text-gray-900 hover:bg-gray-100"
-                          }`}
+                            }`}
                         >
                           {tab.label}
                         </button>
                       ))}
-                    </div>
+                    </div> */}
 
-                    {/* Tab Content */}
-                    <div className="min-h-[200px]">
+      {/* Tab Content */}
+      {/* <div className="min-h-[200px]">
                       {tabsForms[activeTabForm].component}
                     </div>
                   </>
@@ -154,7 +158,7 @@ export default function ModalDetail({
             </div>
           </div>
         </div>
-      </FormProvider>
+      </FormProvider> */}
     </ModalComponent>
   );
 }

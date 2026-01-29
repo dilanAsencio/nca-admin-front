@@ -1,9 +1,0 @@
-@import "tailwindcss";
-
-.container-admissions {
-    @apply
-        relative
-        flex flex-col gap-[100px]
-        py-[2rem] px-[1rem] rounded-[1.5rem]
-        bg-[#ffffff2e]
-}

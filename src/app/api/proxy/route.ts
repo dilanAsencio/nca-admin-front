@@ -1,12 +1,11 @@
 import { NextResponse, NextRequest } from "next/server";
 import axios from "axios";
 
-const API_URL_SERVER = process.env.API_URL_SERVER || "http://localhost";
-const API_PORT = process.env.API_PORT || ":8080/api/";
-const API_PAYMENTS_PORT = process.env.API_PAYMENTS_PORT || ":8090/api/";
+// Usamos la URL completa provista por variable de entorno o fallback
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api";
 
 const api = axios.create({
-  baseURL: API_URL_SERVER+API_PORT || "http://localhost:8080",
+  baseURL: API_URL,
 });
 
 /**
@@ -75,15 +74,16 @@ async function handleProxy(request: NextRequest, method: string) {
         body = undefined;
       }
     }
-    
+
     const response = await api.request({
-      baseURL: microservice === "payments" ? API_URL_SERVER+API_PAYMENTS_PORT : API_URL_SERVER+API_PORT,
+      // baseURL ya está configurado en la instancia 'api'
       url: fullEndpoint,
       method,
       data: body,
       headers: {
         ...(token ? { Authorization: token } : {}),
-        "X-Tenant-ID": process.env.TENANT_ID || "demo-colegio",
+        // Si el cliente envía X-Tenant-ID, úsalo. Si no, usa el default.
+        "X-Tenant-ID": request.headers.get("x-tenant-id") || process.env.TENANT_ID || "demo-colegio",
         ...(contentType ? { "Content-Type": contentType } : {}),
       },
     });

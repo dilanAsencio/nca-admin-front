@@ -14,11 +14,11 @@ const MainContent: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { isOpenSidebar, closeSidebar, setHoverSidebar } = useUI();
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   const pathname = usePathname();
-  
-  const whiteList = ["/login", "/reset-password", "/forgot-password", "/change-password", "/landing", "/auth/register"];
-  const isLandingRoute = pathname.startsWith("/landing");
+
+
+  const whiteList = ["/login", "/reset-password", "/forgot-password", "/change-password", "/auth/register"];
   const lastWidthRef = useRef(window.innerWidth);
-  
+
   useEffect(() => {
     const handleResize = () => {
       const currentWidth = window.innerWidth;
@@ -34,18 +34,18 @@ const MainContent: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   }, [closeSidebar]);
 
   return (<>
-  
+
     <ReduxLoaderOverlay />
-    { isAuthenticated && !whiteList.includes(pathname) && !isLandingRoute && <Header />}
-    { isAuthenticated && !whiteList.includes(pathname) && !isLandingRoute && <SidebarMenu />}
+    {isAuthenticated && !whiteList.includes(pathname) && <Header />}
+    {isAuthenticated && !whiteList.includes(pathname) && <SidebarMenu />}
     <main
-      onMouseEnter={() => {if (window.innerWidth < 768) {setHoverSidebar(false); closeSidebar()}}}
+      onMouseEnter={() => { if (window.innerWidth < 768) { setHoverSidebar(false); closeSidebar() } }}
       className={clsx(
         "content-main",
         `transition-all duration-400 ease-in-out px-[1.5rem]`,
-        whiteList.includes(pathname) ? 
+        whiteList.includes(pathname) ?
           "" : isOpenSidebar ? "ml-[15rem]" : "ml-[4rem]",
-        )}
+      )}
     >
       {children}
     </main></>
