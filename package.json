@@ -27,7 +27,7 @@
     "install": "^0.13.0",
     "leaflet": "^1.9.4",
     "leaflet-defaulticon-compatibility": "^0.1.2",
-    "next": "15.2.2",
+    "next": "15.2.8",
     "nextjs-toast-notify": "^1.35.0",
     "npm": "^11.2.0",
     "primereact": "^10.9.7",
